@@ -1,16 +1,42 @@
 import UIKit
+import Combine
 
 final class AppCoordinator: Coordinator {
 
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
 
-    init(navigationController: UINavigationController) {
+    private let window: UIWindow
+    private var cancellables = Set<AnyCancellable>()
+
+    init(window: UIWindow, navigationController: UINavigationController) {
+        self.window = window
         self.navigationController = navigationController
+        setupNotifications()
     }
 
     func start() {
         showSplash()
+    }
+
+    private func setupNotifications() {
+        NotificationCenter.default.publisher(for: .userDidSignOut)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.handleSignOut()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func handleSignOut() {
+        childCoordinators.removeAll()
+
+        let navigationController = UINavigationController()
+        navigationController.setNavigationBarHidden(true, animated: false)
+        self.navigationController = navigationController
+
+        window.rootViewController = navigationController
+        showSignIn()
     }
 
     private func showSplash() {
@@ -20,25 +46,56 @@ final class AppCoordinator: Coordinator {
         splashCoordinator.start()
     }
 
-    private func showHome() {
-        // TODO: Implement TabbarCoordinator
+    private func showSignIn() {
+        let signInCoordinator = SignInCoordinator(navigationController: navigationController)
+        signInCoordinator.delegate = self
+        childCoordinators.append(signInCoordinator)
+        signInCoordinator.start()
+    }
+
+    private func showTabbar() {
+        childCoordinators.removeAll()
+
+        let tabbarCoordinator = TabbarCoordinator(window: window)
+        childCoordinators.append(tabbarCoordinator)
+        tabbarCoordinator.start()
     }
 
     private func showOnboarding() {
         // TODO: Implement OnboardingCoordinator
+        // For now, just show tabbar
+        showTabbar()
     }
 }
 
 // MARK: - SplashCoordinatorDelegate
 
 extension AppCoordinator: SplashCoordinatorDelegate {
-    func splashCoordinatorDidFinish(_ coordinator: SplashCoordinator, isNewUser: Bool) {
+    func splashCoordinatorDidFinish(_ coordinator: SplashCoordinator, isLoggedIn: Bool, isNewUser: Bool) {
         childCoordinators.removeAll { $0 === coordinator }
 
-        if isNewUser {
+        if isLoggedIn {
+            if isNewUser {
+                showOnboarding()
+            } else {
+                showTabbar()
+            }
+        } else {
+            showSignIn()
+        }
+    }
+}
+
+// MARK: - SignInCoordinatorDelegate
+
+extension AppCoordinator: SignInCoordinatorDelegate {
+    func signInCoordinatorDidFinish(_ coordinator: SignInCoordinator, user: UserData) {
+        childCoordinators.removeAll { $0 === coordinator }
+
+        if user.isNewUser {
             showOnboarding()
         } else {
-            showHome()
+            showTabbar()
         }
     }
 }

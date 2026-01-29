@@ -30,7 +30,6 @@
 		1A0024 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0024 /* PrimaryButton.swift */; };
 		1A0025 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0025 /* LoadingView.swift */; };
 		1A0026 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0026 /* FirebaseManager.swift */; };
-		1A0027 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A0027 /* GoogleService-Info.plist */; };
 		1A0028 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A0028 /* Assets.xcassets */; };
 		1A0029 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A0029 /* LaunchScreen.storyboard */; };
 		1A0031 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0001 /* FirebaseAuth */; };
@@ -38,6 +37,28 @@
 		1A0033 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0003 /* FirebaseFunctions */; };
 		1A0034 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0004 /* FirebaseRemoteConfig */; };
 		1A0035 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0005 /* FirebaseAnalytics */; };
+		1A0036 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0006 /* GoogleSignIn */; };
+		1A0037 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0007 /* GoogleSignInSwift */; };
+		1A0040 /* SignInManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0040 /* SignInManager.swift */; };
+		1A0041 /* SignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0041 /* SignInCoordinator.swift */; };
+		1A0042 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0042 /* SignInView.swift */; };
+		1A0043 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0043 /* SignInViewModel.swift */; };
+		1A0044 /* SignInModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0044 /* SignInModuleBuilder.swift */; };
+		1A0050 /* TabbarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0050 /* TabbarCoordinator.swift */; };
+		1A0051 /* GlassTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0051 /* GlassTabBarView.swift */; };
+		1A0052 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0052 /* HomeCoordinator.swift */; };
+		1A0053 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0053 /* HomeView.swift */; };
+		1A0054 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0054 /* HomeViewModel.swift */; };
+		1A0055 /* HomeModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0055 /* HomeModuleBuilder.swift */; };
+		1A0056 /* ExploreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0056 /* ExploreCoordinator.swift */; };
+		1A0057 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0057 /* ExploreView.swift */; };
+		1A0058 /* ExploreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0058 /* ExploreViewModel.swift */; };
+		1A0059 /* ExploreModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0059 /* ExploreModuleBuilder.swift */; };
+		1A0060 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0060 /* ProfileCoordinator.swift */; };
+		1A0061 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0061 /* ProfileView.swift */; };
+		1A0062 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0062 /* ProfileViewModel.swift */; };
+		1A0063 /* ProfileModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0063 /* ProfileModuleBuilder.swift */; };
+		4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4191BB6A2F2B86440043335E /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,10 +86,30 @@
 		2A0024 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
 		2A0025 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		2A0026 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
-		2A0027 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2A0028 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A0029 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2A0030 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2A0040 /* SignInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInManager.swift; sourceTree = "<group>"; };
+		2A0041 /* SignInCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInCoordinator.swift; sourceTree = "<group>"; };
+		2A0042 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		2A0043 /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		2A0044 /* SignInModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInModuleBuilder.swift; sourceTree = "<group>"; };
+		2A0050 /* TabbarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarCoordinator.swift; sourceTree = "<group>"; };
+		2A0051 /* GlassTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassTabBarView.swift; sourceTree = "<group>"; };
+		2A0052 /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
+		2A0053 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		2A0054 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		2A0055 /* HomeModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModuleBuilder.swift; sourceTree = "<group>"; };
+		2A0056 /* ExploreCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCoordinator.swift; sourceTree = "<group>"; };
+		2A0057 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		2A0058 /* ExploreViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewModel.swift; sourceTree = "<group>"; };
+		2A0059 /* ExploreModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreModuleBuilder.swift; sourceTree = "<group>"; };
+		2A0060 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
+		2A0061 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		2A0062 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		2A0063 /* ProfileModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModuleBuilder.swift; sourceTree = "<group>"; };
+		4191BB672F2B7D970043335E /* vans.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vans.entitlements; sourceTree = "<group>"; };
+		4191BB6A2F2B86440043335E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +122,8 @@
 				1A0033 /* FirebaseFunctions in Frameworks */,
 				1A0034 /* FirebaseRemoteConfig in Frameworks */,
 				1A0035 /* FirebaseAnalytics in Frameworks */,
+				1A0036 /* GoogleSignIn in Frameworks */,
+				1A0037 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +141,7 @@
 		4A0001 /* vans */ = {
 			isa = PBXGroup;
 			children = (
+				4191BB672F2B7D970043335E /* vans.entitlements */,
 				2A0001 /* AppDelegate.swift */,
 				2A0002 /* SceneDelegate.swift */,
 				2A0003 /* AppCoordinator.swift */,
@@ -107,10 +151,10 @@
 				4A0005 /* Managers */,
 				4A0006 /* Modules */,
 				4A0008 /* Views */,
-				2A0027 /* GoogleService-Info.plist */,
 				2A0028 /* Assets.xcassets */,
 				2A0029 /* LaunchScreen.storyboard */,
 				2A0030 /* Info.plist */,
+				4191BB6A2F2B86440043335E /* GoogleService-Info.plist */,
 			);
 			path = vans;
 			sourceTree = "<group>";
@@ -147,6 +191,7 @@
 				2A0026 /* FirebaseManager.swift */,
 				2A0013 /* ThirdPartyManager.swift */,
 				2A0014 /* AuthManager.swift */,
+				2A0040 /* SignInManager.swift */,
 				2A0015 /* UserManager.swift */,
 				2A0016 /* RemoteConfigManager.swift */,
 				2A0017 /* KeychainHelper.swift */,
@@ -159,6 +204,11 @@
 			isa = PBXGroup;
 			children = (
 				4A0010 /* Splash */,
+				4A0012 /* SignIn */,
+				4A0013 /* Tabbar */,
+				4A0014 /* Home */,
+				4A0015 /* Explore */,
+				4A0016 /* Profile */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -201,6 +251,59 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		4A0012 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				2A0041 /* SignInCoordinator.swift */,
+				2A0042 /* SignInView.swift */,
+				2A0043 /* SignInViewModel.swift */,
+				2A0044 /* SignInModuleBuilder.swift */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		4A0013 /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				2A0050 /* TabbarCoordinator.swift */,
+				2A0051 /* GlassTabBarView.swift */,
+			);
+			path = Tabbar;
+			sourceTree = "<group>";
+		};
+		4A0014 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				2A0052 /* HomeCoordinator.swift */,
+				2A0053 /* HomeView.swift */,
+				2A0054 /* HomeViewModel.swift */,
+				2A0055 /* HomeModuleBuilder.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		4A0015 /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				2A0056 /* ExploreCoordinator.swift */,
+				2A0057 /* ExploreView.swift */,
+				2A0058 /* ExploreViewModel.swift */,
+				2A0059 /* ExploreModuleBuilder.swift */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		4A0016 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				2A0060 /* ProfileCoordinator.swift */,
+				2A0061 /* ProfileView.swift */,
+				2A0062 /* ProfileViewModel.swift */,
+				2A0063 /* ProfileModuleBuilder.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		4A0099 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +334,8 @@
 				7A0003 /* FirebaseFunctions */,
 				7A0004 /* FirebaseRemoteConfig */,
 				7A0005 /* FirebaseAnalytics */,
+				7A0006 /* GoogleSignIn */,
+				7A0007 /* GoogleSignInSwift */,
 			);
 			productName = vans;
 			productReference = 2A0000 /* vans.app */;
@@ -262,6 +367,7 @@
 			mainGroup = 4A0000;
 			packageReferences = (
 				8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 4A0099 /* Products */;
 			projectDirPath = "";
@@ -277,9 +383,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A0027 /* GoogleService-Info.plist in Resources */,
 				1A0028 /* Assets.xcassets in Resources */,
 				1A0029 /* LaunchScreen.storyboard in Resources */,
+				4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +407,7 @@
 				1A0009 /* APIError.swift in Sources */,
 				1A0013 /* ThirdPartyManager.swift in Sources */,
 				1A0014 /* AuthManager.swift in Sources */,
+				1A0040 /* SignInManager.swift in Sources */,
 				1A0015 /* UserManager.swift in Sources */,
 				1A0016 /* RemoteConfigManager.swift in Sources */,
 				1A0017 /* KeychainHelper.swift in Sources */,
@@ -309,6 +416,24 @@
 				1A0020 /* SplashView.swift in Sources */,
 				1A0021 /* SplashViewModel.swift in Sources */,
 				1A0022 /* SplashModuleBuilder.swift in Sources */,
+				1A0041 /* SignInCoordinator.swift in Sources */,
+				1A0042 /* SignInView.swift in Sources */,
+				1A0043 /* SignInViewModel.swift in Sources */,
+				1A0044 /* SignInModuleBuilder.swift in Sources */,
+				1A0050 /* TabbarCoordinator.swift in Sources */,
+				1A0051 /* GlassTabBarView.swift in Sources */,
+				1A0052 /* HomeCoordinator.swift in Sources */,
+				1A0053 /* HomeView.swift in Sources */,
+				1A0054 /* HomeViewModel.swift in Sources */,
+				1A0055 /* HomeModuleBuilder.swift in Sources */,
+				1A0056 /* ExploreCoordinator.swift in Sources */,
+				1A0057 /* ExploreView.swift in Sources */,
+				1A0058 /* ExploreViewModel.swift in Sources */,
+				1A0059 /* ExploreModuleBuilder.swift in Sources */,
+				1A0060 /* ProfileCoordinator.swift in Sources */,
+				1A0061 /* ProfileView.swift in Sources */,
+				1A0062 /* ProfileViewModel.swift in Sources */,
+				1A0063 /* ProfileModuleBuilder.swift in Sources */,
 				1A0023 /* Setup.swift in Sources */,
 				1A0024 /* PrimaryButton.swift in Sources */,
 				1A0025 /* LoadingView.swift in Sources */,
@@ -443,6 +568,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = vans/vans.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2LST5R6GRF;
@@ -470,6 +596,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = vans/vans.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2LST5R6GRF;
@@ -524,6 +651,14 @@
 				minimumVersion = 10.0.0;
 			};
 		};
+		8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -551,6 +686,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalytics;
+		};
+		7A0006 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		7A0007 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -27,6 +27,7 @@ final class SplashViewModel: ActionableViewModel {
     @Published var errorMessage: String = ""
 
     private weak var coordinator: SplashCoordinating?
+    private var isLoggedIn: Bool = false
     private var isNewUser: Bool = false
 
     init(coordinator: SplashCoordinating?) {
@@ -66,11 +67,12 @@ final class SplashViewModel: ActionableViewModel {
 
                     // Load user data
                     try await UserManager.shared.loadUser()
+                    isLoggedIn = true
                     isNewUser = UserManager.shared.currentUser?.isNewUser ?? false
                 } else {
-                    // Create new session
-                    let user = try await AuthManager.shared.createSession()
-                    isNewUser = user.isNewUser
+                    // Not logged in - will show sign in screen
+                    isLoggedIn = false
+                    isNewUser = false
                 }
 
                 // 4. Success - navigate to next screen
@@ -79,9 +81,18 @@ final class SplashViewModel: ActionableViewModel {
                 // Small delay for visual feedback
                 try await Task.sleep(nanoseconds: 500_000_000)
 
-                coordinator?.finishSplash(isNewUser: isNewUser)
+                coordinator?.finishSplash(isLoggedIn: isLoggedIn, isNewUser: isNewUser)
 
             } catch {
+                // If error while refreshing token, treat as not logged in
+                if case APIError.unauthorized = error {
+                    isLoggedIn = false
+                    state = .success
+                    try? await Task.sleep(nanoseconds: 500_000_000)
+                    coordinator?.finishSplash(isLoggedIn: false, isNewUser: false)
+                    return
+                }
+
                 state = .failed(error.localizedDescription)
                 errorMessage = error.localizedDescription
                 showError = true

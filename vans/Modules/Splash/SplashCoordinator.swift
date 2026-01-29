@@ -1,11 +1,11 @@
 import UIKit
 
 protocol SplashCoordinatorDelegate: AnyObject {
-    func splashCoordinatorDidFinish(_ coordinator: SplashCoordinator, isNewUser: Bool)
+    func splashCoordinatorDidFinish(_ coordinator: SplashCoordinator, isLoggedIn: Bool, isNewUser: Bool)
 }
 
 protocol SplashCoordinating: Coordinator {
-    func finishSplash(isNewUser: Bool)
+    func finishSplash(isLoggedIn: Bool, isNewUser: Bool)
 }
 
 final class SplashCoordinator: SplashCoordinating {
@@ -23,7 +23,7 @@ final class SplashCoordinator: SplashCoordinating {
         navigationController.setViewControllers([viewController], animated: false)
     }
 
-    func finishSplash(isNewUser: Bool) {
-        delegate?.splashCoordinatorDidFinish(self, isNewUser: isNewUser)
+    func finishSplash(isLoggedIn: Bool, isNewUser: Bool) {
+        delegate?.splashCoordinatorDidFinish(self, isLoggedIn: isLoggedIn, isNewUser: isNewUser)
     }
 }
