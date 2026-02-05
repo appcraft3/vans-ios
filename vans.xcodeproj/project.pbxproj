@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0736BF76ADA33BE20A4D9A9D /* WaitlistReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */; };
+		10E991095E985D1172E52277 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07687C86DB109F07166CEA1D /* ChatView.swift */; };
 		1A0001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0001 /* AppDelegate.swift */; };
 		1A0002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0002 /* SceneDelegate.swift */; };
 		1A0003 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0003 /* AppCoordinator.swift */; };
@@ -58,10 +60,49 @@
 		1A0061 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0061 /* ProfileView.swift */; };
 		1A0062 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0062 /* ProfileViewModel.swift */; };
 		1A0063 /* ProfileModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0063 /* ProfileModuleBuilder.swift */; };
+		1A0070 /* AccessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0070 /* AccessInfo.swift */; };
+		1A0071 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0071 /* UserProfile.swift */; };
+		1A0072 /* TrustInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0072 /* TrustInfo.swift */; };
+		1A0080 /* OnboardingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0080 /* OnboardingCoordinator.swift */; };
+		1A0081 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0081 /* OnboardingView.swift */; };
+		1A0082 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0082 /* OnboardingViewModel.swift */; };
+		1A0083 /* OnboardingModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0083 /* OnboardingModuleBuilder.swift */; };
+		1A0090 /* WaitlistCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0090 /* WaitlistCoordinator.swift */; };
+		1A0091 /* WaitlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0091 /* WaitlistView.swift */; };
+		1A0092 /* WaitlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0092 /* WaitlistViewModel.swift */; };
+		1A0093 /* WaitlistModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0093 /* WaitlistModuleBuilder.swift */; };
+		24CA33E7224EBFC0054CAF59 /* WaitlistReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */; };
+		3B09A9A88267D09831AED448 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */; };
+		411A01602F323BF700A9EDA6 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 99496712EC816571A558DC47 /* Kingfisher */; };
+		411A01622F323EFA00A9EDA6 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411A01612F323EFA00A9EDA6 /* AppTheme.swift */; };
+		412445422F33CBEA00488119 /* BuilderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412445412F33CBEA00488119 /* BuilderModels.swift */; };
 		4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4191BB6A2F2B86440043335E /* GoogleService-Info.plist */; };
+		6693AC733BE3D2AF573EFC8E /* InviteCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */; };
+		829CFD7DCFDD8B8B3D48D13A /* InviteCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */; };
+		8AA5F3BD4FACDE77C5A607D3 /* InviteCodeModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */; };
+		A89FB059FFBC4126C4D1A15E /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */; };
+		B1A95CDF017CD31C67C2991B /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D06139C3B1AC0A84BC7715F /* ChatModels.swift */; };
+		B8D228EF267DFC068CE00A60 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */; };
+		D07A3F7F272604F2E98E4324 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3711F9E5803D07BC66758943 /* ChatListViewModel.swift */; };
+		D43C4483E0F9F65FA1E86C72 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD48230371496DA459F1550C /* CachedAsyncImage.swift */; };
+		E1A00001 /* EventModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00001 /* EventModels.swift */; };
+		E1A00002 /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00002 /* EventsListView.swift */; };
+		E1A00003 /* EventsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00003 /* EventsListViewModel.swift */; };
+		E1A00004 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00004 /* EventDetailView.swift */; };
+		E1A00005 /* EventDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00005 /* EventDetailViewModel.swift */; };
+		E1A00006 /* EventsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00006 /* EventsCoordinator.swift */; };
+		E1A00007 /* EventsModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00007 /* EventsModuleBuilder.swift */; };
+		E1A00008 /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00008 /* CreateEventView.swift */; };
+		E1A00009 /* CreateEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00009 /* CreateEventViewModel.swift */; };
+		E1A00010 /* EventChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00010 /* EventChatView.swift */; };
+		F9C940CBA577E6417A0945E8 /* InviteCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893127945C1A9579A974067 /* InviteCodeViewModel.swift */; };
+		FB1BB1CB8888340E7FD44F3A /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07687C86DB109F07166CEA1D /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
+		0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeCoordinator.swift; sourceTree = "<group>"; };
 		2A0000 /* vans.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vans.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A0001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2A0002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -108,8 +149,42 @@
 		2A0061 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		2A0062 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		2A0063 /* ProfileModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModuleBuilder.swift; sourceTree = "<group>"; };
+		2A0070 /* AccessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessInfo.swift; sourceTree = "<group>"; };
+		2A0071 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		2A0072 /* TrustInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustInfo.swift; sourceTree = "<group>"; };
+		2A0080 /* OnboardingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCoordinator.swift; sourceTree = "<group>"; };
+		2A0081 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		2A0082 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		2A0083 /* OnboardingModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingModuleBuilder.swift; sourceTree = "<group>"; };
+		2A0090 /* WaitlistCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistCoordinator.swift; sourceTree = "<group>"; };
+		2A0091 /* WaitlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistView.swift; sourceTree = "<group>"; };
+		2A0092 /* WaitlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistViewModel.swift; sourceTree = "<group>"; };
+		2A0093 /* WaitlistModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistModuleBuilder.swift; sourceTree = "<group>"; };
+		304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
+		3711F9E5803D07BC66758943 /* ChatListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListViewModel.swift; sourceTree = "<group>"; };
+		3D06139C3B1AC0A84BC7715F /* ChatModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
+		411A01612F323EFA00A9EDA6 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; tabWidth = 5; };
+		412445412F33CBEA00488119 /* BuilderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderModels.swift; sourceTree = "<group>"; };
 		4191BB672F2B7D970043335E /* vans.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vans.entitlements; sourceTree = "<group>"; };
 		4191BB6A2F2B86440043335E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewViewModel.swift; sourceTree = "<group>"; };
+		7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewView.swift; sourceTree = "<group>"; };
+		9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeModuleBuilder.swift; sourceTree = "<group>"; };
+		B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
+		CD48230371496DA459F1550C /* CachedAsyncImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
+		D893127945C1A9579A974067 /* InviteCodeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeViewModel.swift; sourceTree = "<group>"; };
+		DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeView.swift; sourceTree = "<group>"; };
+		E2A00001 /* EventModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventModels.swift; sourceTree = "<group>"; };
+		E2A00002 /* EventsListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
+		E2A00003 /* EventsListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventsListViewModel.swift; sourceTree = "<group>"; };
+		E2A00004 /* EventDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
+		E2A00005 /* EventDetailViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventDetailViewModel.swift; sourceTree = "<group>"; };
+		E2A00006 /* EventsCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventsCoordinator.swift; sourceTree = "<group>"; };
+		E2A00007 /* EventsModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventsModuleBuilder.swift; sourceTree = "<group>"; };
+		E2A00008 /* CreateEventView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = "<group>"; };
+		E2A00009 /* CreateEventViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateEventViewModel.swift; sourceTree = "<group>"; };
+		E2A00010 /* EventChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventChatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				411A01602F323BF700A9EDA6 /* Kingfisher in Frameworks */,
 				1A0031 /* FirebaseAuth in Frameworks */,
 				1A0032 /* FirebaseFirestore in Frameworks */,
 				1A0033 /* FirebaseFunctions in Frameworks */,
@@ -130,6 +206,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		31E4B75DB2E06EE0B8090209 /* InviteCode */ = {
+			isa = PBXGroup;
+			children = (
+				0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */,
+				DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */,
+				D893127945C1A9579A974067 /* InviteCodeViewModel.swift */,
+				9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */,
+			);
+			path = InviteCode;
+			sourceTree = "<group>";
+		};
 		4A0000 = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +235,7 @@
 				4A0002 /* Application */,
 				4A0003 /* Infrastructure */,
 				4A0004 /* API */,
+				4A0009 /* Models */,
 				4A0005 /* Managers */,
 				4A0006 /* Modules */,
 				4A0008 /* Views */,
@@ -205,10 +293,15 @@
 			children = (
 				4A0010 /* Splash */,
 				4A0012 /* SignIn */,
+				4A0017 /* Onboarding */,
+				4A0018 /* Waitlist */,
 				4A0013 /* Tabbar */,
 				4A0014 /* Home */,
 				4A0015 /* Explore */,
+				E3A00001 /* Events */,
 				4A0016 /* Profile */,
+				31E4B75DB2E06EE0B8090209 /* InviteCode */,
+				BD0B9C7A188C40EC8F0095C3 /* Chat */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -226,9 +319,21 @@
 		4A0008 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				411A01612F323EFA00A9EDA6 /* AppTheme.swift */,
 				4A0011 /* Components */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4A0009 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				412445412F33CBEA00488119 /* BuilderModels.swift */,
+				2A0070 /* AccessInfo.swift */,
+				2A0071 /* UserProfile.swift */,
+				2A0072 /* TrustInfo.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		4A0010 /* Splash */ = {
@@ -247,6 +352,7 @@
 			children = (
 				2A0024 /* PrimaryButton.swift */,
 				2A0025 /* LoadingView.swift */,
+				CD48230371496DA459F1550C /* CachedAsyncImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -289,6 +395,8 @@
 				2A0057 /* ExploreView.swift */,
 				2A0058 /* ExploreViewModel.swift */,
 				2A0059 /* ExploreModuleBuilder.swift */,
+				304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */,
+				B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -300,8 +408,32 @@
 				2A0061 /* ProfileView.swift */,
 				2A0062 /* ProfileViewModel.swift */,
 				2A0063 /* ProfileModuleBuilder.swift */,
+				9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */,
+				696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		4A0017 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2A0080 /* OnboardingCoordinator.swift */,
+				2A0081 /* OnboardingView.swift */,
+				2A0082 /* OnboardingViewModel.swift */,
+				2A0083 /* OnboardingModuleBuilder.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		4A0018 /* Waitlist */ = {
+			isa = PBXGroup;
+			children = (
+				2A0090 /* WaitlistCoordinator.swift */,
+				2A0091 /* WaitlistView.swift */,
+				2A0092 /* WaitlistViewModel.swift */,
+				2A0093 /* WaitlistModuleBuilder.swift */,
+			);
+			path = Waitlist;
 			sourceTree = "<group>";
 		};
 		4A0099 /* Products */ = {
@@ -310,6 +442,35 @@
 				2A0000 /* vans.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BD0B9C7A188C40EC8F0095C3 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				3D06139C3B1AC0A84BC7715F /* ChatModels.swift */,
+				0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */,
+				3711F9E5803D07BC66758943 /* ChatListViewModel.swift */,
+				07687C86DB109F07166CEA1D /* ChatView.swift */,
+				7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		E3A00001 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				E2A00001 /* EventModels.swift */,
+				E2A00002 /* EventsListView.swift */,
+				E2A00003 /* EventsListViewModel.swift */,
+				E2A00004 /* EventDetailView.swift */,
+				E2A00005 /* EventDetailViewModel.swift */,
+				E2A00006 /* EventsCoordinator.swift */,
+				E2A00007 /* EventsModuleBuilder.swift */,
+				E2A00008 /* CreateEventView.swift */,
+				E2A00009 /* CreateEventViewModel.swift */,
+				E2A00010 /* EventChatView.swift */,
+			);
+			path = Events;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,6 +497,7 @@
 				7A0005 /* FirebaseAnalytics */,
 				7A0006 /* GoogleSignIn */,
 				7A0007 /* GoogleSignInSwift */,
+				99496712EC816571A558DC47 /* Kingfisher */,
 			);
 			productName = vans;
 			productReference = 2A0000 /* vans.app */;
@@ -368,6 +530,7 @@
 			packageReferences = (
 				8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 4A0099 /* Products */;
 			projectDirPath = "";
@@ -399,6 +562,7 @@
 				1A0001 /* AppDelegate.swift in Sources */,
 				1A0002 /* SceneDelegate.swift in Sources */,
 				1A0003 /* AppCoordinator.swift in Sources */,
+				411A01622F323EFA00A9EDA6 /* AppTheme.swift in Sources */,
 				1A0004 /* Coordinator.swift in Sources */,
 				1A0005 /* ActionableHostingViewController.swift in Sources */,
 				1A0006 /* View+Extensions.swift in Sources */,
@@ -408,6 +572,7 @@
 				1A0013 /* ThirdPartyManager.swift in Sources */,
 				1A0014 /* AuthManager.swift in Sources */,
 				1A0040 /* SignInManager.swift in Sources */,
+				412445422F33CBEA00488119 /* BuilderModels.swift in Sources */,
 				1A0015 /* UserManager.swift in Sources */,
 				1A0016 /* RemoteConfigManager.swift in Sources */,
 				1A0017 /* KeychainHelper.swift in Sources */,
@@ -438,6 +603,41 @@
 				1A0024 /* PrimaryButton.swift in Sources */,
 				1A0025 /* LoadingView.swift in Sources */,
 				1A0026 /* FirebaseManager.swift in Sources */,
+				1A0070 /* AccessInfo.swift in Sources */,
+				1A0071 /* UserProfile.swift in Sources */,
+				1A0072 /* TrustInfo.swift in Sources */,
+				1A0080 /* OnboardingCoordinator.swift in Sources */,
+				1A0081 /* OnboardingView.swift in Sources */,
+				1A0082 /* OnboardingViewModel.swift in Sources */,
+				1A0083 /* OnboardingModuleBuilder.swift in Sources */,
+				1A0090 /* WaitlistCoordinator.swift in Sources */,
+				1A0091 /* WaitlistView.swift in Sources */,
+				1A0092 /* WaitlistViewModel.swift in Sources */,
+				1A0093 /* WaitlistModuleBuilder.swift in Sources */,
+				829CFD7DCFDD8B8B3D48D13A /* InviteCodeCoordinator.swift in Sources */,
+				6693AC733BE3D2AF573EFC8E /* InviteCodeView.swift in Sources */,
+				F9C940CBA577E6417A0945E8 /* InviteCodeViewModel.swift in Sources */,
+				8AA5F3BD4FACDE77C5A607D3 /* InviteCodeModuleBuilder.swift in Sources */,
+				0736BF76ADA33BE20A4D9A9D /* WaitlistReviewView.swift in Sources */,
+				24CA33E7224EBFC0054CAF59 /* WaitlistReviewViewModel.swift in Sources */,
+				A89FB059FFBC4126C4D1A15E /* UserProfileView.swift in Sources */,
+				D43C4483E0F9F65FA1E86C72 /* CachedAsyncImage.swift in Sources */,
+				FB1BB1CB8888340E7FD44F3A /* UserProfileViewModel.swift in Sources */,
+				B1A95CDF017CD31C67C2991B /* ChatModels.swift in Sources */,
+				3B09A9A88267D09831AED448 /* ChatListView.swift in Sources */,
+				D07A3F7F272604F2E98E4324 /* ChatListViewModel.swift in Sources */,
+				10E991095E985D1172E52277 /* ChatView.swift in Sources */,
+				B8D228EF267DFC068CE00A60 /* ChatViewModel.swift in Sources */,
+				E1A00001 /* EventModels.swift in Sources */,
+				E1A00002 /* EventsListView.swift in Sources */,
+				E1A00003 /* EventsListViewModel.swift in Sources */,
+				E1A00004 /* EventDetailView.swift in Sources */,
+				E1A00005 /* EventDetailViewModel.swift in Sources */,
+				E1A00006 /* EventsCoordinator.swift in Sources */,
+				E1A00007 /* EventsModuleBuilder.swift in Sources */,
+				E1A00008 /* CreateEventView.swift in Sources */,
+				E1A00009 /* CreateEventViewModel.swift in Sources */,
+				E1A00010 /* EventChatView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,6 +843,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -696,6 +904,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		99496712EC816571A558DC47 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

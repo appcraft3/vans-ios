@@ -76,6 +76,9 @@ final class SignInManager: NSObject {
             displayName: firebaseUser.displayName
         )
 
+        // Load user into UserManager and start real-time listener
+        try await UserManager.shared.loadUser()
+
         return response.user
     }
 

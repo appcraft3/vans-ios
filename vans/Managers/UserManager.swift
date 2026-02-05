@@ -38,12 +38,44 @@ final class UserManager {
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let data = snapshot?.data() else { return }
 
+                // Parse profile if exists
+                var profile: UserProfile? = nil
+                if let profileData = data["profile"] as? [String: Any] {
+                    profile = UserProfile(
+                        firstName: profileData["firstName"] as? String ?? "",
+                        photoUrl: profileData["photoUrl"] as? String ?? "",
+                        age: profileData["age"] as? Int ?? 0,
+                        gender: Gender(rawValue: profileData["gender"] as? String ?? "") ?? .male,
+                        vanLifeStatus: VanLifeStatus(rawValue: profileData["vanLifeStatus"] as? String ?? "") ?? .planning,
+                        region: profileData["region"] as? String ?? "",
+                        activities: profileData["activities"] as? [String] ?? [],
+                        bio: profileData["bio"] as? String
+                    )
+                }
+
+                // Parse trust info
+                var trust = TrustInfo.empty
+                if let trustData = data["trust"] as? [String: Any] {
+                    trust = TrustInfo(
+                        level: trustData["level"] as? Int ?? 0,
+                        badges: trustData["badges"] as? [String] ?? [],
+                        eventsAttended: trustData["eventsAttended"] as? Int ?? 0,
+                        positiveReviews: trustData["positiveReviews"] as? Int ?? 0,
+                        negativeReviews: trustData["negativeReviews"] as? Int ?? 0
+                    )
+                }
+
                 let user = UserData(
                     id: userId,
-                    displayName: data["displayName"] as? String,
-                    avatarUrl: data["avatarUrl"] as? String,
                     email: data["email"] as? String,
-                    isNewUser: data["isNewUser"] as? Bool ?? false
+                    accessLevel: AccessLevel(rawValue: data["accessLevel"] as? String ?? "guest") ?? .guest,
+                    role: UserRole(rawValue: data["role"] as? String ?? "user") ?? .user,
+                    profile: profile,
+                    trust: trust,
+                    reviewStatus: ReviewStatus(rawValue: data["reviewStatus"] as? String ?? "none") ?? .none,
+                    isPremium: data["isPremium"] as? Bool ?? false,
+                    inviteCode: data["inviteCode"] as? String,
+                    isNewUser: data["isNewUser"] as? Bool
                 )
 
                 DispatchQueue.main.async {
@@ -59,10 +91,23 @@ final class UserManager {
 
     // MARK: - User Updates
 
-    func updateUser(displayName: String?, avatarUrl: String?) async throws {
-        let updatedUser = try await AuthManager.shared.updateUser(
-            displayName: displayName,
-            avatarUrl: avatarUrl
+    func updateProfile(
+        firstName: String? = nil,
+        photoUrl: String? = nil,
+        age: Int? = nil,
+        vanLifeStatus: VanLifeStatus? = nil,
+        region: String? = nil,
+        activities: [String]? = nil,
+        bio: String? = nil
+    ) async throws {
+        let updatedUser = try await AuthManager.shared.updateProfile(
+            firstName: firstName,
+            photoUrl: photoUrl,
+            age: age,
+            vanLifeStatus: vanLifeStatus,
+            region: region,
+            activities: activities,
+            bio: bio
         )
         await MainActor.run { self.currentUser = updatedUser }
     }

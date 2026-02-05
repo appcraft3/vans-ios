@@ -7,26 +7,36 @@ struct SignInView: ActionableView {
 
     var body: some View {
         ZStack {
-            backgroundView
+            AppTheme.background.ignoresSafeArea()
 
             VStack(spacing: 32) {
                 Spacer()
 
                 // Logo and Title
                 VStack(spacing: 16) {
-                    Image(systemName: "car.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.white)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(AppTheme.accentDark)
+                            .frame(width: 100, height: 100)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(AppTheme.accent.opacity(0.5), lineWidth: 2)
+                            )
+
+                        Image(systemName: "car.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(AppTheme.accent)
+                    }
 
                     Text("Welcome to VANS")
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(AppTheme.textPrimary)
 
-                    Text("Sign in to continue")
+                    Text("Connect with the van-life community")
                         .font(.body)
-                        .foregroundColor(.white.opacity(0.7))
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 Spacer()
@@ -42,7 +52,7 @@ struct SignInView: ActionableView {
                     )
                     .signInWithAppleButtonStyle(.white)
                     .frame(height: 56)
-                    .cornerRadius(12)
+                    .cornerRadius(14)
                     .overlay(
                         Button(action: {
                             viewModel.signInWithApple()
@@ -63,20 +73,10 @@ struct SignInView: ActionableView {
                         }
                         .frame(maxWidth: .infinity)
                         .frame(height: 56)
-                        .background(Color.white)
+                        .background(AppTheme.secondary)
                         .foregroundColor(.black)
-                        .cornerRadius(12)
+                        .cornerRadius(14)
                     }
-
-                    // Anonymous Sign In
-                    Button(action: {
-                        viewModel.signInAnonymously()
-                    }) {
-                        Text("Continue without signing in")
-                            .font(.subheadline)
-                            .foregroundColor(.white.opacity(0.7))
-                    }
-                    .padding(.top, 8)
                 }
                 .padding(.horizontal, 24)
 
@@ -86,11 +86,11 @@ struct SignInView: ActionableView {
 
             // Loading overlay
             if viewModel.isLoading {
-                Color.black.opacity(0.5)
+                AppTheme.background.opacity(0.8)
                     .ignoresSafeArea()
 
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.primary))
                     .scaleEffect(1.5)
             }
         }
@@ -99,18 +99,6 @@ struct SignInView: ActionableView {
         } message: {
             Text(viewModel.errorMessage)
         }
-    }
-
-    private var backgroundView: some View {
-        LinearGradient(
-            gradient: Gradient(colors: [
-                Color(red: 0.1, green: 0.1, blue: 0.15),
-                Color(red: 0.05, green: 0.05, blue: 0.1)
-            ]),
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .ignoresSafeArea()
     }
 }
 

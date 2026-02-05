@@ -20,12 +20,7 @@ final class TabbarCoordinator: NSObject, Coordinator {
     }
 
     private var tabBarController: TabViewController?
-
-    private lazy var tabCoordinators: [Coordinator] = [
-        HomeCoordinator(),
-        ExploreCoordinator(),
-        ProfileCoordinator()
-    ]
+    private var tabCoordinators: [Coordinator] = []
 
     init(window: UIWindow) {
         self.window = window
@@ -34,6 +29,13 @@ final class TabbarCoordinator: NSObject, Coordinator {
 
     func start() {
         guard !(window.rootViewController is UITabBarController) else { return }
+
+        tabCoordinators = [
+            HomeCoordinator(),
+            ExploreCoordinator(),
+            EventsCoordinator(),
+            ProfileCoordinator()
+        ]
 
         tabBarController = TabViewController()
         tabBarController!.delegate = self

@@ -1,6 +1,8 @@
 import UIKit
+import SwiftUI
 
 protocol ProfileCoordinating: Coordinator {
+    func showWaitlistReview()
 }
 
 final class ProfileCoordinator: NSObject, ProfileCoordinating {
@@ -15,5 +17,13 @@ final class ProfileCoordinator: NSObject, ProfileCoordinating {
     func start() {
         let viewController = ProfileModuleBuilder.build(coordinator: self)
         navigationController.setViewControllers([viewController], animated: false)
+    }
+
+    func showWaitlistReview() {
+        let viewModel = WaitlistReviewViewModel()
+        let view = WaitlistReviewView(viewModel: viewModel)
+        let hostingController = UIHostingController(rootView: view)
+        hostingController.hidesBottomBarWhenPushed = true
+        navigationController.pushViewController(hostingController, animated: true)
     }
 }

@@ -7,4 +7,13 @@ final class HomeViewModel: ActionableViewModel {
     init(coordinator: HomeCoordinating?) {
         self.coordinator = coordinator
     }
+
+    func openChat(chatId: String, otherUser: ChatUser, sourceEventName: String?, waitingForHer: Bool) {
+        coordinator?.showChat(
+            chatId: chatId,
+            otherUser: otherUser,
+            sourceEventName: sourceEventName,
+            waitingForHer: waitingForHer
+        )
+    }
 }

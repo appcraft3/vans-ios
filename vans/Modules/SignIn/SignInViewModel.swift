@@ -47,20 +47,6 @@ final class SignInViewModel: ActionableViewModel {
         }
     }
 
-    func signInAnonymously() {
-        isLoading = true
-
-        Task { @MainActor in
-            do {
-                let user = try await AuthManager.shared.createSession()
-                coordinator?.finishSignIn(user: user)
-            } catch {
-                handleError(error)
-            }
-            isLoading = false
-        }
-    }
-
     // MARK: - Helpers
 
     private func handleError(_ error: Error) {
