@@ -101,12 +101,6 @@ struct BecomeBuilderView: View {
                 // Bio
                 bioSection
 
-                // Pricing
-                pricingSection
-
-                // Availability
-                availabilitySection
-
                 // Error/Success
                 if let error = viewModel.errorMessage {
                     Text(error)
@@ -191,48 +185,6 @@ struct BecomeBuilderView: View {
         .padding(.horizontal)
     }
 
-    private var pricingSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Session Pricing")
-                .font(.headline)
-                .foregroundColor(AppTheme.textPrimary)
-
-            HStack(spacing: 16) {
-                PriceInput(
-                    label: "15 min",
-                    value: $viewModel.price15,
-                    minimum: 5
-                )
-
-                PriceInput(
-                    label: "30 min",
-                    value: $viewModel.price30,
-                    minimum: 10
-                )
-            }
-
-            Text("Set fair prices for your time. Minimum $5 for 15min, $10 for 30min.")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
-        }
-        .padding(.horizontal)
-    }
-
-    private var availabilitySection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Availability (optional)")
-                .font(.headline)
-                .foregroundColor(AppTheme.textPrimary)
-
-            TextField("e.g., Weekdays 9-5 PST", text: $viewModel.availability)
-                .foregroundColor(AppTheme.textPrimary)
-                .padding()
-                .background(AppTheme.inputBackground)
-                .cornerRadius(12)
-        }
-        .padding(.horizontal)
-    }
-
     private var submitButton: some View {
         Button(action: {
             Task {
@@ -288,40 +240,3 @@ struct CategoryToggle: View {
     }
 }
 
-struct PriceInput: View {
-    let label: String
-    @Binding var value: String
-    let minimum: Int
-
-    var isValid: Bool {
-        (Int(value) ?? 0) >= minimum
-    }
-
-    var body: some View {
-        VStack(spacing: 8) {
-            Text(label)
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
-
-            HStack {
-                Text("$")
-                    .foregroundColor(AppTheme.textSecondary)
-                TextField("", text: $value)
-                    .keyboardType(.numberPad)
-                    .foregroundColor(AppTheme.textPrimary)
-                    .multilineTextAlignment(.center)
-            }
-            .padding()
-            .background(AppTheme.inputBackground)
-            .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(isValid ? Color.clear : AppTheme.error, lineWidth: 1)
-            )
-
-            Text("Min $\(minimum)")
-                .font(.caption2)
-                .foregroundColor(isValid ? AppTheme.textTertiary : AppTheme.error)
-        }
-    }
-}

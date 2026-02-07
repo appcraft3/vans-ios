@@ -277,8 +277,10 @@ final class EventDetailViewModel: ObservableObject {
             createdAt: createdAt,
             status: status,
             checkInEnabled: data["checkInEnabled"] as? Bool ?? false,
+            allowCheckIn: data["allowCheckIn"] as? Bool ?? true,
             isInterested: false,
-            isAttending: false
+            isAttending: false,
+            hasBuilder: data["hasBuilder"] as? Bool ?? false
         )
     }
 

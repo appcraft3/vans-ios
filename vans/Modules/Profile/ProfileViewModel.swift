@@ -24,6 +24,11 @@ final class ProfileViewModel: ActionableViewModel {
     @Published var isUploadingPhoto: Bool = false
     @Published var photoUploadError: String?
 
+    // Builder
+    @Published var isBuilder: Bool = false
+    @Published var builderSessions: Int = 0
+    @Published var builderRating: Int = 100
+
     private weak var coordinator: ProfileCoordinating?
     private var cancellables = Set<AnyCancellable>()
 
@@ -112,6 +117,29 @@ final class ProfileViewModel: ActionableViewModel {
     func loadUser() {
         user = UserManager.shared.currentUser ?? AuthManager.shared.currentUser
         loadConnectionsCount()
+        loadBuilderStatus()
+    }
+
+    private func loadBuilderStatus() {
+        Task { @MainActor in
+            do {
+                let response: MyBuilderProfileResponse = try await FirebaseManager.shared.callFunction(
+                    name: "getMyBuilderProfile",
+                    data: [:]
+                )
+                self.isBuilder = response.isBuilder
+                if let builder = response.builder {
+                    self.builderSessions = builder.completedSessions
+                    self.builderRating = builder.rating
+                }
+            } catch {
+                print("Failed to load builder status: \(error)")
+            }
+        }
+    }
+
+    func openBecomeBuilder() {
+        coordinator?.showBecomeBuilder()
     }
 
     private func loadConnectionsCount() {

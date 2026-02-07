@@ -76,6 +76,10 @@
 		411A01602F323BF700A9EDA6 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 99496712EC816571A558DC47 /* Kingfisher */; };
 		411A01622F323EFA00A9EDA6 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411A01612F323EFA00A9EDA6 /* AppTheme.swift */; };
 		412445422F33CBEA00488119 /* BuilderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412445412F33CBEA00488119 /* BuilderModels.swift */; };
+		412461272F37854300488119 /* BecomeBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412461172F37854300488119 /* BecomeBuilderView.swift */; };
+		412461282F37854300488119 /* BecomeBuilderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412461182F37854300488119 /* BecomeBuilderViewModel.swift */; };
+		4124612E2F37854300488119 /* BuildersCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4124611F2F37854300488119 /* BuildersCoordinator.swift */; };
+		412461312F37951D00488119 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412461302F37951D00488119 /* LocationSearchView.swift */; };
 		4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4191BB6A2F2B86440043335E /* GoogleService-Info.plist */; };
 		6693AC733BE3D2AF573EFC8E /* InviteCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */; };
 		829CFD7DCFDD8B8B3D48D13A /* InviteCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */; };
@@ -165,6 +169,10 @@
 		3D06139C3B1AC0A84BC7715F /* ChatModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		411A01612F323EFA00A9EDA6 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; tabWidth = 5; };
 		412445412F33CBEA00488119 /* BuilderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderModels.swift; sourceTree = "<group>"; };
+		412461172F37854300488119 /* BecomeBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BecomeBuilderView.swift; sourceTree = "<group>"; };
+		412461182F37854300488119 /* BecomeBuilderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BecomeBuilderViewModel.swift; sourceTree = "<group>"; };
+		4124611F2F37854300488119 /* BuildersCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildersCoordinator.swift; sourceTree = "<group>"; };
+		412461302F37951D00488119 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		4191BB672F2B7D970043335E /* vans.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vans.entitlements; sourceTree = "<group>"; };
 		4191BB6A2F2B86440043335E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewViewModel.swift; sourceTree = "<group>"; };
@@ -215,6 +223,16 @@
 				9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */,
 			);
 			path = InviteCode;
+			sourceTree = "<group>";
+		};
+		412461232F37854300488119 /* Builders */ = {
+			isa = PBXGroup;
+			children = (
+				412461172F37854300488119 /* BecomeBuilderView.swift */,
+				412461182F37854300488119 /* BecomeBuilderViewModel.swift */,
+				4124611F2F37854300488119 /* BuildersCoordinator.swift */,
+			);
+			path = Builders;
 			sourceTree = "<group>";
 		};
 		4A0000 = {
@@ -291,6 +309,7 @@
 		4A0006 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				412461232F37854300488119 /* Builders */,
 				4A0010 /* Splash */,
 				4A0012 /* SignIn */,
 				4A0017 /* Onboarding */,
@@ -459,6 +478,7 @@
 		E3A00001 /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				412461302F37951D00488119 /* LocationSearchView.swift */,
 				E2A00001 /* EventModels.swift */,
 				E2A00002 /* EventsListView.swift */,
 				E2A00003 /* EventsListViewModel.swift */,
@@ -607,6 +627,7 @@
 				1A0071 /* UserProfile.swift in Sources */,
 				1A0072 /* TrustInfo.swift in Sources */,
 				1A0080 /* OnboardingCoordinator.swift in Sources */,
+				412461312F37951D00488119 /* LocationSearchView.swift in Sources */,
 				1A0081 /* OnboardingView.swift in Sources */,
 				1A0082 /* OnboardingViewModel.swift in Sources */,
 				1A0083 /* OnboardingModuleBuilder.swift in Sources */,
@@ -626,6 +647,9 @@
 				B1A95CDF017CD31C67C2991B /* ChatModels.swift in Sources */,
 				3B09A9A88267D09831AED448 /* ChatListView.swift in Sources */,
 				D07A3F7F272604F2E98E4324 /* ChatListViewModel.swift in Sources */,
+				412461272F37854300488119 /* BecomeBuilderView.swift in Sources */,
+				412461282F37854300488119 /* BecomeBuilderViewModel.swift in Sources */,
+				4124612E2F37854300488119 /* BuildersCoordinator.swift in Sources */,
 				10E991095E985D1172E52277 /* ChatView.swift in Sources */,
 				B8D228EF267DFC068CE00A60 /* ChatViewModel.swift in Sources */,
 				E1A00001 /* EventModels.swift in Sources */,

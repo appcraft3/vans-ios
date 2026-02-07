@@ -3,6 +3,7 @@ import SwiftUI
 struct EventsListView: ActionableView {
     @ObservedObject var viewModel: EventsListViewModel
     @State private var showCreateEvent = false
+    @State private var showLocationFilter = false
 
     var body: some View {
         ZStack {
@@ -29,6 +30,47 @@ struct EventsListView: ActionableView {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
+                .padding(.bottom, 8)
+
+                // Location Filter
+                Button {
+                    showLocationFilter = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "mappin.circle.fill")
+                            .font(.subheadline)
+
+                        if let location = viewModel.selectedLocation {
+                            Text(location.name)
+                                .font(.subheadline)
+                                .lineLimit(1)
+
+                            Button {
+                                viewModel.clearLocationFilter()
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(AppTheme.textTertiary)
+                            }
+                        } else {
+                            Text("All Locations")
+                                .font(.subheadline)
+
+                            Image(systemName: "chevron.down")
+                                .font(.caption2)
+                        }
+                    }
+                    .foregroundColor(viewModel.selectedLocation != nil ? AppTheme.primary : AppTheme.textSecondary)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(viewModel.selectedLocation != nil ? AppTheme.primary.opacity(0.15) : AppTheme.card)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(viewModel.selectedLocation != nil ? AppTheme.primary.opacity(0.3) : AppTheme.divider, lineWidth: 1)
+                    )
+                }
+                .padding(.horizontal, 20)
                 .padding(.bottom, 12)
 
                 if viewModel.isLoading && viewModel.events.isEmpty {
@@ -75,6 +117,12 @@ struct EventsListView: ActionableView {
             Task { await viewModel.refreshEvents() }
         }) {
             CreateEventView()
+        }
+        .sheet(isPresented: $showLocationFilter) {
+            LocationSearchView { location in
+                viewModel.selectedLocation = location
+                Task { await viewModel.loadEvents() }
+            }
         }
         .task {
             await viewModel.loadEvents()
@@ -139,6 +187,22 @@ struct EventCard: View {
                         Text("\(event.attendeesCount)/\(event.maxAttendees) interested")
                             .font(.subheadline)
                             .foregroundColor(AppTheme.textSecondary)
+
+                        if event.hasBuilder {
+                            Spacer()
+                            HStack(spacing: 4) {
+                                Image(systemName: "wrench.and.screwdriver.fill")
+                                    .font(.caption2)
+                                Text("Builder")
+                                    .font(.caption2)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundColor(AppTheme.primary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(AppTheme.primary.opacity(0.2))
+                            .cornerRadius(8)
+                        }
                     }
                 }
 

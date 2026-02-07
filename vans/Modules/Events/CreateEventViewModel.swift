@@ -1,16 +1,17 @@
 import Foundation
 import FirebaseFunctions
+import MapKit
 
 @MainActor
 final class CreateEventViewModel: ObservableObject {
     @Published var title = ""
     @Published var description = ""
     @Published var activityType = "hiking"
-    @Published var region = ""
-    @Published var approximateArea = ""
+    @Published var selectedLocation: LocationResult?
     @Published var date = Date().addingTimeInterval(3600) // 1 hour from now
     @Published var endDate = Date().addingTimeInterval(7200) // 2 hours from now
     @Published var maxAttendees = 20
+    @Published var allowCheckIn = true // If false, only interest marking is available
 
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -20,13 +21,13 @@ final class CreateEventViewModel: ObservableObject {
     var isValid: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty &&
         !activityType.isEmpty &&
-        !region.trimmingCharacters(in: .whitespaces).isEmpty &&
+        selectedLocation != nil &&
         date > Date() &&
         endDate > date
     }
 
     func createEvent() async -> Bool {
-        guard isValid else { return false }
+        guard isValid, let location = selectedLocation else { return false }
 
         isLoading = true
         errorMessage = nil
@@ -39,11 +40,15 @@ final class CreateEventViewModel: ObservableObject {
                 "title": title.trimmingCharacters(in: .whitespaces),
                 "description": description.trimmingCharacters(in: .whitespaces),
                 "activityType": activityType,
-                "region": region.trimmingCharacters(in: .whitespaces),
-                "approximateArea": approximateArea.trimmingCharacters(in: .whitespaces),
+                "region": location.region,
+                "country": location.country,
+                "approximateArea": location.name,
+                "latitude": location.coordinate.latitude,
+                "longitude": location.coordinate.longitude,
                 "date": formatter.string(from: date),
                 "endDate": formatter.string(from: endDate),
-                "maxAttendees": maxAttendees
+                "maxAttendees": maxAttendees,
+                "allowCheckIn": allowCheckIn
             ])
 
             guard let data = result.data as? [String: Any],

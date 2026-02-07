@@ -29,6 +29,9 @@ struct ProfileView: ActionableView {
                         bioSection(bio: bio)
                     }
 
+                    // Builder Section
+                    builderSection
+
                     // Admin Section
                     if viewModel.isAdmin {
                         adminSection
@@ -224,6 +227,50 @@ struct ProfileView: ActionableView {
                 .foregroundColor(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(AppTheme.card)
+        .cornerRadius(16)
+    }
+
+    // MARK: - Builder Section
+
+    private var builderSection: some View {
+        HStack {
+            Image(systemName: "wrench.and.screwdriver.fill")
+                .font(.title2)
+                .foregroundColor(AppTheme.primary)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Builder Mode")
+                    .font(.headline)
+                    .foregroundColor(AppTheme.textPrimary)
+
+                Text(viewModel.isBuilder ? "You're a Trusted Builder" : "Help others with van builds")
+                    .font(.caption)
+                    .foregroundColor(AppTheme.textSecondary)
+            }
+
+            Spacer()
+
+            if viewModel.isBuilder {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(AppTheme.accent)
+            } else {
+                Button(action: {
+                    viewModel.openBecomeBuilder()
+                }) {
+                    Text("Enable")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(AppTheme.primary)
+                        .cornerRadius(20)
+                }
+            }
+        }
         .padding()
         .background(AppTheme.card)
         .cornerRadius(16)

@@ -1,5 +1,6 @@
 import Foundation
 import FirebaseFunctions
+import MapKit
 
 @MainActor
 final class EventsListViewModel: ActionableViewModel {
@@ -7,6 +8,7 @@ final class EventsListViewModel: ActionableViewModel {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var canCreateEvents = false
+    @Published var selectedLocation: LocationResult?
 
     private weak var coordinator: EventsCoordinating?
     private let functions = Functions.functions()
@@ -14,6 +16,11 @@ final class EventsListViewModel: ActionableViewModel {
     init(coordinator: EventsCoordinating?) {
         self.coordinator = coordinator
         checkUserRole()
+    }
+
+    func clearLocationFilter() {
+        selectedLocation = nil
+        Task { await loadEvents() }
     }
 
     private func checkUserRole() {
@@ -28,7 +35,14 @@ final class EventsListViewModel: ActionableViewModel {
         errorMessage = nil
 
         do {
-            let result = try await functions.httpsCallable("getEvents").call(["limit": 30])
+            var params: [String: Any] = ["limit": 30]
+
+            if let location = selectedLocation {
+                params["region"] = location.region
+                params["country"] = location.country
+            }
+
+            let result = try await functions.httpsCallable("getEvents").call(params)
 
             guard let data = result.data as? [String: Any],
                   let success = data["success"] as? Bool,
@@ -89,8 +103,10 @@ final class EventsListViewModel: ActionableViewModel {
             createdAt: createdAt,
             status: status,
             checkInEnabled: data["checkInEnabled"] as? Bool ?? false,
+            allowCheckIn: data["allowCheckIn"] as? Bool ?? true,
             isInterested: data["isInterested"] as? Bool ?? false,
-            isAttending: data["isAttending"] as? Bool ?? false
+            isAttending: data["isAttending"] as? Bool ?? false,
+            hasBuilder: data["hasBuilder"] as? Bool ?? false
         )
     }
 }

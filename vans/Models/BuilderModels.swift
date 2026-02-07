@@ -89,7 +89,7 @@ struct BuilderProfile: Codable, Identifiable {
     let userId: String
     let categories: [BuilderCategory]
     let bio: String
-    let sessionPrices: SessionPrices
+    let sessionPrices: SessionPrices?
     let availability: String
     let status: BuilderStatus
     let totalSessions: Int

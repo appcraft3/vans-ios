@@ -5,8 +5,6 @@ import FirebaseFunctions
 final class BecomeBuilderViewModel: ObservableObject {
     @Published var selectedCategories: Set<BuilderCategory> = []
     @Published var bio: String = ""
-    @Published var price15: String = "15"
-    @Published var price30: String = "25"
     @Published var availability: String = ""
 
     @Published var isLoading = false
@@ -25,8 +23,6 @@ final class BecomeBuilderViewModel: ObservableObject {
     var canSubmit: Bool {
         !selectedCategories.isEmpty &&
         bio.count >= 20 &&
-        (Int(price15) ?? 0) >= 5 &&
-        (Int(price30) ?? 0) >= 10 &&
         !isSubmitting
     }
 
@@ -72,10 +68,6 @@ final class BecomeBuilderViewModel: ObservableObject {
             let params: [String: Any] = [
                 "categories": selectedCategories.map { $0.rawValue },
                 "bio": bio,
-                "sessionPrices": [
-                    "15": Int(price15) ?? 15,
-                    "30": Int(price30) ?? 25
-                ],
                 "availability": availability.isEmpty ? "Contact for availability" : availability
             ]
 

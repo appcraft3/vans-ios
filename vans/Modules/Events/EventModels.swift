@@ -1,4 +1,5 @@
 import Foundation
+import MapKit
 
 struct VanEvent: Identifiable, Codable {
     let id: String
@@ -15,8 +16,10 @@ struct VanEvent: Identifiable, Codable {
     let createdAt: Date
     var status: EventStatus
     var checkInEnabled: Bool
+    var allowCheckIn: Bool // If false, only interest marking (no check-in)
     var isInterested: Bool
     var isAttending: Bool
+    var hasBuilder: Bool
 
     enum EventStatus: String, Codable {
         case upcoming
@@ -100,4 +103,29 @@ struct EventDetailResponse {
     let canReview: Bool
     let isAdmin: Bool
     let checkInCode: String?
+}
+
+// MARK: - Location Result
+
+struct LocationResult: Identifiable {
+    let id = UUID()
+    let name: String
+    let address: String
+    let coordinate: CLLocationCoordinate2D
+    let region: String
+    let country: String
+
+    var icon: String {
+        if name.lowercased().contains("park") {
+            return "leaf.fill"
+        } else if name.lowercased().contains("beach") {
+            return "water.waves"
+        } else if name.lowercased().contains("mountain") || name.lowercased().contains("trail") {
+            return "mountain.2.fill"
+        } else if name.lowercased().contains("lake") {
+            return "drop.fill"
+        } else {
+            return "mappin.circle.fill"
+        }
+    }
 }

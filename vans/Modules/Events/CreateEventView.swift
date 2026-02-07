@@ -3,6 +3,7 @@ import SwiftUI
 struct CreateEventView: View {
     @StateObject private var viewModel = CreateEventViewModel()
     @Environment(\.dismiss) private var dismiss
+    @State private var showingLocationSearch = false
 
     var body: some View {
         NavigationStack {
@@ -38,22 +39,55 @@ struct CreateEventView: View {
                             ActivityPicker(selected: $viewModel.activityType)
                         }
 
-                        // Region
+                        // Location
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Region")
+                            Text("Location")
                                 .font(.subheadline)
                                 .foregroundColor(AppTheme.textSecondary)
-                            TextField("e.g., US West Coast", text: $viewModel.region)
-                                .textFieldStyle(DarkTextFieldStyle())
-                        }
 
-                        // Approximate Area
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Approximate Area")
-                                .font(.subheadline)
-                                .foregroundColor(AppTheme.textSecondary)
-                            TextField("e.g., Joshua Tree National Park", text: $viewModel.approximateArea)
-                                .textFieldStyle(DarkTextFieldStyle())
+                            Button {
+                                showingLocationSearch = true
+                            } label: {
+                                HStack {
+                                    if let location = viewModel.selectedLocation {
+                                        Image(systemName: location.icon)
+                                            .foregroundColor(AppTheme.primary)
+
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(location.name)
+                                                .font(.subheadline)
+                                                .fontWeight(.medium)
+                                                .foregroundColor(AppTheme.textPrimary)
+
+                                            Text(location.address)
+                                                .font(.caption)
+                                                .foregroundColor(AppTheme.textSecondary)
+                                                .lineLimit(1)
+                                        }
+
+                                        Spacer()
+
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundColor(AppTheme.textTertiary)
+                                    } else {
+                                        Image(systemName: "magnifyingglass")
+                                            .foregroundColor(AppTheme.textTertiary)
+
+                                        Text("Search for a location...")
+                                            .foregroundColor(AppTheme.textTertiary)
+
+                                        Spacer()
+
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundColor(AppTheme.textTertiary)
+                                    }
+                                }
+                                .padding(12)
+                                .background(AppTheme.card)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
                         }
 
                         // Date & Time
@@ -87,6 +121,33 @@ struct CreateEventView: View {
                                 .foregroundColor(AppTheme.textSecondary)
                             Stepper("\(viewModel.maxAttendees) people", value: $viewModel.maxAttendees, in: 2...100)
                                 .foregroundColor(AppTheme.textPrimary)
+                        }
+
+                        // Event Type
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Attendance Type")
+                                .font(.subheadline)
+                                .foregroundColor(AppTheme.textSecondary)
+
+                            VStack(spacing: 12) {
+                                EventTypeOption(
+                                    title: "Check-in Event",
+                                    description: "Attendees check in with a code when they arrive",
+                                    icon: "checkmark.circle.fill",
+                                    isSelected: viewModel.allowCheckIn
+                                ) {
+                                    viewModel.allowCheckIn = true
+                                }
+
+                                EventTypeOption(
+                                    title: "Interest Only",
+                                    description: "People can only mark interest, no check-in needed",
+                                    icon: "star.fill",
+                                    isSelected: !viewModel.allowCheckIn
+                                ) {
+                                    viewModel.allowCheckIn = false
+                                }
+                            }
                         }
 
                         Spacer(minLength: 40)
@@ -144,6 +205,11 @@ struct CreateEventView: View {
             } message: {
                 Text(viewModel.errorMessage ?? "")
             }
+            .sheet(isPresented: $showingLocationSearch) {
+                LocationSearchView { location in
+                    viewModel.selectedLocation = location
+                }
+            }
         }
     }
 }
@@ -194,6 +260,49 @@ struct ActivityPicker: View {
                     }
                 }
             }
+        }
+    }
+}
+
+struct EventTypeOption: View {
+    let title: String
+    let description: String
+    let icon: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(isSelected ? AppTheme.accent : AppTheme.textTertiary)
+                    .frame(width: 32)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(AppTheme.textPrimary)
+
+                    Text(description)
+                        .font(.caption)
+                        .foregroundColor(AppTheme.textSecondary)
+                }
+
+                Spacer()
+
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundColor(isSelected ? AppTheme.accent : AppTheme.textTertiary)
+            }
+            .padding(12)
+            .background(isSelected ? AppTheme.accent.opacity(0.1) : AppTheme.card)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? AppTheme.accent : Color.clear, lineWidth: 2)
+            )
         }
     }
 }
