@@ -20,10 +20,8 @@ struct EventDetailView: View {
                     .scaleEffect(1.5)
             } else if let event = viewModel.event {
                 VStack(spacing: 0) {
-                    // Custom segment (only if interested)
-                    if event.isInterested {
-                        segmentControl
-                    }
+                    // Top bar: back button + segment
+                    topBar(event: event)
 
                     if selectedTab == 0 {
                         detailsTab(event: event)
@@ -36,29 +34,6 @@ struct EventDetailView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
-            }
-
-            // Floating back button
-            VStack {
-                HStack {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(width: 36, height: 36)
-                            .background(.ultraThinMaterial.opacity(0.8))
-                            .environment(\.colorScheme, .dark)
-                            .clipShape(Circle())
-                    }
-
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 8)
-
-                Spacer()
             }
         }
         .navigationBarHidden(true)
@@ -94,42 +69,66 @@ struct EventDetailView: View {
         }
     }
 
-    // MARK: - Segment Control
+    // MARK: - Top Bar (Back + Segment)
 
-    private var segmentControl: some View {
-        HStack(spacing: 4) {
-            ForEach(["Details", "Chat"], id: \.self) { tab in
-                let index = tab == "Details" ? 0 : 1
-                let isSelected = selectedTab == index
+    @ViewBuilder
+    private func topBar(event: VanEvent) -> some View {
+        HStack(spacing: 10) {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(
+                        Circle()
+                            .fill(Color.white.opacity(0.06))
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+            }
 
-                Button {
-                    let impact = UIImpactFeedbackGenerator(style: .light)
-                    impact.impactOccurred(intensity: 0.5)
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        selectedTab = index
+            if event.isInterested {
+                HStack(spacing: 4) {
+                    ForEach(["Details", "Chat"], id: \.self) { tab in
+                        let index = tab == "Details" ? 0 : 1
+                        let isSelected = selectedTab == index
+
+                        Button {
+                            let impact = UIImpactFeedbackGenerator(style: .light)
+                            impact.impactOccurred(intensity: 0.5)
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                selectedTab = index
+                            }
+                        } label: {
+                            Text(tab)
+                                .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
+                                .foregroundColor(isSelected ? .white : AppTheme.textTertiary)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(
+                                    Capsule()
+                                        .fill(isSelected ? accentGreen.opacity(0.35) : Color.clear)
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .stroke(isSelected ? accentGreen.opacity(0.5) : Color.clear, lineWidth: 1)
+                                )
+                        }
                     }
-                } label: {
-                    Text(tab)
-                        .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
-                        .foregroundColor(isSelected ? .white : AppTheme.textTertiary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(
-                            Capsule()
-                                .fill(isSelected ? accentGreen.opacity(0.35) : Color.clear)
-                        )
-                        .overlay(
-                            Capsule()
-                                .stroke(isSelected ? accentGreen.opacity(0.5) : Color.clear, lineWidth: 1)
-                        )
                 }
+                .padding(4)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.06))
+                )
+            } else {
+                Spacer()
             }
         }
-        .padding(4)
-        .background(
-            Capsule()
-                .fill(Color.white.opacity(0.06))
-        )
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
@@ -213,106 +212,103 @@ struct EventDetailView: View {
 
     @ViewBuilder
     private func heroImage(event: VanEvent) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            // Background image
-            AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/800/600")) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    Rectangle().fill(Color(hex: "1A2820"))
-                case .empty:
-                    Rectangle().fill(Color(hex: "1A2820"))
-                        .overlay(ProgressView().tint(.white.opacity(0.25)))
-                @unknown default:
-                    Rectangle().fill(Color(hex: "1A2820"))
-                }
-            }
-            .frame(height: 320)
-            .clipped()
+        GeometryReader { geo in
+            let imgW = geo.size.width
+            let imgH = imgW * 0.75 // 4:3 aspect ratio
 
-            // Green gradient overlays
-            VStack(spacing: 0) {
-                // Top gradient (for back button area)
-                LinearGradient(
-                    stops: [
-                        .init(color: AppTheme.background.opacity(0.7), location: 0),
-                        .init(color: .clear, location: 1.0),
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 100)
-
-                Spacer()
-
-                // Bottom gradient (green tint)
-                LinearGradient(
-                    stops: [
-                        .init(color: .clear, location: 0),
-                        .init(color: accentGreen.opacity(0.5), location: 0.4),
-                        .init(color: accentGreen.opacity(0.85), location: 0.75),
-                        .init(color: AppTheme.background, location: 1.0),
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 200)
-            }
-            .frame(height: 320)
-
-            // Title overlay at bottom
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
-                    StatusBadge(status: event.status)
-
-                    if event.hasBuilder {
-                        HStack(spacing: 4) {
-                            Image(systemName: "wrench.and.screwdriver.fill")
-                                .font(.system(size: 9))
-                            Text("Builder")
-                                .font(.system(size: 11, weight: .semibold))
-                        }
-                        .foregroundColor(AppTheme.primary)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(
-                            Capsule()
-                                .fill(.ultraThinMaterial)
-                                .environment(\.colorScheme, .dark)
-                        )
-                        .overlay(
-                            Capsule()
-                                .stroke(AppTheme.primary.opacity(0.4), lineWidth: 1)
-                        )
+            ZStack(alignment: .bottomLeading) {
+                // Background image
+                AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/800/600")) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: imgW, height: imgH)
+                            .clipped()
+                    case .failure:
+                        Rectangle().fill(Color(hex: "1A2820"))
+                    case .empty:
+                        Rectangle().fill(Color(hex: "1A2820"))
+                            .overlay(ProgressView().tint(.white.opacity(0.25)))
+                    @unknown default:
+                        Rectangle().fill(Color(hex: "1A2820"))
                     }
+                }
+                .frame(width: imgW, height: imgH)
 
+                // Green gradient overlays
+                VStack(spacing: 0) {
                     Spacer()
 
-                    Image(systemName: event.activityIcon)
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.white.opacity(0.85))
-                        .padding(10)
-                        .background(.white.opacity(0.12))
-                        .clipShape(Circle())
+                    // Bottom gradient (green tint)
+                    LinearGradient(
+                        stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: accentGreen.opacity(0.5), location: 0.35),
+                            .init(color: accentGreen.opacity(0.85), location: 0.7),
+                            .init(color: AppTheme.background, location: 1.0),
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: imgH * 0.6)
                 }
+                .frame(width: imgW, height: imgH)
 
-                Text(event.activityType.capitalized)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.6))
-                    .textCase(.uppercase)
-                    .tracking(1.5)
+                // Title overlay at bottom
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 10) {
+                        StatusBadge(status: event.status)
 
-                Text(event.title)
-                    .font(.system(size: 26, weight: .bold))
-                    .foregroundColor(.white)
-                    .lineLimit(2)
+                        if event.hasBuilder {
+                            HStack(spacing: 4) {
+                                Image(systemName: "wrench.and.screwdriver.fill")
+                                    .font(.system(size: 9))
+                                Text("Builder")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundColor(AppTheme.primary)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(
+                                Capsule()
+                                    .fill(.ultraThinMaterial)
+                                    .environment(\.colorScheme, .dark)
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(AppTheme.primary.opacity(0.4), lineWidth: 1)
+                            )
+                        }
+
+                        Spacer()
+
+                        Image(systemName: event.activityIcon)
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white.opacity(0.85))
+                            .padding(10)
+                            .background(.white.opacity(0.12))
+                            .clipShape(Circle())
+                    }
+
+                    Text(event.activityType.capitalized)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.6))
+                        .textCase(.uppercase)
+                        .tracking(1.5)
+
+                    Text(event.title)
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundColor(.white)
+                        .lineLimit(2)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 16)
+            .frame(width: imgW, height: imgH)
         }
+        .aspectRatio(4/3, contentMode: .fit)
     }
 
     // MARK: - Info Pills
