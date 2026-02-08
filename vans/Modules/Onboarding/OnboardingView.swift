@@ -4,57 +4,75 @@ import PhotosUI
 struct OnboardingView: ActionableView {
 
     @ObservedObject var viewModel: OnboardingViewModel
+    @FocusState private var isTextFieldFocused: Bool
     private let accentGreen = Color(hex: "2E7D5A")
 
     var body: some View {
-        ZStack(alignment: .top) {
-            // Background
-            AppTheme.background.ignoresSafeArea()
+        GeometryReader { geometry in
+            ZStack {
+                AppTheme.background.ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                // Header with progress
-                headerView
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Fixed header section
+                        headerView
 
-                // Progress bar
-                HStack(spacing: 4) {
-                    ForEach(0..<OnboardingStep.allCases.count, id: \.self) { index in
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(index <= viewModel.currentStep.rawValue ? accentGreen : Color.white.opacity(0.2))
-                            .frame(height: 3)
+                        HStack(spacing: 4) {
+                            ForEach(0..<OnboardingStep.allCases.count, id: \.self) { index in
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(index <= viewModel.currentStep.rawValue ? accentGreen : Color.white.opacity(0.2))
+                                    .frame(height: 3)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+
+                        titleSection
+                            .padding(.top, 24)
+
+                        // Centered step content
+                        VStack {
+                            Spacer(minLength: 20)
+                            stepContent
+                                .padding(.horizontal, 24)
+                            Spacer(minLength: 20)
+                        }
+                        .frame(minHeight: geometry.size.height - 280) // Space for header, title, and button
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 12)
 
-                // Title section (fixed at top)
-                titleSection
-                    .padding(.top, 24)
-                    .padding(.bottom, 20)
-
-                // Step content (scrollable, takes remaining space)
-                ScrollView(showsIndicators: false) {
-                    stepContent
-                        .padding(.horizontal, 24)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                // Loading overlay
+                if viewModel.isLoading {
+                    Color.black.opacity(0.5).ignoresSafeArea()
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: accentGreen))
+                        .scaleEffect(1.5)
                 }
-
-                Spacer(minLength: 0)
-
-                // Bottom button
-                bottomButton
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-
-            // Loading overlay
-            if viewModel.isLoading {
-                Color.black.opacity(0.5).ignoresSafeArea()
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: accentGreen))
-                    .scaleEffect(1.5)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .navigationBarHidden(true)
+        .safeAreaInset(edge: .bottom) {
+            bottomButton
+                .padding(.horizontal, 24)
+                .padding(.bottom, 12)
+                .background(AppTheme.background.opacity(0.95))
+        }
+        .toolbar(.hidden, for: .navigationBar)
+        .onAppear {
+            // Auto-focus text field on pages with text input
+            if viewModel.currentStep == .fullName || viewModel.currentStep == .socialMedia {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isTextFieldFocused = true
+                }
+            }
+        }
+        .onChange(of: viewModel.currentStep) { newStep in
+            // Auto-focus when navigating to text input pages
+            if newStep == .fullName || newStep == .socialMedia {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    isTextFieldFocused = true
+                }
+            }
+        }
         .alert("Error", isPresented: $viewModel.showError) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -131,9 +149,14 @@ struct OnboardingView: ActionableView {
 
     private var fullNameStepContent: some View {
         VStack(spacing: 24) {
-            TextField("Enter your full name", text: $viewModel.fullName)
+            TextField("", text: $viewModel.fullName)
+                .placeholder(when: viewModel.fullName.isEmpty, alignment: .leading) {
+                    Text("Enter your full name")
+                        .foregroundColor(.white.opacity(0.5))
+                }
                 .font(.system(size: 17))
                 .foregroundColor(.white)
+                .focused($isTextFieldFocused)
                 .padding(16)
                 .background(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -146,6 +169,7 @@ struct OnboardingView: ActionableView {
                 .textContentType(.name)
                 .autocorrectionDisabled()
         }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Birthday Step
@@ -162,6 +186,7 @@ struct OnboardingView: ActionableView {
             .labelsHidden()
             .colorScheme(.dark)
             .tint(accentGreen)
+            .frame(maxWidth: .infinity)
 
             if !viewModel.isAdult {
                 HStack(spacing: 8) {
@@ -177,6 +202,7 @@ struct OnboardingView: ActionableView {
                 .cornerRadius(10)
             }
         }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Gender Step
@@ -218,6 +244,7 @@ struct OnboardingView: ActionableView {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Languages Step
@@ -248,6 +275,7 @@ struct OnboardingView: ActionableView {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Social Media Step
@@ -256,34 +284,23 @@ struct OnboardingView: ActionableView {
         VStack(spacing: 20) {
             // Instagram
             HStack(spacing: 12) {
-                ZStack {
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "833AB4"),
-                            Color(hex: "FD1D1D"),
-                            Color(hex: "F77737")
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
+                Image("instagram_icon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 40, height: 40)
                     .cornerRadius(10)
-
-                    Image(systemName: "camera.fill")
-                        .font(.system(size: 18))
-                        .foregroundColor(.white)
-                }
 
                 Text("@")
                     .foregroundColor(.white.opacity(0.5))
 
                 TextField("", text: $viewModel.instagramUsername)
-                    .placeholder(when: viewModel.instagramUsername.isEmpty) {
+                    .placeholder(when: viewModel.instagramUsername.isEmpty, alignment: .leading) {
                         Text("Username")
-                            .foregroundColor(.white.opacity(0.4))
+                            .foregroundColor(.white.opacity(0.5))
                     }
                     .font(.system(size: 16))
                     .foregroundColor(.white)
+                    .focused($isTextFieldFocused)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
             }
@@ -297,72 +314,39 @@ struct OnboardingView: ActionableView {
                     .stroke(Color.white.opacity(0.15), lineWidth: 1)
             )
 
-            Text("Or")
-                .font(.system(size: 14))
-                .foregroundColor(.white.opacity(0.5))
-
-            // LinkedIn
-            HStack(spacing: 12) {
-                ZStack {
-                    Color(hex: "0A66C2")
-                        .frame(width: 40, height: 40)
-                        .cornerRadius(10)
-
-                    Text("in")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.white)
-                }
-
-                TextField("", text: $viewModel.linkedinUrl)
-                    .placeholder(when: viewModel.linkedinUrl.isEmpty) {
-                        Text("Link to your profile")
-                            .foregroundColor(.white.opacity(0.4))
-                    }
-                    .font(.system(size: 16))
-                    .foregroundColor(.white)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-                    .keyboardType(.URL)
-            }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.white.opacity(0.08))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
-            )
-
-            // Skip button
-            Button {
-                viewModel.skipSocialMedia()
-            } label: {
-                Text("Skip for now")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(accentGreen)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .fill(accentGreen.opacity(0.15))
-                    )
-            }
-            .padding(.top, 8)
         }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Bottom Button
 
     private var bottomButton: some View {
         Group {
-            if viewModel.currentStep != .socialMedia && viewModel.currentStep != .gender {
+            if viewModel.currentStep == .socialMedia {
+                // Social media step - Skip or Continue
+                Button {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    viewModel.skipSocialMedia()
+                } label: {
+                    Text(viewModel.instagramUsername.isEmpty ? "Skip for now" : "Continue")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(viewModel.instagramUsername.isEmpty ? accentGreen : .black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 18)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(viewModel.instagramUsername.isEmpty ? accentGreen.opacity(0.15) : accentGreen)
+                        )
+                }
+            } else if viewModel.currentStep != .gender {
+                // Other steps (except gender which auto-advances)
                 Button {
                     let impact = UIImpactFeedbackGenerator(style: .medium)
                     impact.impactOccurred()
                     viewModel.nextStep()
                 } label: {
-                    Text(viewModel.isLastStep ? "Save and Continue" : "Continue")
+                    Text("Continue")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(viewModel.canProceed ? .black : .white.opacity(0.4))
                         .frame(maxWidth: .infinity)
@@ -373,8 +357,6 @@ struct OnboardingView: ActionableView {
                         )
                 }
                 .disabled(!viewModel.canProceed)
-                .padding(.horizontal, 24)
-                .padding(.bottom, 34)
             }
         }
     }

@@ -29,6 +29,11 @@ struct ProfileView: ActionableView {
                         bioSection(bio: bio)
                     }
 
+                    // Instagram Section
+                    if let instagram = viewModel.user?.profile?.instagramUsername, !instagram.isEmpty {
+                        instagramSection(username: instagram)
+                    }
+
                     // Builder Section
                     builderSection
 
@@ -230,6 +235,41 @@ struct ProfileView: ActionableView {
         .padding()
         .background(AppTheme.card)
         .cornerRadius(16)
+    }
+
+    private func instagramSection(username: String) -> some View {
+        Button(action: {
+            if let url = URL(string: "https://instagram.com/\(username)") {
+                UIApplication.shared.open(url)
+            }
+        }) {
+            HStack(spacing: 12) {
+                Image("instagram_icon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 32, height: 32)
+                    .cornerRadius(8)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Instagram")
+                        .font(.caption)
+                        .foregroundColor(AppTheme.textSecondary)
+                    Text("@\(username)")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(AppTheme.textPrimary)
+                }
+
+                Spacer()
+
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundColor(AppTheme.textTertiary)
+            }
+            .padding()
+            .background(AppTheme.card)
+            .cornerRadius(16)
+        }
     }
 
     // MARK: - Builder Section

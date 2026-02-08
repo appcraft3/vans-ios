@@ -28,19 +28,6 @@ class ActionableHostingViewController<Content: ActionableView, ViewModel: Action
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
-
-        // Ensure the hosting controller fills available space (iOS 16+)
-        if #available(iOS 16.0, *) {
-            sizingOptions = [.preferredContentSize]
-        }
-
-        // Make sure view fills the screen
-        view.backgroundColor = .clear
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.frame = view.superview?.bounds ?? view.frame
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
