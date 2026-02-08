@@ -120,7 +120,9 @@ final class EventsListViewModel: ActionableViewModel {
             allowCheckIn: data["allowCheckIn"] as? Bool ?? true,
             isInterested: data["isInterested"] as? Bool ?? false,
             isAttending: data["isAttending"] as? Bool ?? false,
-            hasBuilder: data["hasBuilder"] as? Bool ?? false
+            hasBuilder: data["hasBuilder"] as? Bool ?? false,
+            latitude: data["latitude"] as? Double,
+            longitude: data["longitude"] as? Double
         )
     }
 }

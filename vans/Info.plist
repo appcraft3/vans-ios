@@ -13,6 +13,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to show nearby events and activities on the map.</string>
 	<key>GIDClientID</key>
 	<string>678595405193-md4ila236h4frb52q4uc1nt3nkuqfcdt.apps.googleusercontent.com</string>
 	<key>UIApplicationSceneManifest</key>

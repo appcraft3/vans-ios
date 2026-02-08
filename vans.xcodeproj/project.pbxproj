@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0736BF76ADA33BE20A4D9A9D /* WaitlistReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */; };
+		07E72C6ED1018666F452C6DC /* EventAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E428D83E7576FC89633678D /* EventAnnotation.swift */; };
 		10E991095E985D1172E52277 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07687C86DB109F07166CEA1D /* ChatView.swift */; };
 		1A0001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0001 /* AppDelegate.swift */; };
 		1A0002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0002 /* SceneDelegate.swift */; };
@@ -73,6 +74,8 @@
 		1A0093 /* WaitlistModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0093 /* WaitlistModuleBuilder.swift */; };
 		24CA33E7224EBFC0054CAF59 /* WaitlistReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */; };
 		3B09A9A88267D09831AED448 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */; };
+		3BEF7EB63F40D1D95BF1A736 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ED692DC4CD24A57457566D /* LocationManager.swift */; };
+		3CD45EE6319C5E85331F494B /* DarkMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF287A2C6ABF3FC05B1588E /* DarkMapView.swift */; };
 		411A01602F323BF700A9EDA6 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 99496712EC816571A558DC47 /* Kingfisher */; };
 		411A01622F323EFA00A9EDA6 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411A01612F323EFA00A9EDA6 /* AppTheme.swift */; };
 		412445422F33CBEA00488119 /* BuilderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412445412F33CBEA00488119 /* BuilderModels.swift */; };
@@ -81,7 +84,9 @@
 		4124612E2F37854300488119 /* BuildersCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4124611F2F37854300488119 /* BuildersCoordinator.swift */; };
 		412461312F37951D00488119 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412461302F37951D00488119 /* LocationSearchView.swift */; };
 		4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4191BB6A2F2B86440043335E /* GoogleService-Info.plist */; };
+		55B1793178B79819D11CD109 /* EventPreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FA955BA809FDA25C74CC4 /* EventPreviewCard.swift */; };
 		6693AC733BE3D2AF573EFC8E /* InviteCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */; };
+		73DBA679ADC240311078C11D /* EventPreviewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */; };
 		829CFD7DCFDD8B8B3D48D13A /* InviteCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */; };
 		8AA5F3BD4FACDE77C5A607D3 /* InviteCodeModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */; };
 		A89FB059FFBC4126C4D1A15E /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */; };
@@ -99,6 +104,7 @@
 		E1A00008 /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00008 /* CreateEventView.swift */; };
 		E1A00009 /* CreateEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00009 /* CreateEventViewModel.swift */; };
 		E1A00010 /* EventChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00010 /* EventChatView.swift */; };
+		F4F60A5F2C7DEA6096EDEA41 /* EventAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */; };
 		F9C940CBA577E6417A0945E8 /* InviteCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893127945C1A9579A974067 /* InviteCodeViewModel.swift */; };
 		FB1BB1CB8888340E7FD44F3A /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -107,6 +113,8 @@
 		07687C86DB109F07166CEA1D /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeCoordinator.swift; sourceTree = "<group>"; };
+		0E428D83E7576FC89633678D /* EventAnnotation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotation.swift; sourceTree = "<group>"; };
+		119FA955BA809FDA25C74CC4 /* EventPreviewCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventPreviewCard.swift; sourceTree = "<group>"; };
 		2A0000 /* vans.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vans.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A0001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2A0002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -175,10 +183,14 @@
 		412461302F37951D00488119 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		4191BB672F2B7D970043335E /* vans.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vans.entitlements; sourceTree = "<group>"; };
 		4191BB6A2F2B86440043335E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5AF287A2C6ABF3FC05B1588E /* DarkMapView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DarkMapView.swift; sourceTree = "<group>"; };
 		696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewViewModel.swift; sourceTree = "<group>"; };
+		79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotationView.swift; sourceTree = "<group>"; };
 		7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewView.swift; sourceTree = "<group>"; };
 		9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeModuleBuilder.swift; sourceTree = "<group>"; };
+		A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventPreviewSheet.swift; sourceTree = "<group>"; };
+		B5ED692DC4CD24A57457566D /* LocationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		CD48230371496DA459F1550C /* CachedAsyncImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
 		D893127945C1A9579A974067 /* InviteCodeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeViewModel.swift; sourceTree = "<group>"; };
@@ -302,6 +314,7 @@
 				2A0016 /* RemoteConfigManager.swift */,
 				2A0017 /* KeychainHelper.swift */,
 				2A0018 /* ForceUpdateManager.swift */,
+				B5ED692DC4CD24A57457566D /* LocationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -416,6 +429,11 @@
 				2A0059 /* ExploreModuleBuilder.swift */,
 				304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */,
 				B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */,
+				5AF287A2C6ABF3FC05B1588E /* DarkMapView.swift */,
+				0E428D83E7576FC89633678D /* EventAnnotation.swift */,
+				79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */,
+				119FA955BA809FDA25C74CC4 /* EventPreviewCard.swift */,
+				A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -550,7 +568,7 @@
 			packageReferences = (
 				8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */,
 			);
 			productRefGroup = 4A0099 /* Products */;
 			projectDirPath = "";
@@ -662,6 +680,12 @@
 				E1A00008 /* CreateEventView.swift in Sources */,
 				E1A00009 /* CreateEventViewModel.swift in Sources */,
 				E1A00010 /* EventChatView.swift in Sources */,
+				3BEF7EB63F40D1D95BF1A736 /* LocationManager.swift in Sources */,
+				3CD45EE6319C5E85331F494B /* DarkMapView.swift in Sources */,
+				07E72C6ED1018666F452C6DC /* EventAnnotation.swift in Sources */,
+				F4F60A5F2C7DEA6096EDEA41 /* EventAnnotationView.swift in Sources */,
+				55B1793178B79819D11CD109 /* EventPreviewCard.swift in Sources */,
+				73DBA679ADC240311078C11D /* EventPreviewSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -867,7 +891,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -931,7 +955,7 @@
 		};
 		99496712EC816571A558DC47 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */

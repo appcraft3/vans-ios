@@ -20,6 +20,13 @@ struct VanEvent: Identifiable, Codable {
     var isInterested: Bool
     var isAttending: Bool
     var hasBuilder: Bool
+    var latitude: Double?
+    var longitude: Double?
+
+    var coordinate: CLLocationCoordinate2D? {
+        guard let lat = latitude, let lng = longitude else { return nil }
+        return CLLocationCoordinate2D(latitude: lat, longitude: lng)
+    }
 
     enum EventStatus: String, Codable {
         case upcoming

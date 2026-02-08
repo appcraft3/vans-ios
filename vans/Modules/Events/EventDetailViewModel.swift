@@ -280,7 +280,9 @@ final class EventDetailViewModel: ObservableObject {
             allowCheckIn: data["allowCheckIn"] as? Bool ?? true,
             isInterested: false,
             isAttending: false,
-            hasBuilder: data["hasBuilder"] as? Bool ?? false
+            hasBuilder: data["hasBuilder"] as? Bool ?? false,
+            latitude: data["latitude"] as? Double,
+            longitude: data["longitude"] as? Double
         )
     }
 
