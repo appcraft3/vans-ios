@@ -43,12 +43,6 @@ struct EventsListView: ActionableView {
                     allSeenState
                     Spacer()
                 } else {
-                    // Card counter
-                    Text("\(currentIndex + 1) of \(filteredEvents.count)")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(AppTheme.textTertiary)
-                        .padding(.bottom, 6)
-
                     cardStack
                 }
             }
@@ -205,7 +199,7 @@ struct EventsListView: ActionableView {
             }
             .padding(.horizontal, 20)
         }
-        .padding(.bottom, 8)
+        .padding(.bottom, 12)
     }
 
     // MARK: - Empty / All-Seen States
@@ -249,7 +243,7 @@ struct EventsListView: ActionableView {
     private var cardStack: some View {
         GeometryReader { geo in
             let cardW = geo.size.width
-            let cardH = geo.size.height
+            let cardH = geo.size.height - 36 // room for back card peek above
             let dragProgress = min(1.0, max(0, -dragOffset / (cardH * 0.25)))
 
             ZStack {
@@ -272,8 +266,9 @@ struct EventsListView: ActionableView {
                     .gesture(stackPos == 0 ? swipeGesture(cardHeight: cardH) : nil)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
+        .clipped()
         .padding(.horizontal, 16)
         .padding(.bottom, 86)
     }
@@ -288,7 +283,7 @@ struct EventsListView: ActionableView {
     ) -> some View {
         // Back cards peek from the TOP of the front card
         let scaleDrop: CGFloat = 0.04
-        let peekPerCard: CGFloat = 8.0
+        let peekPerCard: CGFloat = 12.0
 
         let scale = 1.0 - CGFloat(stackPos) * scaleDrop
         let peek = peekPerCard * CGFloat(stackPos)
@@ -313,7 +308,10 @@ struct EventsListView: ActionableView {
             event: event,
             cardWidth: cardW,
             cardHeight: cardH,
-            greenColor: accentGreen
+            greenColor: accentGreen,
+            onInterestTap: {
+                viewModel.toggleInterest(for: event)
+            }
         )
         .scaleEffect(scl)
         .offset(y: yOff)
@@ -370,6 +368,9 @@ struct EventSwipeCard: View {
     let cardWidth: CGFloat
     let cardHeight: CGFloat
     let greenColor: Color
+    var onInterestTap: (() -> Void)? = nil
+
+    private let heartColor = Color(hex: "E8B86D") // accentWarning / sand-gold
 
     var body: some View {
         ZStack {
@@ -441,43 +442,73 @@ struct EventSwipeCard: View {
 
                 Spacer()
 
-                // Bottom: event info
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(event.activityType.capitalized)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.65))
-                        .textCase(.uppercase)
-                        .tracking(1.5)
+                // Bottom: event info + interest button
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(event.activityType.capitalized)
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.65))
+                            .textCase(.uppercase)
+                            .tracking(1.5)
 
-                    Text(event.title)
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.white)
-                        .lineLimit(2)
+                        Text(event.title)
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.white)
+                            .lineLimit(2)
 
-                    HStack(spacing: 14) {
-                        Label(event.formattedDate, systemImage: "calendar")
-                        Label("\(event.attendeesCount)/\(event.maxAttendees)", systemImage: "person.2")
-                    }
-                    .font(.system(size: 12))
-                    .foregroundColor(.white.opacity(0.7))
-
-                    if !event.approximateArea.isEmpty || !event.region.isEmpty {
-                        Label(
-                            event.approximateArea.isEmpty ? event.region : event.approximateArea,
-                            systemImage: "mappin"
-                        )
+                        HStack(spacing: 14) {
+                            Label(event.formattedDate, systemImage: "calendar")
+                            Label("\(event.attendeesCount)/\(event.maxAttendees)", systemImage: "person.2")
+                        }
                         .font(.system(size: 12))
-                        .foregroundColor(.white.opacity(0.65))
+                        .foregroundColor(.white.opacity(0.7))
+
+                        if !event.approximateArea.isEmpty || !event.region.isEmpty {
+                            Label(
+                                event.approximateArea.isEmpty ? event.region : event.approximateArea,
+                                systemImage: "mappin"
+                            )
+                            .font(.system(size: 12))
+                            .foregroundColor(.white.opacity(0.65))
+                        }
                     }
+
+                    Spacer()
+
+                    // Interest / heart button
+                    interestButton
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .frame(width: cardWidth, height: cardHeight)
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
         .shadow(color: .black.opacity(0.35), radius: 12, y: 6)
+    }
+
+    // MARK: - Interest Button
+
+    private var interestButton: some View {
+        Button {
+            let impact = UIImpactFeedbackGenerator(style: .light)
+            impact.impactOccurred()
+            onInterestTap?()
+        } label: {
+            VStack(spacing: 3) {
+                Text("\(event.attendeesCount)")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.white)
+
+                Image(systemName: event.isInterested ? "heart.fill" : "heart")
+                    .font(.system(size: 24, weight: .medium))
+                    .foregroundColor(event.isInterested ? heartColor : .white.opacity(0.75))
+                    .scaleEffect(event.isInterested ? 1.15 : 1.0)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.5), value: event.isInterested)
+            }
+            .padding(.leading, 8)
+        }
+        .buttonStyle(.plain)
     }
 
     private var placeholderBg: some View {
@@ -492,13 +523,19 @@ struct StatusBadge: View {
 
     var body: some View {
         Text(status.rawValue.capitalized)
-            .font(.caption2)
-            .fontWeight(.semibold)
-            .foregroundColor(statusColor)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(statusColor.opacity(0.2))
-            .clipShape(Capsule())
+            .font(.system(size: 11, weight: .semibold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(
+                Capsule()
+                    .fill(.ultraThinMaterial)
+                    .environment(\.colorScheme, .dark)
+            )
+            .overlay(
+                Capsule()
+                    .stroke(statusColor.opacity(0.5), lineWidth: 1)
+            )
     }
 
     var statusColor: Color {

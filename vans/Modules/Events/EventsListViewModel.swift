@@ -67,6 +67,20 @@ final class EventsListViewModel: ActionableViewModel {
         coordinator?.showEventDetail(eventId: event.id)
     }
 
+    func toggleInterest(for event: VanEvent) {
+        guard let index = events.firstIndex(where: { $0.id == event.id }) else { return }
+        let wasInterested = events[index].isInterested
+
+        // Optimistic update — stays even if API fails, syncs on next load
+        events[index].isInterested = !wasInterested
+        events[index].attendeesCount += wasInterested ? -1 : 1
+
+        Task {
+            let functionName = wasInterested ? "leaveEvent" : "joinEvent"
+            _ = try? await functions.httpsCallable(functionName).call(["eventId": event.id])
+        }
+    }
+
     private func parseEvent(_ data: [String: Any]) -> VanEvent? {
         guard let id = data["id"] as? String,
               let title = data["title"] as? String,
