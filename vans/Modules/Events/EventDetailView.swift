@@ -200,10 +200,27 @@ struct EventDetailView: View {
                 }
             }
 
-            // Bottom action
-            bottomActionButton(for: event)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
+            // Bottom action with glassy background
+            VStack(spacing: 0) {
+                // Top fade gradient
+                LinearGradient(
+                    stops: [
+                        .init(color: AppTheme.background.opacity(0), location: 0),
+                        .init(color: AppTheme.background.opacity(0.6), location: 0.4),
+                        .init(color: AppTheme.background.opacity(0.9), location: 1.0),
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 30)
+
+                // Button area on solid-ish background
+                bottomActionButton(for: event)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 4)
+                    .padding(.bottom, 16)
+                    .background(AppTheme.background.opacity(0.92))
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
