@@ -1,11 +1,22 @@
 import SwiftUI
 
+// MARK: - Date Filter
+
+enum EventDateFilter: String, CaseIterable {
+    case all = "All"
+    case today = "Today"
+    case thisWeek = "This Week"
+    case nextWeek = "Next Week"
+    case later = "Later"
+}
+
 struct EventsListView: ActionableView {
     @ObservedObject var viewModel: EventsListViewModel
     @State private var showCreateEvent = false
     @State private var showLocationFilter = false
     @State private var currentIndex = 0
     @State private var dragOffset: CGFloat = 0
+    @State private var dateFilter: EventDateFilter = .all
 
     private let accentGreen = Color(hex: "2E7D5A") // accentPrimary
 
@@ -15,6 +26,7 @@ struct EventsListView: ActionableView {
 
             VStack(spacing: 0) {
                 headerBar
+                dateFilterBar
 
                 if viewModel.isLoading && viewModel.events.isEmpty {
                     Spacer()
@@ -22,20 +34,20 @@ struct EventsListView: ActionableView {
                         .progressViewStyle(CircularProgressViewStyle(tint: accentGreen))
                         .scaleEffect(1.5)
                     Spacer()
-                } else if viewModel.events.isEmpty {
+                } else if filteredEvents.isEmpty {
                     Spacer()
                     emptyState
                     Spacer()
-                } else if currentIndex >= viewModel.events.count {
+                } else if currentIndex >= filteredEvents.count {
                     Spacer()
                     allSeenState
                     Spacer()
                 } else {
                     // Card counter
-                    Text("\(currentIndex + 1) of \(viewModel.events.count)")
+                    Text("\(currentIndex + 1) of \(filteredEvents.count)")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(AppTheme.textTertiary)
-                        .padding(.bottom, 10)
+                        .padding(.bottom, 6)
 
                     cardStack
                 }
@@ -60,6 +72,37 @@ struct EventsListView: ActionableView {
             currentIndex = 0
             dragOffset = 0
         }
+        .onChange(of: dateFilter) { _ in
+            currentIndex = 0
+            dragOffset = 0
+        }
+    }
+
+    // MARK: - Filtered Events
+
+    private var filteredEvents: [VanEvent] {
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfToday = calendar.startOfDay(for: now)
+
+        switch dateFilter {
+        case .all:
+            return viewModel.events
+        case .today:
+            let endOfToday = calendar.date(byAdding: .day, value: 1, to: startOfToday)!
+            return viewModel.events.filter { $0.date >= startOfToday && $0.date < endOfToday }
+        case .thisWeek:
+            guard let weekEnd = calendar.date(byAdding: .day, value: 7 - calendar.component(.weekday, from: now) + 1, to: startOfToday) else { return viewModel.events }
+            return viewModel.events.filter { $0.date >= startOfToday && $0.date < weekEnd }
+        case .nextWeek:
+            guard let thisWeekEnd = calendar.date(byAdding: .day, value: 7 - calendar.component(.weekday, from: now) + 1, to: startOfToday),
+                  let nextWeekEnd = calendar.date(byAdding: .day, value: 7, to: thisWeekEnd) else { return viewModel.events }
+            return viewModel.events.filter { $0.date >= thisWeekEnd && $0.date < nextWeekEnd }
+        case .later:
+            guard let thisWeekEnd = calendar.date(byAdding: .day, value: 7 - calendar.component(.weekday, from: now) + 1, to: startOfToday),
+                  let nextWeekEnd = calendar.date(byAdding: .day, value: 7, to: thisWeekEnd) else { return viewModel.events }
+            return viewModel.events.filter { $0.date >= nextWeekEnd }
+        }
     }
 
     // MARK: - Header
@@ -73,11 +116,13 @@ struct EventsListView: ActionableView {
             Spacer()
 
             Button {
+                let impact = UIImpactFeedbackGenerator(style: .light)
+                impact.impactOccurred()
                 showLocationFilter = true
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: viewModel.selectedLocation != nil ? "mappin.circle.fill" : "mappin")
-                        .font(.subheadline)
+                        .font(.system(size: 14, weight: .medium))
                     if let location = viewModel.selectedLocation {
                         Text(location.name)
                             .font(.caption)
@@ -87,10 +132,24 @@ struct EventsListView: ActionableView {
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                                 .font(.caption2)
+                                .foregroundColor(.white.opacity(0.4))
                         }
                     }
                 }
-                .foregroundColor(viewModel.selectedLocation != nil ? accentGreen : AppTheme.textSecondary)
+                .foregroundColor(viewModel.selectedLocation != nil ? accentGreen : .white.opacity(0.7))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(
+                            viewModel.selectedLocation != nil ? accentGreen.opacity(0.4) : Color.white.opacity(0.12),
+                            lineWidth: 1
+                        )
+                )
             }
 
             if viewModel.canCreateEvents {
@@ -98,13 +157,54 @@ struct EventsListView: ActionableView {
                     showCreateEvent = true
                 } label: {
                     Image(systemName: "plus")
-                        .font(.title3.weight(.medium))
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(8)
+                        .background(
+                            Circle().fill(Color.white.opacity(0.06))
+                        )
+                        .overlay(
+                            Circle().stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        )
                 }
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)
+        .padding(.bottom, 4)
+    }
+
+    // MARK: - Date Filter
+
+    private var dateFilterBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                ForEach(EventDateFilter.allCases, id: \.self) { filter in
+                    Button {
+                        let impact = UIImpactFeedbackGenerator(style: .light)
+                        impact.impactOccurred(intensity: 0.6)
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            dateFilter = filter
+                        }
+                    } label: {
+                        Text(filter.rawValue)
+                            .font(.system(size: 14, weight: dateFilter == filter ? .semibold : .regular))
+                            .foregroundColor(dateFilter == filter ? accentGreen : AppTheme.textSecondary)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 7)
+                            .background(
+                                Capsule()
+                                    .fill(dateFilter == filter ? accentGreen.opacity(0.12) : Color.clear)
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(dateFilter == filter ? accentGreen.opacity(0.3) : Color.clear, lineWidth: 1)
+                            )
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+        }
         .padding(.bottom, 8)
     }
 
@@ -221,7 +321,7 @@ struct EventsListView: ActionableView {
     }
 
     private var visibleCards: [EnumeratedSequence<[VanEvent]>.Element] {
-        Array(viewModel.events.enumerated())
+        Array(filteredEvents.enumerated())
             .filter { $0.offset >= currentIndex && $0.offset < currentIndex + 3 }
     }
 
