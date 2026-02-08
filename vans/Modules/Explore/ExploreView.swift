@@ -55,8 +55,8 @@ struct ExploreView: ActionableView {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, 12)
-        .padding(.bottom, 4)
+        .padding(.top, 20)
+        .padding(.bottom, 10)
     }
 
     // MARK: - Stories (placeholder)
@@ -89,13 +89,13 @@ struct ExploreView: ActionableView {
             }
             .padding(.horizontal, 20)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
     }
 
     // MARK: - Search + Filter
 
     private var searchFilterBar: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             // Search bar
             Button {
                 viewModel.showLocationSearch = true
@@ -125,6 +125,36 @@ struct ExploreView: ActionableView {
             // Activity filter chips
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
+                    // "All" chip
+                    let allActive = viewModel.selectedActivityFilter == nil
+
+                    Button {
+                        let impact = UIImpactFeedbackGenerator(style: .light)
+                        impact.impactOccurred(intensity: 0.6)
+                        viewModel.clearActivityFilter()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "square.grid.2x2")
+                                .font(.system(size: 11))
+                            Text("All")
+                                .font(.system(size: 13, weight: allActive ? .semibold : .regular))
+                        }
+                        .foregroundColor(allActive ? accentGreen : AppTheme.textSecondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(
+                            Capsule()
+                                .fill(allActive ? accentGreen.opacity(0.12) : Color.clear)
+                        )
+                        .overlay(
+                            Capsule()
+                                .stroke(
+                                    allActive ? accentGreen.opacity(0.3) : Color.white.opacity(0.08),
+                                    lineWidth: 1
+                                )
+                        )
+                    }
+
                     ForEach(viewModel.activityTypes, id: \.key) { type in
                         let isActive = viewModel.selectedActivityFilter == type.key
 
@@ -159,7 +189,7 @@ struct ExploreView: ActionableView {
                 .padding(.horizontal, 16)
             }
         }
-        .padding(.bottom, 8)
+        .padding(.bottom, 10)
     }
 
     // MARK: - Map

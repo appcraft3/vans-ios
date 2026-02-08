@@ -223,6 +223,13 @@ final class ExploreViewModel: ActionableViewModel {
         Task { await buildAnnotations() }
     }
 
+    func clearActivityFilter() {
+        guard selectedActivityFilter != nil else { return }
+        selectedActivityFilter = nil
+        dismissPreview()
+        Task { await buildAnnotations() }
+    }
+
     func moveMapTo(_ coordinate: CLLocationCoordinate2D) {
         mapRegion = MKCoordinateRegion(
             center: coordinate,

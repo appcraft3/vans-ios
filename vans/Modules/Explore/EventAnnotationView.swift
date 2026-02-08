@@ -2,10 +2,11 @@ import MapKit
 import UIKit
 
 final class EventAnnotationView: MKAnnotationView {
-    private let iconSize: CGFloat = 38
+    private let iconSize: CGFloat = 44
 
-    // accentGreen #2E7D5A
+    // Sand-gold border for visibility on dark map
     private let pinColor = UIColor(red: 0x2E / 255.0, green: 0x7D / 255.0, blue: 0x5A / 255.0, alpha: 1.0)
+    private let borderColor = UIColor(red: 0xE8 / 255.0, green: 0xB8 / 255.0, blue: 0x6D / 255.0, alpha: 1.0)
 
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
@@ -20,18 +21,23 @@ final class EventAnnotationView: MKAnnotationView {
     func configure(with annotation: EventAnnotation) {
         self.annotation = annotation
 
-        let container = UIView(frame: CGRect(x: 0, y: 0, width: iconSize, height: iconSize))
+        // Larger render size to include shadow
+        let shadowPadding: CGFloat = 8
+        let totalSize = iconSize + shadowPadding * 2
+
+        let container = UIView(frame: CGRect(x: shadowPadding, y: shadowPadding, width: iconSize, height: iconSize))
         container.backgroundColor = pinColor
         container.layer.cornerRadius = iconSize / 2
-        container.layer.borderWidth = 2
-        container.layer.borderColor = UIColor.white.withAlphaComponent(0.35).cgColor
+        container.layer.borderWidth = 2.5
+        container.layer.borderColor = borderColor.cgColor
 
+        // Strong shadow for visibility
         container.layer.shadowColor = UIColor.black.cgColor
-        container.layer.shadowOffset = CGSize(width: 0, height: 2)
-        container.layer.shadowRadius = 4
-        container.layer.shadowOpacity = 0.5
+        container.layer.shadowOffset = CGSize(width: 0, height: 3)
+        container.layer.shadowRadius = 6
+        container.layer.shadowOpacity = 0.7
 
-        let symbolSize: CGFloat = 16
+        let symbolSize: CGFloat = 18
         let config = UIImage.SymbolConfiguration(pointSize: symbolSize, weight: .semibold)
         let iconImage = UIImage(systemName: annotation.event.activityIcon, withConfiguration: config)?
             .withTintColor(.white, renderingMode: .alwaysOriginal)
@@ -45,12 +51,16 @@ final class EventAnnotationView: MKAnnotationView {
         )
         container.addSubview(iconView)
 
-        let renderer = UIGraphicsImageRenderer(size: container.bounds.size)
+        let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: totalSize, height: totalSize))
+        wrapper.addSubview(container)
+
+        let renderer = UIGraphicsImageRenderer(size: wrapper.bounds.size)
         let pinImage = renderer.image { ctx in
-            container.layer.render(in: ctx.cgContext)
+            wrapper.layer.render(in: ctx.cgContext)
         }
 
         self.image = pinImage
-        self.frame.size = CGSize(width: iconSize, height: iconSize)
+        self.frame.size = CGSize(width: totalSize, height: totalSize)
+        self.centerOffset = CGPoint(x: 0, y: -totalSize / 2)
     }
 }
