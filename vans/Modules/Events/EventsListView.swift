@@ -4,113 +4,42 @@ struct EventsListView: ActionableView {
     @ObservedObject var viewModel: EventsListViewModel
     @State private var showCreateEvent = false
     @State private var showLocationFilter = false
+    @State private var currentIndex = 0
+    @State private var dragOffset: CGFloat = 0
+
+    private let accentGreen = Color(hex: "2E7D5A") // accentPrimary
 
     var body: some View {
         ZStack {
             AppTheme.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Text("Events")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(AppTheme.textPrimary)
-                    Spacer()
-
-                    if viewModel.canCreateEvents {
-                        Button {
-                            showCreateEvent = true
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(AppTheme.primary)
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
-
-                // Location Filter
-                Button {
-                    showLocationFilter = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "mappin.circle.fill")
-                            .font(.subheadline)
-
-                        if let location = viewModel.selectedLocation {
-                            Text(location.name)
-                                .font(.subheadline)
-                                .lineLimit(1)
-
-                            Button {
-                                viewModel.clearLocationFilter()
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .font(.caption)
-                                    .foregroundColor(AppTheme.textTertiary)
-                            }
-                        } else {
-                            Text("All Locations")
-                                .font(.subheadline)
-
-                            Image(systemName: "chevron.down")
-                                .font(.caption2)
-                        }
-                    }
-                    .foregroundColor(viewModel.selectedLocation != nil ? AppTheme.primary : AppTheme.textSecondary)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .background(viewModel.selectedLocation != nil ? AppTheme.primary.opacity(0.15) : AppTheme.card)
-                    .clipShape(Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(viewModel.selectedLocation != nil ? AppTheme.primary.opacity(0.3) : AppTheme.divider, lineWidth: 1)
-                    )
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 12)
+                headerBar
 
                 if viewModel.isLoading && viewModel.events.isEmpty {
                     Spacer()
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.primary))
+                        .progressViewStyle(CircularProgressViewStyle(tint: accentGreen))
                         .scaleEffect(1.5)
                     Spacer()
                 } else if viewModel.events.isEmpty {
                     Spacer()
-                    VStack(spacing: 16) {
-                        Image(systemName: "calendar.badge.exclamationmark")
-                            .font(.system(size: 48))
-                            .foregroundColor(AppTheme.textTertiary)
-                        Text("No upcoming events")
-                            .foregroundColor(AppTheme.textSecondary)
-                            .font(.headline)
-                        Text("Check back later for community meetups")
-                            .foregroundColor(AppTheme.textTertiary)
-                            .font(.subheadline)
-                    }
+                    emptyState
+                    Spacer()
+                } else if currentIndex >= viewModel.events.count {
+                    Spacer()
+                    allSeenState
                     Spacer()
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 16) {
-                            ForEach(viewModel.events) { event in
-                                EventCard(event: event) {
-                                    viewModel.openEventDetail(event)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 120)
-                    }
-                    .refreshable {
-                        await viewModel.refreshEvents()
-                    }
+                    // Card counter
+                    Text("\(currentIndex + 1) of \(viewModel.events.count)")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(AppTheme.textTertiary)
+                        .padding(.bottom, 10)
+
+                    cardStack
                 }
             }
-            .frame(maxHeight: .infinity)
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $showCreateEvent, onDismiss: {
@@ -127,111 +56,336 @@ struct EventsListView: ActionableView {
         .task {
             await viewModel.loadEvents()
         }
+        .onChange(of: viewModel.events.count) { _ in
+            currentIndex = 0
+            dragOffset = 0
+        }
     }
-}
 
-struct EventCard: View {
-    let event: VanEvent
-    let onTap: () -> Void
+    // MARK: - Header
 
-    var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: event.activityIcon)
-                        .font(.system(size: 24))
-                        .foregroundColor(AppTheme.accent)
-                        .frame(width: 44, height: 44)
-                        .background(AppTheme.accentDark)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+    private var headerBar: some View {
+        HStack {
+            Text("Events")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(AppTheme.textPrimary)
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(event.title)
-                            .font(.headline)
-                            .foregroundColor(AppTheme.textPrimary)
+            Spacer()
+
+            Button {
+                showLocationFilter = true
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: viewModel.selectedLocation != nil ? "mappin.circle.fill" : "mappin")
+                        .font(.subheadline)
+                    if let location = viewModel.selectedLocation {
+                        Text(location.name)
+                            .font(.caption)
                             .lineLimit(1)
-
-                        Text(event.activityType.capitalized)
-                            .font(.caption)
-                            .foregroundColor(AppTheme.textSecondary)
-                    }
-
-                    Spacer()
-
-                    StatusBadge(status: event.status)
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "calendar")
-                            .font(.caption)
-                            .foregroundColor(AppTheme.textTertiary)
-                        Text(event.formattedDate)
-                            .font(.subheadline)
-                            .foregroundColor(AppTheme.textSecondary)
-                    }
-
-                    HStack(spacing: 6) {
-                        Image(systemName: "mappin.circle")
-                            .font(.caption)
-                            .foregroundColor(AppTheme.textTertiary)
-                        Text(event.approximateArea.isEmpty ? event.region : event.approximateArea)
-                            .font(.subheadline)
-                            .foregroundColor(AppTheme.textSecondary)
-                    }
-
-                    HStack(spacing: 6) {
-                        Image(systemName: "person.2")
-                            .font(.caption)
-                            .foregroundColor(AppTheme.textTertiary)
-                        Text("\(event.attendeesCount)/\(event.maxAttendees) interested")
-                            .font(.subheadline)
-                            .foregroundColor(AppTheme.textSecondary)
-
-                        if event.hasBuilder {
-                            Spacer()
-                            HStack(spacing: 4) {
-                                Image(systemName: "wrench.and.screwdriver.fill")
-                                    .font(.caption2)
-                                Text("Builder")
-                                    .font(.caption2)
-                                    .fontWeight(.medium)
-                            }
-                            .foregroundColor(AppTheme.primary)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(AppTheme.primary.opacity(0.2))
-                            .cornerRadius(8)
+                        Button {
+                            viewModel.clearLocationFilter()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.caption2)
                         }
                     }
                 }
+                .foregroundColor(viewModel.selectedLocation != nil ? accentGreen : AppTheme.textSecondary)
+            }
 
-                if event.isInterested {
-                    HStack {
-                        Image(systemName: event.isAttending ? "checkmark.circle.fill" : "star.fill")
-                            .foregroundColor(event.isAttending ? AppTheme.accent : AppTheme.primary)
-                        Text(event.isAttending ? "Attending" : "Interested")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(event.isAttending ? AppTheme.accent : AppTheme.primary)
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background((event.isAttending ? AppTheme.accent : AppTheme.primary).opacity(0.2))
-                    .clipShape(Capsule())
+            if viewModel.canCreateEvents {
+                Button {
+                    showCreateEvent = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title3.weight(.medium))
+                        .foregroundColor(AppTheme.textPrimary)
                 }
             }
-            .padding(16)
-            .background(AppTheme.card)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(AppTheme.divider, lineWidth: 1)
-            )
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+    }
+
+    // MARK: - Empty / All-Seen States
+
+    private var emptyState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "calendar.badge.exclamationmark")
+                .font(.system(size: 48))
+                .foregroundColor(AppTheme.textTertiary)
+            Text("No upcoming events")
+                .foregroundColor(AppTheme.textSecondary)
+                .font(.headline)
+            Text("Check back later for community meetups")
+                .foregroundColor(AppTheme.textTertiary)
+                .font(.subheadline)
+        }
+    }
+
+    private var allSeenState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "checkmark.circle")
+                .font(.system(size: 48))
+                .foregroundColor(accentGreen.opacity(0.6))
+            Text("You've seen all events")
+                .foregroundColor(AppTheme.textSecondary)
+                .font(.headline)
+            Button {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    currentIndex = 0
+                }
+            } label: {
+                Text("Start Over")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(accentGreen)
+            }
+        }
+    }
+
+    // MARK: - Card Stack
+
+    private var cardStack: some View {
+        GeometryReader { geo in
+            let cardW = geo.size.width
+            let cardH = geo.size.height
+            let dragProgress = min(1.0, max(0, -dragOffset / (cardH * 0.25)))
+
+            ZStack {
+                ForEach(visibleCards.reversed(), id: \.offset) { item in
+                    let stackPos = item.offset - currentIndex
+
+                    stackedCard(
+                        event: item.element,
+                        stackPos: stackPos,
+                        dragProgress: dragProgress,
+                        cardW: cardW,
+                        cardH: cardH
+                    )
+                    .zIndex(Double(100 - stackPos))
+                    .onTapGesture {
+                        if stackPos == 0 {
+                            viewModel.openEventDetail(item.element)
+                        }
+                    }
+                    .gesture(stackPos == 0 ? swipeGesture(cardHeight: cardH) : nil)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 86)
+    }
+
+    @ViewBuilder
+    private func stackedCard(
+        event: VanEvent,
+        stackPos: Int,
+        dragProgress: CGFloat,
+        cardW: CGFloat,
+        cardH: CGFloat
+    ) -> some View {
+        // Back cards peek from the TOP of the front card
+        let scaleDrop: CGFloat = 0.04
+        let peekPerCard: CGFloat = 8.0
+
+        let scale = 1.0 - CGFloat(stackPos) * scaleDrop
+        let peek = peekPerCard * CGFloat(stackPos)
+
+        // Offset so the back card's top edge sits `peek` pt above the front card's top
+        // With center-anchored scaleEffect: visual top = center_y - (cardH * scale / 2)
+        // We want: back_visual_top = front_top - peek = -cardH/2 - peek
+        // So: restingY - cardH * scale / 2 = -cardH/2 - peek
+        // restingY = -cardH/2 - peek + cardH * scale / 2 = -(cardH * (1 - scale) / 2 + peek)
+        let restingY = -(cardH * (1.0 - scale) / 2.0 + peek)
+
+        let baseOpacity: Double = stackPos == 0 ? 1.0 : stackPos == 1 ? 0.6 : 0.3
+
+        // During drag, interpolate behind cards toward front position
+        let lerp: CGFloat = stackPos == 1 ? dragProgress * 0.45 : dragProgress * 0.15
+
+        let yOff = stackPos == 0 ? dragOffset : restingY * (1.0 - lerp)
+        let scl = stackPos == 0 ? 1.0 : scale + (1.0 - scale) * lerp
+        let opa = stackPos == 0 ? 1.0 : baseOpacity + (1.0 - baseOpacity) * lerp
+
+        EventSwipeCard(
+            event: event,
+            cardWidth: cardW,
+            cardHeight: cardH,
+            greenColor: accentGreen
+        )
+        .scaleEffect(scl)
+        .offset(y: yOff)
+        .opacity(opa)
+    }
+
+    private var visibleCards: [EnumeratedSequence<[VanEvent]>.Element] {
+        Array(viewModel.events.enumerated())
+            .filter { $0.offset >= currentIndex && $0.offset < currentIndex + 3 }
+    }
+
+    // MARK: - Swipe Gesture
+
+    private func swipeGesture(cardHeight: CGFloat) -> some Gesture {
+        DragGesture(minimumDistance: 15)
+            .onChanged { value in
+                if value.translation.height < 0 {
+                    dragOffset = value.translation.height
+                } else {
+                    dragOffset = value.translation.height * 0.2 // resist downward
+                }
+            }
+            .onEnded { value in
+                let threshold = -cardHeight * 0.22
+                let shouldDismiss = value.translation.height < threshold
+                    || value.predictedEndTranslation.height < -cardHeight * 0.5
+
+                if shouldDismiss {
+                    // Fly card off the top
+                    withAnimation(.easeOut(duration: 0.28)) {
+                        dragOffset = -cardHeight * 1.5
+                    }
+                    // Bring next card forward
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+                        dragOffset = 0
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
+                            currentIndex += 1
+                        }
+                    }
+                } else {
+                    // Snap back
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.72)) {
+                        dragOffset = 0
+                    }
+                }
+            }
     }
 }
+
+// MARK: - Event Swipe Card
+
+struct EventSwipeCard: View {
+    let event: VanEvent
+    let cardWidth: CGFloat
+    let cardHeight: CGFloat
+    let greenColor: Color
+
+    var body: some View {
+        ZStack {
+            // Background image
+            // TODO: Replace with real event images from backend
+            AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/600/900")) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                case .failure:
+                    placeholderBg
+                case .empty:
+                    placeholderBg
+                        .overlay(ProgressView().tint(.white.opacity(0.25)))
+                @unknown default:
+                    placeholderBg
+                }
+            }
+            .frame(width: cardWidth, height: cardHeight)
+
+            // Green gradient overlays
+            VStack(spacing: 0) {
+                // Top gradient
+                LinearGradient(
+                    stops: [
+                        .init(color: greenColor.opacity(0.8), location: 0),
+                        .init(color: greenColor.opacity(0.35), location: 0.5),
+                        .init(color: .clear, location: 1.0),
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: cardHeight * 0.28)
+
+                Spacer()
+
+                // Bottom gradient
+                LinearGradient(
+                    stops: [
+                        .init(color: .clear, location: 0),
+                        .init(color: greenColor.opacity(0.45), location: 0.35),
+                        .init(color: greenColor.opacity(0.9), location: 1.0),
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: cardHeight * 0.45)
+            }
+
+            // Content overlay
+            VStack {
+                // Top bar: status + activity icon
+                HStack {
+                    StatusBadge(status: event.status)
+
+                    Spacer()
+
+                    Image(systemName: event.activityIcon)
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white.opacity(0.9))
+                        .padding(10)
+                        .background(.white.opacity(0.12))
+                        .clipShape(Circle())
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+
+                Spacer()
+
+                // Bottom: event info
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(event.activityType.capitalized)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.65))
+                        .textCase(.uppercase)
+                        .tracking(1.5)
+
+                    Text(event.title)
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                        .lineLimit(2)
+
+                    HStack(spacing: 14) {
+                        Label(event.formattedDate, systemImage: "calendar")
+                        Label("\(event.attendeesCount)/\(event.maxAttendees)", systemImage: "person.2")
+                    }
+                    .font(.system(size: 12))
+                    .foregroundColor(.white.opacity(0.7))
+
+                    if !event.approximateArea.isEmpty || !event.region.isEmpty {
+                        Label(
+                            event.approximateArea.isEmpty ? event.region : event.approximateArea,
+                            systemImage: "mappin"
+                        )
+                        .font(.system(size: 12))
+                        .foregroundColor(.white.opacity(0.65))
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .frame(width: cardWidth, height: cardHeight)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: .black.opacity(0.35), radius: 12, y: 6)
+    }
+
+    private var placeholderBg: some View {
+        Rectangle().fill(Color(hex: "1A2820"))
+    }
+}
+
+// MARK: - Status Badge
 
 struct StatusBadge: View {
     let status: VanEvent.EventStatus
