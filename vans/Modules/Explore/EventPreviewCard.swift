@@ -41,10 +41,10 @@ struct EventPreviewCard: View {
                     onDismiss()
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(Color(hex: "636366"))
-                        .padding(7)
-                        .background(Circle().fill(Color.white.opacity(0.08)))
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(8)
+                        .background(Circle().fill(Color.white.opacity(0.15)))
                 }
                 .buttonStyle(.plain)
             }

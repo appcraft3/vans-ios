@@ -73,6 +73,7 @@
 		1A0092 /* WaitlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0092 /* WaitlistViewModel.swift */; };
 		1A0093 /* WaitlistModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0093 /* WaitlistModuleBuilder.swift */; };
 		24CA33E7224EBFC0054CAF59 /* WaitlistReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */; };
+		36A393F3BE00518B9F086BF5 /* StoryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D8E89CF62344D886668E9 /* StoryModels.swift */; };
 		3B09A9A88267D09831AED448 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */; };
 		3BEF7EB63F40D1D95BF1A736 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ED692DC4CD24A57457566D /* LocationManager.swift */; };
 		3CD45EE6319C5E85331F494B /* DarkMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF287A2C6ABF3FC05B1588E /* DarkMapView.swift */; };
@@ -92,6 +93,7 @@
 		A89FB059FFBC4126C4D1A15E /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */; };
 		B1A95CDF017CD31C67C2991B /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D06139C3B1AC0A84BC7715F /* ChatModels.swift */; };
 		B8D228EF267DFC068CE00A60 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */; };
+		C5013215B6C64EC71FC06150 /* StoryProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA99C0DE087CF7F17F26BF09 /* StoryProgressRing.swift */; };
 		D07A3F7F272604F2E98E4324 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3711F9E5803D07BC66758943 /* ChatListViewModel.swift */; };
 		D43C4483E0F9F65FA1E86C72 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD48230371496DA459F1550C /* CachedAsyncImage.swift */; };
 		E1A00001 /* EventModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00001 /* EventModels.swift */; };
@@ -105,6 +107,7 @@
 		E1A00009 /* CreateEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00009 /* CreateEventViewModel.swift */; };
 		E1A00010 /* EventChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00010 /* EventChatView.swift */; };
 		F4F60A5F2C7DEA6096EDEA41 /* EventAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */; };
+		F90E21D0C2648CDC4A294E0E /* StoryViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5274FFC1C167CA1BAB51D3 /* StoryViewerView.swift */; };
 		F9C940CBA577E6417A0945E8 /* InviteCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893127945C1A9579A974067 /* InviteCodeViewModel.swift */; };
 		FB1BB1CB8888340E7FD44F3A /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -172,6 +175,7 @@
 		2A0091 /* WaitlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistView.swift; sourceTree = "<group>"; };
 		2A0092 /* WaitlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistViewModel.swift; sourceTree = "<group>"; };
 		2A0093 /* WaitlistModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistModuleBuilder.swift; sourceTree = "<group>"; };
+		2D5274FFC1C167CA1BAB51D3 /* StoryViewerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryViewerView.swift; sourceTree = "<group>"; };
 		304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		3711F9E5803D07BC66758943 /* ChatListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListViewModel.swift; sourceTree = "<group>"; };
 		3D06139C3B1AC0A84BC7715F /* ChatModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
@@ -183,6 +187,7 @@
 		412461302F37951D00488119 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		4191BB672F2B7D970043335E /* vans.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vans.entitlements; sourceTree = "<group>"; };
 		4191BB6A2F2B86440043335E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4A3D8E89CF62344D886668E9 /* StoryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryModels.swift; sourceTree = "<group>"; };
 		5AF287A2C6ABF3FC05B1588E /* DarkMapView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DarkMapView.swift; sourceTree = "<group>"; };
 		696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewViewModel.swift; sourceTree = "<group>"; };
 		79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotationView.swift; sourceTree = "<group>"; };
@@ -205,6 +210,7 @@
 		E2A00008 /* CreateEventView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = "<group>"; };
 		E2A00009 /* CreateEventViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateEventViewModel.swift; sourceTree = "<group>"; };
 		E2A00010 /* EventChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventChatView.swift; sourceTree = "<group>"; };
+		FA99C0DE087CF7F17F26BF09 /* StoryProgressRing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryProgressRing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,6 +391,7 @@
 				2A0024 /* PrimaryButton.swift */,
 				2A0025 /* LoadingView.swift */,
 				CD48230371496DA459F1550C /* CachedAsyncImage.swift */,
+				FA99C0DE087CF7F17F26BF09 /* StoryProgressRing.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -434,6 +441,8 @@
 				79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */,
 				119FA955BA809FDA25C74CC4 /* EventPreviewCard.swift */,
 				A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */,
+				4A3D8E89CF62344D886668E9 /* StoryModels.swift */,
+				2D5274FFC1C167CA1BAB51D3 /* StoryViewerView.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -686,6 +695,9 @@
 				F4F60A5F2C7DEA6096EDEA41 /* EventAnnotationView.swift in Sources */,
 				55B1793178B79819D11CD109 /* EventPreviewCard.swift in Sources */,
 				73DBA679ADC240311078C11D /* EventPreviewSheet.swift in Sources */,
+				36A393F3BE00518B9F086BF5 /* StoryModels.swift in Sources */,
+				F90E21D0C2648CDC4A294E0E /* StoryViewerView.swift in Sources */,
+				C5013215B6C64EC71FC06150 /* StoryProgressRing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

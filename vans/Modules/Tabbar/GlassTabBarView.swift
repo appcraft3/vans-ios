@@ -12,9 +12,9 @@ struct GlassTabBarView: View {
 
     let tabs: [TabItem] = [
         .init(id: 0, title: String(localized: "Messages"), icon: "bubble.left", activeIcon: "bubble.left.fill", isPrimary: false),
-        .init(id: 1, title: String(localized: "Explore"), icon: "compass", activeIcon: "compass.fill", isPrimary: false),
-        .init(id: 2, title: String(localized: "Events"), icon: "calendar", activeIcon: "calendar.fill", isPrimary: true),
-        .init(id: 3, title: String(localized: "Profile"), icon: "person", activeIcon: "person.fill", isPrimary: false),
+        .init(id: 1, title: String(localized: "Explore"), icon: "safari", activeIcon: "safari.fill", isPrimary: false),
+        .init(id: 2, title: String(localized: "Events"), icon: "calendar", activeIcon: "calendar.circle.fill", isPrimary: true),
+        .init(id: 3, title: String(localized: "Profile"), icon: "person.crop.circle", activeIcon: "person.crop.circle.fill", isPrimary: false),
     ]
 
     @Binding var selectedIndex: Int
@@ -70,6 +70,7 @@ struct GlassTabBarView: View {
         } label: {
             VStack(spacing: 4) {
                 Image(systemName: isSelected ? tab.activeIcon : tab.icon)
+                    .symbolRenderingMode(.monochrome)
                     .font(.system(
                         size: tab.isPrimary ? 22 : 20,
                         weight: isSelected ? .medium : .light

@@ -26,10 +26,18 @@ struct DarkMapView: UIViewRepresentable {
         )
 
         mapView.setRegion(region, animated: false)
+        context.coordinator.lastRegion = region
         return mapView
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
+        // Sync region if binding changed programmatically (e.g. recenter)
+        let coord = context.coordinator
+        if !coord.regionsEqual(region, coord.lastRegion) {
+            mapView.setRegion(region, animated: true)
+            coord.lastRegion = region
+        }
+
         // Diff annotations to avoid flicker
         let existing = Set(mapView.annotations.compactMap { $0 as? EventAnnotation })
         let incoming = Set(annotations)
@@ -52,10 +60,17 @@ struct DarkMapView: UIViewRepresentable {
     // MARK: - Coordinator
 
     final class MapCoordinator: NSObject, MKMapViewDelegate {
-        let parent: DarkMapView
+        var parent: DarkMapView
+        var lastRegion: MKCoordinateRegion?
 
         init(parent: DarkMapView) {
             self.parent = parent
+        }
+
+        func regionsEqual(_ a: MKCoordinateRegion, _ b: MKCoordinateRegion?) -> Bool {
+            guard let b = b else { return false }
+            return abs(a.center.latitude - b.center.latitude) < 0.0001
+                && abs(a.center.longitude - b.center.longitude) < 0.0001
         }
 
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -80,7 +95,12 @@ struct DarkMapView: UIViewRepresentable {
         }
 
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-            parent.region = mapView.region
+            // Track where the map ended up so updateUIView won't fight it
+            lastRegion = mapView.region
+            // Sync back to binding asynchronously to avoid publish-during-view-update warning
+            DispatchQueue.main.async {
+                self.parent.region = mapView.region
+            }
         }
     }
 }
