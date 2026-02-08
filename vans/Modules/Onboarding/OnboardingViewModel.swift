@@ -4,66 +4,66 @@ import SwiftUI
 import PhotosUI
 
 enum OnboardingStep: Int, CaseIterable {
-    case photo = 0
-    case basicInfo = 1
-    case vanLifeStatus = 2
-    case region = 3
-    case activities = 4
-    case bio = 5
+    case fullName = 0
+    case birthday = 1
+    case gender = 2
+    case languages = 3
+    case socialMedia = 4
 
     var title: String {
         switch self {
-        case .photo: return "Add a Photo"
-        case .basicInfo: return "About You"
-        case .vanLifeStatus: return "Van Life Journey"
-        case .region: return "Your Region"
-        case .activities: return "Your Interests"
-        case .bio: return "Your Story"
+        case .fullName: return "My full name..."
+        case .birthday: return "When's your birthday?"
+        case .gender: return "How do you identify?"
+        case .languages: return "I speak these languages..."
+        case .socialMedia: return "Social media account"
         }
     }
 
     var subtitle: String {
         switch self {
-        case .photo: return "Show the community who you are"
-        case .basicInfo: return "Let's get to know you"
-        case .vanLifeStatus: return "Where are you in your journey?"
-        case .region: return "Where do you roam?"
-        case .activities: return "What do you love doing?"
-        case .bio: return "Share a bit about yourself"
+        case .fullName: return "This is how you will appear on the app"
+        case .birthday: return "We need to verify that you are over 18. This helps us find events with like-minded people for you."
+        case .gender: return "This info will help you access gender-specific events and create a safe space"
+        case .languages: return "This will help you see events only in the languages you speak"
+        case .socialMedia: return "Let people know more about you"
         }
     }
 }
 
 final class OnboardingViewModel: ActionableViewModel {
 
-    @Published var currentStep: OnboardingStep = .photo
+    @Published var currentStep: OnboardingStep = .fullName
     @Published var isLoading: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String = ""
 
-    // Photo step
-    @Published var selectedPhotoItem: PhotosPickerItem?
-    @Published var photoUrl: String = ""
-    @Published var photoImage: UIImage?
+    // Full name step
+    @Published var fullName: String = ""
 
-    // Basic info step
-    @Published var firstName: String = ""
-    @Published var age: String = ""
+    // Birthday step
+    @Published var birthday: Date = Calendar.current.date(byAdding: .year, value: -25, to: Date()) ?? Date()
+
+    // Gender step
     @Published var selectedGender: Gender?
 
-    // Van life status step
-    @Published var selectedVanLifeStatus: VanLifeStatus?
+    // Languages step
+    @Published var selectedLanguages: Set<String> = []
 
-    // Region step
+    // Social media step
+    @Published var instagramUsername: String = ""
+    @Published var linkedinUrl: String = ""
+
+    // Keep these for later steps (after waitlist)
+    @Published var selectedVanLifeStatus: VanLifeStatus?
     @Published var regions: [Region] = []
     @Published var selectedRegion: Region?
-
-    // Activities step
     @Published var activities: [Activity] = []
     @Published var selectedActivities: Set<String> = []
-
-    // Bio step
     @Published var bio: String = ""
+    @Published var photoUrl: String = ""
+    @Published var photoImage: UIImage?
+    @Published var selectedPhotoItem: PhotosPickerItem?
 
     private weak var coordinator: OnboardingCoordinating?
     private var cancellables = Set<AnyCancellable>()
@@ -72,27 +72,34 @@ final class OnboardingViewModel: ActionableViewModel {
         Double(currentStep.rawValue + 1) / Double(OnboardingStep.allCases.count)
     }
 
+    var calculatedAge: Int {
+        let calendar = Calendar.current
+        let now = Date()
+        let ageComponents = calendar.dateComponents([.year], from: birthday, to: now)
+        return ageComponents.year ?? 0
+    }
+
+    var isAdult: Bool {
+        calculatedAge >= 18
+    }
+
     var canProceed: Bool {
         switch currentStep {
-        case .photo:
-            return photoImage != nil || !photoUrl.isEmpty
-        case .basicInfo:
-            return !firstName.trimmingCharacters(in: .whitespaces).isEmpty &&
-                   (Int(age) ?? 0) >= 18 &&
-                   selectedGender != nil
-        case .vanLifeStatus:
-            return selectedVanLifeStatus != nil
-        case .region:
-            return selectedRegion != nil
-        case .activities:
-            return !selectedActivities.isEmpty && selectedActivities.count <= 5
-        case .bio:
-            return true // Bio is optional
+        case .fullName:
+            return !fullName.trimmingCharacters(in: .whitespaces).isEmpty
+        case .birthday:
+            return isAdult
+        case .gender:
+            return selectedGender != nil
+        case .languages:
+            return !selectedLanguages.isEmpty
+        case .socialMedia:
+            return true // Optional step
         }
     }
 
     var isLastStep: Bool {
-        currentStep == .bio
+        currentStep == .socialMedia
     }
 
     init(coordinator: OnboardingCoordinating?) {
@@ -117,8 +124,6 @@ final class OnboardingViewModel: ActionableViewModel {
             if let data = try await item.loadTransferable(type: Data.self),
                let image = UIImage(data: data) {
                 self.photoImage = image
-                // TODO: Upload to Firebase Storage and get URL
-                // For now, we'll use a placeholder
                 self.photoUrl = "photo_selected"
             }
         } catch {
@@ -134,7 +139,7 @@ final class OnboardingViewModel: ActionableViewModel {
                 self.activities = data.activities
                 self.regions = data.regions
             } catch {
-                showError(message: "Failed to load setup data")
+                // Don't show error for now, data will be loaded later
             }
             isLoading = false
         }
@@ -146,7 +151,7 @@ final class OnboardingViewModel: ActionableViewModel {
         if isLastStep {
             submitProfile()
         } else if let nextStep = OnboardingStep(rawValue: currentStep.rawValue + 1) {
-            withAnimation {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 currentStep = nextStep
             }
         }
@@ -154,9 +159,25 @@ final class OnboardingViewModel: ActionableViewModel {
 
     func previousStep() {
         if let prevStep = OnboardingStep(rawValue: currentStep.rawValue - 1) {
-            withAnimation {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 currentStep = prevStep
             }
+        }
+    }
+
+    func selectGender(_ gender: Gender) {
+        selectedGender = gender
+        // Auto-advance after selection
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.nextStep()
+        }
+    }
+
+    func toggleLanguage(_ languageId: String) {
+        if selectedLanguages.contains(languageId) {
+            selectedLanguages.remove(languageId)
+        } else {
+            selectedLanguages.insert(languageId)
         }
     }
 
@@ -168,11 +189,12 @@ final class OnboardingViewModel: ActionableViewModel {
         }
     }
 
+    func skipSocialMedia() {
+        submitProfile()
+    }
+
     private func submitProfile() {
-        guard let gender = selectedGender,
-              let vanLifeStatus = selectedVanLifeStatus,
-              let region = selectedRegion,
-              let ageInt = Int(age) else {
+        guard let gender = selectedGender else {
             showError(message: "Please complete all required fields")
             return
         }
@@ -180,18 +202,26 @@ final class OnboardingViewModel: ActionableViewModel {
         Task { @MainActor in
             isLoading = true
             do {
-                // TODO: Upload photo to Firebase Storage first
-                let uploadedPhotoUrl = photoUrl.isEmpty ? "https://placeholder.com/avatar.jpg" : photoUrl
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions = [.withFullDate]
+                let birthdayString = formatter.string(from: birthday)
+
+                // Extract first name from full name
+                let firstName = fullName.trimmingCharacters(in: .whitespaces).components(separatedBy: " ").first ?? fullName
 
                 _ = try await AuthManager.shared.submitProfile(
-                    firstName: firstName.trimmingCharacters(in: .whitespaces),
-                    photoUrl: uploadedPhotoUrl,
-                    age: ageInt,
+                    firstName: firstName,
+                    photoUrl: "https://placeholder.com/avatar.jpg", // Will be set later
+                    age: calculatedAge,
                     gender: gender,
-                    vanLifeStatus: vanLifeStatus,
-                    region: region.id,
-                    activities: Array(selectedActivities),
-                    bio: bio.isEmpty ? nil : bio.trimmingCharacters(in: .whitespacesAndNewlines)
+                    vanLifeStatus: .planning, // Default, will be set later
+                    region: "global", // Default, will be set later
+                    activities: [], // Will be set later
+                    bio: nil,
+                    birthday: birthdayString,
+                    languages: Array(selectedLanguages),
+                    instagramUsername: instagramUsername.isEmpty ? nil : instagramUsername.trimmingCharacters(in: .whitespaces),
+                    linkedinUrl: linkedinUrl.isEmpty ? nil : linkedinUrl.trimmingCharacters(in: .whitespaces)
                 )
 
                 coordinator?.finishOnboarding()

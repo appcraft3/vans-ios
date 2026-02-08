@@ -175,9 +175,13 @@ final class AuthManager {
         vanLifeStatus: VanLifeStatus,
         region: String,
         activities: [String],
-        bio: String?
+        bio: String?,
+        birthday: String? = nil,
+        languages: [String]? = nil,
+        instagramUsername: String? = nil,
+        linkedinUrl: String? = nil
     ) async throws -> UserData {
-        let data: [String: Any] = [
+        var data: [String: Any] = [
             "firstName": firstName,
             "photoUrl": photoUrl,
             "age": age,
@@ -187,6 +191,19 @@ final class AuthManager {
             "activities": activities,
             "bio": bio ?? ""
         ]
+
+        if let birthday = birthday {
+            data["birthday"] = birthday
+        }
+        if let languages = languages {
+            data["languages"] = languages
+        }
+        if let instagramUsername = instagramUsername {
+            data["instagramUsername"] = instagramUsername
+        }
+        if let linkedinUrl = linkedinUrl {
+            data["linkedinUrl"] = linkedinUrl
+        }
 
         let response: SubmitProfileResponse = try await FirebaseManager.shared.callFunction(
             name: "submitProfile",

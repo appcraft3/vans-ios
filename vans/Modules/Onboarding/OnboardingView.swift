@@ -4,323 +4,429 @@ import PhotosUI
 struct OnboardingView: ActionableView {
 
     @ObservedObject var viewModel: OnboardingViewModel
+    private let accentGreen = Color(hex: "2E7D5A")
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
+            // Background
             AppTheme.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
+                // Header with progress
+                headerView
+
                 // Progress bar
-                ProgressView(value: viewModel.progress)
-                    .progressViewStyle(LinearProgressViewStyle(tint: AppTheme.accent))
-                    .padding(.horizontal, 24)
-                    .padding(.top, 16)
-
-                // Step indicator
-                Text("Step \(viewModel.currentStep.rawValue + 1) of \(OnboardingStep.allCases.count)")
-                    .font(.caption)
-                    .foregroundColor(AppTheme.textTertiary)
-                    .padding(.top, 8)
-
-                // Content
-                ScrollView {
-                    VStack(spacing: 24) {
-                        // Title
-                        VStack(spacing: 8) {
-                            Text(viewModel.currentStep.title)
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(AppTheme.textPrimary)
-
-                            Text(viewModel.currentStep.subtitle)
-                                .font(.body)
-                                .foregroundColor(AppTheme.textSecondary)
-                                .multilineTextAlignment(.center)
-                        }
-                        .padding(.top, 32)
-
-                        // Step content
-                        stepContent
-                            .padding(.horizontal, 24)
+                HStack(spacing: 4) {
+                    ForEach(0..<OnboardingStep.allCases.count, id: \.self) { index in
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(index <= viewModel.currentStep.rawValue ? accentGreen : Color.white.opacity(0.2))
+                            .frame(height: 3)
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
 
-                // Navigation buttons
-                HStack(spacing: 16) {
-                    if viewModel.currentStep != .photo {
-                        Button(action: { viewModel.previousStep() }) {
-                            Text("Back")
-                                .font(.headline)
-                                .foregroundColor(AppTheme.textPrimary)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(AppTheme.card)
-                                .cornerRadius(12)
-                        }
-                    }
+                // Title section (fixed at top)
+                titleSection
+                    .padding(.top, 24)
+                    .padding(.bottom, 20)
 
-                    Button(action: { viewModel.nextStep() }) {
-                        Text(viewModel.isLastStep ? "Submit" : "Continue")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(viewModel.canProceed ? AppTheme.accent : AppTheme.textTertiary)
-                            .cornerRadius(12)
-                    }
-                    .disabled(!viewModel.canProceed)
+                // Step content (scrollable, takes remaining space)
+                ScrollView(showsIndicators: false) {
+                    stepContent
+                        .padding(.horizontal, 24)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(24)
+
+                Spacer(minLength: 0)
+
+                // Bottom button
+                bottomButton
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
+            // Loading overlay
             if viewModel.isLoading {
-                AppTheme.background.opacity(0.8).ignoresSafeArea()
+                Color.black.opacity(0.5).ignoresSafeArea()
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.primary))
+                    .progressViewStyle(CircularProgressViewStyle(tint: accentGreen))
                     .scaleEffect(1.5)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationBarHidden(true)
         .alert("Error", isPresented: $viewModel.showError) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.errorMessage)
         }
-        .onAppear {
-            viewModel.loadSetupData()
-        }
     }
+
+    // MARK: - Header
+
+    private var headerView: some View {
+        HStack {
+            if viewModel.currentStep != .fullName {
+                Button {
+                    viewModel.previousStep()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+            } else {
+                Color.clear.frame(width: 24)
+            }
+
+            Spacer()
+
+            Text("Registration")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.white)
+
+            Spacer()
+
+            Color.clear.frame(width: 24)
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+    }
+
+    // MARK: - Title Section
+
+    private var titleSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(viewModel.currentStep.title)
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(.white)
+
+            Text(viewModel.currentStep.subtitle)
+                .font(.system(size: 15))
+                .foregroundColor(.white.opacity(0.6))
+                .lineSpacing(4)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 24)
+    }
+
+    // MARK: - Step Content
 
     @ViewBuilder
     private var stepContent: some View {
         switch viewModel.currentStep {
-        case .photo:
-            photoStepContent
-        case .basicInfo:
-            basicInfoStepContent
-        case .vanLifeStatus:
-            vanLifeStatusStepContent
-        case .region:
-            regionStepContent
-        case .activities:
-            activitiesStepContent
-        case .bio:
-            bioStepContent
+        case .fullName:
+            fullNameStepContent
+        case .birthday:
+            birthdayStepContent
+        case .gender:
+            genderStepContent
+        case .languages:
+            languagesStepContent
+        case .socialMedia:
+            socialMediaStepContent
         }
     }
 
-    private var photoStepContent: some View {
+    // MARK: - Full Name Step
+
+    private var fullNameStepContent: some View {
         VStack(spacing: 24) {
-            PhotosPicker(selection: $viewModel.selectedPhotoItem, matching: .images) {
-                if let image = viewModel.photoImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 200, height: 200)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(AppTheme.primary, lineWidth: 3))
-                } else {
-                    ZStack {
-                        Circle()
-                            .fill(AppTheme.card)
-                            .frame(width: 200, height: 200)
-
-                        VStack(spacing: 8) {
-                            Image(systemName: "camera.fill")
-                                .font(.system(size: 40))
-                            Text("Add Photo")
-                                .font(.headline)
-                        }
-                        .foregroundColor(AppTheme.textPrimary)
-                    }
-                }
-            }
-
-            Text("Choose a photo that clearly shows your face")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
+            TextField("Enter your full name", text: $viewModel.fullName)
+                .font(.system(size: 17))
+                .foregroundColor(.white)
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white.opacity(0.08))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                )
+                .textContentType(.name)
+                .autocorrectionDisabled()
         }
-        .padding(.top, 40)
     }
 
-    private var basicInfoStepContent: some View {
-        VStack(spacing: 20) {
-            // First name
-            VStack(alignment: .leading, spacing: 8) {
-                Text("First Name")
-                    .font(.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+    // MARK: - Birthday Step
 
-                TextField("", text: $viewModel.firstName)
-                    .textFieldStyle(OnboardingTextFieldStyle())
-                    .textContentType(.givenName)
-            }
+    private var birthdayStepContent: some View {
+        VStack(spacing: 24) {
+            DatePicker(
+                "",
+                selection: $viewModel.birthday,
+                in: ...Calendar.current.date(byAdding: .year, value: -18, to: Date())!,
+                displayedComponents: .date
+            )
+            .datePickerStyle(.wheel)
+            .labelsHidden()
+            .colorScheme(.dark)
+            .tint(accentGreen)
 
-            // Age
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Age (must be 18+)")
-                    .font(.caption)
-                    .foregroundColor(AppTheme.textSecondary)
-
-                TextField("", text: $viewModel.age)
-                    .textFieldStyle(OnboardingTextFieldStyle())
-                    .keyboardType(.numberPad)
-            }
-
-            // Gender
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Gender")
-                    .font(.caption)
-                    .foregroundColor(AppTheme.textSecondary)
-
-                HStack(spacing: 12) {
-                    ForEach(Gender.allCases, id: \.self) { gender in
-                        Button(action: { viewModel.selectedGender = gender }) {
-                            Text(gender.displayName)
-                                .font(.subheadline)
-                                .foregroundColor(viewModel.selectedGender == gender ? .black : AppTheme.textPrimary)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .background(viewModel.selectedGender == gender ? AppTheme.accent : AppTheme.card)
-                                .cornerRadius(8)
-                        }
-                    }
+            if !viewModel.isAdult {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                    Text("You must be 18 or older to join")
+                        .font(.system(size: 14))
+                        .foregroundColor(.orange)
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(Color.orange.opacity(0.15))
+                .cornerRadius(10)
             }
         }
     }
 
-    private var vanLifeStatusStepContent: some View {
-        VStack(spacing: 16) {
-            ForEach(VanLifeStatus.allCases, id: \.self) { status in
-                Button(action: { viewModel.selectedVanLifeStatus = status }) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(status.displayName)
-                                .font(.headline)
-                                .foregroundColor(AppTheme.textPrimary)
+    // MARK: - Gender Step
 
-                            Text(statusDescription(for: status))
-                                .font(.caption)
-                                .foregroundColor(AppTheme.textSecondary)
+    private var genderStepContent: some View {
+        VStack(spacing: 12) {
+            ForEach(Gender.allCases, id: \.self) { gender in
+                Button {
+                    let impact = UIImpactFeedbackGenerator(style: .light)
+                    impact.impactOccurred()
+                    viewModel.selectGender(gender)
+                } label: {
+                    HStack(spacing: 12) {
+                        if !gender.icon.isEmpty {
+                            Text(gender.icon)
+                                .font(.system(size: 20))
                         }
+
+                        Text(gender.displayName)
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundColor(accentGreen)
 
                         Spacer()
 
-                        if viewModel.selectedVanLifeStatus == status {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(AppTheme.accent)
-                        }
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(accentGreen.opacity(0.6))
                     }
-                    .padding()
-                    .background(viewModel.selectedVanLifeStatus == status ? AppTheme.accentDark : AppTheme.card)
-                    .cornerRadius(12)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(accentGreen.opacity(0.15))
+                    )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(viewModel.selectedVanLifeStatus == status ? AppTheme.accent : Color.clear, lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(viewModel.selectedGender == gender ? accentGreen : Color.clear, lineWidth: 2)
                     )
                 }
             }
         }
     }
 
-    private func statusDescription(for status: VanLifeStatus) -> String {
-        switch status {
-        case .fullTime: return "Living in my van full-time"
-        case .partTime: return "Part-time van life, part-time home"
-        case .planning: return "Planning to start van life soon"
-        }
-    }
+    // MARK: - Languages Step
 
-    private var regionStepContent: some View {
-        VStack(spacing: 12) {
-            if viewModel.regions.isEmpty {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.primary))
-            } else {
-                ForEach(viewModel.regions) { region in
-                    Button(action: { viewModel.selectedRegion = region }) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(region.name)
-                                    .font(.headline)
-                                    .foregroundColor(AppTheme.textPrimary)
-                                Text(region.country)
-                                    .font(.caption)
-                                    .foregroundColor(AppTheme.textSecondary)
-                            }
-
-                            Spacer()
-
-                            if viewModel.selectedRegion?.id == region.id {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(AppTheme.accent)
-                            }
-                        }
-                        .padding()
-                        .background(viewModel.selectedRegion?.id == region.id ? AppTheme.accentDark : AppTheme.card)
-                        .cornerRadius(12)
+    private var languagesStepContent: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            FlowLayout(spacing: 10) {
+                ForEach(Language.allLanguages) { language in
+                    Button {
+                        let impact = UIImpactFeedbackGenerator(style: .light)
+                        impact.impactOccurred(intensity: 0.6)
+                        viewModel.toggleLanguage(language.id)
+                    } label: {
+                        Text(language.name)
+                            .font(.system(size: 15, weight: viewModel.selectedLanguages.contains(language.id) ? .semibold : .regular))
+                            .foregroundColor(viewModel.selectedLanguages.contains(language.id) ? accentGreen : .white.opacity(0.7))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(
+                                Capsule()
+                                    .fill(viewModel.selectedLanguages.contains(language.id) ? accentGreen.opacity(0.2) : Color.white.opacity(0.08))
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(viewModel.selectedLanguages.contains(language.id) ? accentGreen.opacity(0.5) : Color.white.opacity(0.15), lineWidth: 1)
+                            )
                     }
                 }
             }
         }
     }
 
-    private var activitiesStepContent: some View {
-        VStack(spacing: 16) {
-            Text("Select up to 5 activities")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
+    // MARK: - Social Media Step
 
-            if viewModel.activities.isEmpty {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.primary))
-            } else {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 12) {
-                    ForEach(viewModel.activities) { activity in
-                        Button(action: { viewModel.toggleActivity(activity.id) }) {
-                            VStack(spacing: 8) {
-                                Image(systemName: activity.icon)
-                                    .font(.title2)
-                                Text(activity.name)
-                                    .font(.caption)
-                            }
-                            .foregroundColor(viewModel.selectedActivities.contains(activity.id) ? .black : AppTheme.textPrimary)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(viewModel.selectedActivities.contains(activity.id) ? AppTheme.accent : AppTheme.card)
-                            .cornerRadius(12)
-                        }
-                    }
+    private var socialMediaStepContent: some View {
+        VStack(spacing: 20) {
+            // Instagram
+            HStack(spacing: 12) {
+                ZStack {
+                    LinearGradient(
+                        colors: [
+                            Color(hex: "833AB4"),
+                            Color(hex: "FD1D1D"),
+                            Color(hex: "F77737")
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(10)
+
+                    Image(systemName: "camera.fill")
+                        .font(.system(size: 18))
+                        .foregroundColor(.white)
                 }
-            }
 
-            Text("\(viewModel.selectedActivities.count)/5 selected")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                Text("@")
+                    .foregroundColor(.white.opacity(0.5))
+
+                TextField("", text: $viewModel.instagramUsername)
+                    .placeholder(when: viewModel.instagramUsername.isEmpty) {
+                        Text("Username")
+                            .foregroundColor(.white.opacity(0.4))
+                    }
+                    .font(.system(size: 16))
+                    .foregroundColor(.white)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(0.08))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+            )
+
+            Text("Or")
+                .font(.system(size: 14))
+                .foregroundColor(.white.opacity(0.5))
+
+            // LinkedIn
+            HStack(spacing: 12) {
+                ZStack {
+                    Color(hex: "0A66C2")
+                        .frame(width: 40, height: 40)
+                        .cornerRadius(10)
+
+                    Text("in")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.white)
+                }
+
+                TextField("", text: $viewModel.linkedinUrl)
+                    .placeholder(when: viewModel.linkedinUrl.isEmpty) {
+                        Text("Link to your profile")
+                            .foregroundColor(.white.opacity(0.4))
+                    }
+                    .font(.system(size: 16))
+                    .foregroundColor(.white)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.URL)
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(0.08))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+            )
+
+            // Skip button
+            Button {
+                viewModel.skipSocialMedia()
+            } label: {
+                Text("Skip for now")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(accentGreen)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(accentGreen.opacity(0.15))
+                    )
+            }
+            .padding(.top, 8)
         }
     }
 
-    private var bioStepContent: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Bio (optional)")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
+    // MARK: - Bottom Button
 
-            TextEditor(text: $viewModel.bio)
-                .frame(height: 150)
-                .padding(12)
-                .background(AppTheme.card)
-                .cornerRadius(12)
-                .foregroundColor(AppTheme.textPrimary)
-                .scrollContentBackground(.hidden)
-
-            Text("\(viewModel.bio.count)/300")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+    private var bottomButton: some View {
+        Group {
+            if viewModel.currentStep != .socialMedia && viewModel.currentStep != .gender {
+                Button {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    viewModel.nextStep()
+                } label: {
+                    Text(viewModel.isLastStep ? "Save and Continue" : "Continue")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(viewModel.canProceed ? .black : .white.opacity(0.4))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 18)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(viewModel.canProceed ? accentGreen : Color.white.opacity(0.1))
+                        )
+                }
+                .disabled(!viewModel.canProceed)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 34)
+            }
         }
     }
 }
+
+// MARK: - Flow Layout for Language Tags
+
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let result = FlowResult(in: proposal.width ?? 0, subviews: subviews, spacing: spacing)
+        return CGSize(width: proposal.width ?? 0, height: result.height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let result = FlowResult(in: bounds.width, subviews: subviews, spacing: spacing)
+        for (index, subview) in subviews.enumerated() {
+            let point = result.positions[index]
+            subview.place(at: CGPoint(x: bounds.minX + point.x, y: bounds.minY + point.y), proposal: .unspecified)
+        }
+    }
+
+    struct FlowResult {
+        var positions: [CGPoint] = []
+        var height: CGFloat = 0
+
+        init(in width: CGFloat, subviews: Subviews, spacing: CGFloat) {
+            var currentX: CGFloat = 0
+            var currentY: CGFloat = 0
+            var lineHeight: CGFloat = 0
+
+            for subview in subviews {
+                let size = subview.sizeThatFits(.unspecified)
+
+                if currentX + size.width > width && currentX > 0 {
+                    currentX = 0
+                    currentY += lineHeight + spacing
+                    lineHeight = 0
+                }
+
+                positions.append(CGPoint(x: currentX, y: currentY))
+                lineHeight = max(lineHeight, size.height)
+                currentX += size.width + spacing
+            }
+
+            height = currentY + lineHeight
+        }
+    }
+}
+
+// MARK: - Text Field Style
 
 struct OnboardingTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
@@ -331,3 +437,4 @@ struct OnboardingTextFieldStyle: TextFieldStyle {
             .foregroundColor(AppTheme.textPrimary)
     }
 }
+
