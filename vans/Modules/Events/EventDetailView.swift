@@ -8,132 +8,26 @@ struct EventDetailView: View {
     @State private var checkInCode = ""
     @State private var selectedTab = 0
 
+    private let accentGreen = Color(hex: "2E7D5A")
+
     var body: some View {
         ZStack {
             AppTheme.background.ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                // Custom Navigation Header
-                HStack {
-                    Button {
-                        dismiss()
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 16, weight: .semibold))
-                            Text("Back")
-                        }
-                        .foregroundColor(AppTheme.textPrimary)
-                    }
-
-                    Spacer()
-
-                    Text("Event")
-                        .font(.headline)
-                        .foregroundColor(AppTheme.textPrimary)
-
-                    Spacer()
-
-                    // Invisible spacer for centering
-                    HStack(spacing: 4) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
-                        Text("Back")
-                    }
-                    .opacity(0)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(AppTheme.background)
-
-                if viewModel.isLoading && viewModel.event == nil {
-                    Spacer()
-                    ProgressView()
-                        .tint(AppTheme.primary)
-                    Spacer()
-                } else if let event = viewModel.event {
-                    // Tab Picker (only show if interested or attending)
+            if viewModel.isLoading && viewModel.event == nil {
+                ProgressView()
+                    .tint(accentGreen)
+                    .scaleEffect(1.5)
+            } else if let event = viewModel.event {
+                VStack(spacing: 0) {
+                    // Custom segment (only if interested)
                     if event.isInterested {
-                        Picker("", selection: $selectedTab) {
-                            Text("Details").tag(0)
-                            Text("Chat").tag(1)
-                        }
-                        .pickerStyle(.segmented)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        segmentControl
                     }
 
                     if selectedTab == 0 {
-                        // Details Tab
-                        ZStack(alignment: .bottom) {
-                            ScrollView(showsIndicators: false) {
-                                VStack(alignment: .leading, spacing: 24) {
-                                    // Header
-                                    EventDetailHeader(event: event, isAdmin: viewModel.isAdmin)
-
-                                    // Description
-                                    if !event.description.isEmpty {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            Text("About")
-                                                .font(.headline)
-                                                .foregroundColor(AppTheme.textPrimary)
-                                            Text(event.description)
-                                                .font(.body)
-                                                .foregroundColor(AppTheme.textSecondary)
-                                        }
-                                    }
-
-                                    // Admin Section
-                                    if viewModel.isAdmin, let checkInCode = viewModel.checkInCode {
-                                        AdminSection(
-                                            event: event,
-                                            checkInCode: checkInCode,
-                                            onEnableCheckIn: { Task { await viewModel.enableCheckIn() } },
-                                            onCompleteEvent: { Task { await viewModel.completeEvent() } }
-                                        )
-                                    }
-
-                                    // Interest limit indicator (only when can send interests)
-                                    if viewModel.canSendInterests {
-                                        InterestLimitBanner(
-                                            interestsCount: viewModel.interestsCount,
-                                            interestLimit: viewModel.interestLimit
-                                        )
-                                    }
-
-                                    // Attendees
-                                    if !viewModel.attendees.isEmpty {
-                                        AttendeesSection(
-                                            attendees: viewModel.attendees,
-                                            canReview: viewModel.canReview,
-                                            canSendInterests: viewModel.canSendInterests,
-                                            interestsRemaining: viewModel.interestsRemaining,
-                                            processingInterestFor: viewModel.processingInterestFor,
-                                            onTapAttendee: { attendee in
-                                                viewModel.openUserProfile(attendee)
-                                            },
-                                            onReview: { attendee in
-                                                viewModel.openReviewSheet(for: attendee)
-                                            },
-                                            onToggleInterest: { attendee in
-                                                Task { await viewModel.toggleInterest(for: attendee) }
-                                            }
-                                        )
-                                    }
-
-                                    Spacer(minLength: 100)
-                                }
-                                .padding(16)
-                            }
-
-                            // Bottom action button
-                            bottomActionButton(for: event)
-                                .padding(.horizontal, 16)
-                                .padding(.bottom, 16)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        detailsTab(event: event)
                     } else {
-                        // Chat Tab
                         EventChatView(eventId: viewModel.eventId) { senderId in
                             if let attendee = viewModel.attendees.first(where: { $0.id == senderId }) {
                                 viewModel.openUserProfile(attendee)
@@ -142,6 +36,29 @@ struct EventDetailView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
+            }
+
+            // Floating back button
+            VStack {
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(width: 36, height: 36)
+                            .background(.ultraThinMaterial.opacity(0.8))
+                            .environment(\.colorScheme, .dark)
+                            .clipShape(Circle())
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+
+                Spacer()
             }
         }
         .navigationBarHidden(true)
@@ -177,55 +94,387 @@ struct EventDetailView: View {
         }
     }
 
+    // MARK: - Segment Control
+
+    private var segmentControl: some View {
+        HStack(spacing: 4) {
+            ForEach(["Details", "Chat"], id: \.self) { tab in
+                let index = tab == "Details" ? 0 : 1
+                let isSelected = selectedTab == index
+
+                Button {
+                    let impact = UIImpactFeedbackGenerator(style: .light)
+                    impact.impactOccurred(intensity: 0.5)
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        selectedTab = index
+                    }
+                } label: {
+                    Text(tab)
+                        .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
+                        .foregroundColor(isSelected ? .white : AppTheme.textTertiary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(isSelected ? accentGreen.opacity(0.35) : Color.clear)
+                        )
+                        .overlay(
+                            Capsule()
+                                .stroke(isSelected ? accentGreen.opacity(0.5) : Color.clear, lineWidth: 1)
+                        )
+                }
+            }
+        }
+        .padding(4)
+        .background(
+            Capsule()
+                .fill(Color.white.opacity(0.06))
+        )
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+    }
+
+    // MARK: - Details Tab
+
+    @ViewBuilder
+    private func detailsTab(event: VanEvent) -> some View {
+        ZStack(alignment: .bottom) {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
+                    // Hero Image
+                    heroImage(event: event)
+
+                    VStack(alignment: .leading, spacing: 20) {
+                        // Info pills
+                        infoPills(event: event)
+
+                        // About
+                        if !event.description.isEmpty {
+                            aboutSection(event: event)
+                        }
+
+                        // Photo Gallery
+                        photoGallery(event: event)
+
+                        // Admin Section
+                        if viewModel.isAdmin, let checkInCode = viewModel.checkInCode {
+                            AdminSection(
+                                event: event,
+                                checkInCode: checkInCode,
+                                onEnableCheckIn: { Task { await viewModel.enableCheckIn() } },
+                                onCompleteEvent: { Task { await viewModel.completeEvent() } }
+                            )
+                        }
+
+                        // Interest limit indicator
+                        if viewModel.canSendInterests {
+                            InterestLimitBanner(
+                                interestsCount: viewModel.interestsCount,
+                                interestLimit: viewModel.interestLimit
+                            )
+                        }
+
+                        // Attendees
+                        if !viewModel.attendees.isEmpty {
+                            AttendeesSection(
+                                attendees: viewModel.attendees,
+                                canReview: viewModel.canReview,
+                                canSendInterests: viewModel.canSendInterests,
+                                interestsRemaining: viewModel.interestsRemaining,
+                                processingInterestFor: viewModel.processingInterestFor,
+                                onTapAttendee: { attendee in
+                                    viewModel.openUserProfile(attendee)
+                                },
+                                onReview: { attendee in
+                                    viewModel.openReviewSheet(for: attendee)
+                                },
+                                onToggleInterest: { attendee in
+                                    Task { await viewModel.toggleInterest(for: attendee) }
+                                }
+                            )
+                        }
+
+                        Spacer(minLength: 100)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 20)
+                }
+            }
+
+            // Bottom action
+            bottomActionButton(for: event)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: - Hero Image
+
+    @ViewBuilder
+    private func heroImage(event: VanEvent) -> some View {
+        ZStack(alignment: .bottomLeading) {
+            // Background image
+            AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/800/600")) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                case .failure:
+                    Rectangle().fill(Color(hex: "1A2820"))
+                case .empty:
+                    Rectangle().fill(Color(hex: "1A2820"))
+                        .overlay(ProgressView().tint(.white.opacity(0.25)))
+                @unknown default:
+                    Rectangle().fill(Color(hex: "1A2820"))
+                }
+            }
+            .frame(height: 320)
+            .clipped()
+
+            // Green gradient overlays
+            VStack(spacing: 0) {
+                // Top gradient (for back button area)
+                LinearGradient(
+                    stops: [
+                        .init(color: AppTheme.background.opacity(0.7), location: 0),
+                        .init(color: .clear, location: 1.0),
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 100)
+
+                Spacer()
+
+                // Bottom gradient (green tint)
+                LinearGradient(
+                    stops: [
+                        .init(color: .clear, location: 0),
+                        .init(color: accentGreen.opacity(0.5), location: 0.4),
+                        .init(color: accentGreen.opacity(0.85), location: 0.75),
+                        .init(color: AppTheme.background, location: 1.0),
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 200)
+            }
+            .frame(height: 320)
+
+            // Title overlay at bottom
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 10) {
+                    StatusBadge(status: event.status)
+
+                    if event.hasBuilder {
+                        HStack(spacing: 4) {
+                            Image(systemName: "wrench.and.screwdriver.fill")
+                                .font(.system(size: 9))
+                            Text("Builder")
+                                .font(.system(size: 11, weight: .semibold))
+                        }
+                        .foregroundColor(AppTheme.primary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(
+                            Capsule()
+                                .fill(.ultraThinMaterial)
+                                .environment(\.colorScheme, .dark)
+                        )
+                        .overlay(
+                            Capsule()
+                                .stroke(AppTheme.primary.opacity(0.4), lineWidth: 1)
+                        )
+                    }
+
+                    Spacer()
+
+                    Image(systemName: event.activityIcon)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.white.opacity(0.85))
+                        .padding(10)
+                        .background(.white.opacity(0.12))
+                        .clipShape(Circle())
+                }
+
+                Text(event.activityType.capitalized)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.6))
+                    .textCase(.uppercase)
+                    .tracking(1.5)
+
+                Text(event.title)
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(2)
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 16)
+        }
+    }
+
+    // MARK: - Info Pills
+
+    @ViewBuilder
+    private func infoPills(event: VanEvent) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                infoPill(icon: "calendar", text: event.formattedDate)
+                infoPill(icon: "mappin", text: event.approximateArea.isEmpty ? event.region : event.approximateArea)
+                infoPill(icon: "person.2", text: "\(event.attendeesCount)/\(event.maxAttendees)")
+            }
+        }
+    }
+
+    private func infoPill(icon: String, text: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(accentGreen)
+            Text(text)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(AppTheme.textSecondary)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.white.opacity(0.06))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        )
+    }
+
+    // MARK: - About Section
+
+    @ViewBuilder
+    private func aboutSection(event: VanEvent) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("About")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.white)
+
+            Text(event.description)
+                .font(.system(size: 15))
+                .foregroundColor(AppTheme.textSecondary)
+                .lineSpacing(4)
+        }
+    }
+
+    // MARK: - Photo Gallery
+
+    @ViewBuilder
+    private func photoGallery(event: VanEvent) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Gallery")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.white)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(0..<5, id: \.self) { index in
+                        AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)_\(index)/400/300")) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            case .failure:
+                                Rectangle().fill(Color(hex: "1A2820"))
+                                    .overlay(
+                                        Image(systemName: "photo")
+                                            .foregroundColor(.white.opacity(0.15))
+                                    )
+                            case .empty:
+                                Rectangle().fill(Color(hex: "1A2820"))
+                                    .overlay(ProgressView().tint(.white.opacity(0.2)))
+                            @unknown default:
+                                Rectangle().fill(Color(hex: "1A2820"))
+                            }
+                        }
+                        .frame(width: 160, height: 120)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Bottom Action Button
+
     @ViewBuilder
     private func bottomActionButton(for event: VanEvent) -> some View {
         if event.status == .completed && viewModel.canReview {
             Text("Event Completed - Leave Reviews Above")
-                .font(.headline)
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(AppTheme.textTertiary)
                 .frame(maxWidth: .infinity)
-                .padding()
-                .background(AppTheme.card)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(AppTheme.card)
+                )
         } else if event.isAttending {
-            HStack {
+            HStack(spacing: 8) {
                 Image(systemName: "checkmark.circle.fill")
                 Text("Attending")
             }
-            .font(.headline)
-            .foregroundColor(AppTheme.accent)
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundColor(accentGreen)
             .frame(maxWidth: .infinity)
-            .padding()
-            .background(AppTheme.accent.opacity(0.2))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(accentGreen.opacity(0.15))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(accentGreen.opacity(0.3), lineWidth: 1)
+            )
         } else if event.isInterested {
             if event.status == .ongoing && event.checkInEnabled {
                 Button {
                     showCheckInSheet = true
                 } label: {
-                    HStack {
+                    HStack(spacing: 8) {
                         Image(systemName: "qrcode.viewfinder")
                         Text("Check In to Attend")
                     }
-                    .font(.headline)
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(AppTheme.accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(accentGreen)
+                    )
                 }
             } else {
                 VStack(spacing: 8) {
-                    HStack {
+                    HStack(spacing: 8) {
                         Image(systemName: "star.fill")
                         Text("You're Interested")
                     }
-                    .font(.headline)
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(AppTheme.primary)
                     .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(AppTheme.primary.opacity(0.2))
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(AppTheme.primary.opacity(0.12))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(AppTheme.primary.opacity(0.25), lineWidth: 1)
+                    )
 
                     if event.status == .upcoming {
                         Text("Check-in available when event starts")
@@ -251,7 +500,7 @@ struct EventDetailView: View {
             Button {
                 Task { await viewModel.joinEvent() }
             } label: {
-                HStack {
+                HStack(spacing: 8) {
                     if viewModel.isProcessing {
                         ProgressView()
                             .tint(.black)
@@ -260,84 +509,31 @@ struct EventDetailView: View {
                         Text("I'm Interested")
                     }
                 }
-                .font(.headline)
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity)
-                .padding()
-                .background(AppTheme.primary)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(accentGreen)
+                )
             }
             .disabled(viewModel.isProcessing || event.attendeesCount >= event.maxAttendees)
         } else {
             Text("Event \(event.status.rawValue.capitalized)")
-                .font(.headline)
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(AppTheme.textTertiary)
                 .frame(maxWidth: .infinity)
-                .padding()
-                .background(AppTheme.card)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(AppTheme.card)
+                )
         }
     }
 }
 
-struct EventDetailHeader: View {
-    let event: VanEvent
-    let isAdmin: Bool
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Image(systemName: event.activityIcon)
-                    .font(.system(size: 32))
-                    .foregroundColor(AppTheme.accent)
-                    .frame(width: 64, height: 64)
-                    .background(AppTheme.accentDark)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(event.title)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(AppTheme.textPrimary)
-
-                    Text(event.activityType.capitalized)
-                        .font(.subheadline)
-                        .foregroundColor(AppTheme.textSecondary)
-                }
-
-                Spacer()
-
-                StatusBadge(status: event.status)
-            }
-
-            VStack(alignment: .leading, spacing: 12) {
-                InfoRow(icon: "calendar", text: event.formattedDate)
-                InfoRow(icon: "mappin.circle", text: event.approximateArea.isEmpty ? event.region : event.approximateArea)
-                InfoRow(icon: "person.2", text: "\(event.attendeesCount)/\(event.maxAttendees) interested")
-            }
-        }
-        .padding(16)
-        .background(AppTheme.card)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-    }
-}
-
-struct InfoRow: View {
-    let icon: String
-    let text: String
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.subheadline)
-                .foregroundColor(AppTheme.textTertiary)
-                .frame(width: 20)
-            Text(text)
-                .font(.subheadline)
-                .foregroundColor(AppTheme.textSecondary)
-        }
-    }
-}
+// MARK: - Admin Section
 
 struct AdminSection: View {
     let event: VanEvent
@@ -345,52 +541,85 @@ struct AdminSection: View {
     let onEnableCheckIn: () -> Void
     let onCompleteEvent: () -> Void
 
+    private let accentGreen = Color(hex: "2E7D5A")
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Admin Controls")
-                .font(.headline)
-                .foregroundColor(AppTheme.primary)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                Image(systemName: "gearshape.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(AppTheme.primary)
+                Text("Admin Controls")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(AppTheme.primary)
+            }
 
             HStack {
-                Text("Check-in Code:")
+                Text("Check-in Code")
+                    .font(.system(size: 14))
                     .foregroundColor(AppTheme.textSecondary)
+                Spacer()
                 Text(checkInCode)
                     .font(.system(.body, design: .monospaced))
                     .fontWeight(.bold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.white.opacity(0.08))
+                    )
             }
 
             if event.status == .upcoming {
                 Button(action: onEnableCheckIn) {
-                    Text("Enable Check-In & Start Event")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(AppTheme.accent)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    HStack(spacing: 6) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 12))
+                        Text("Enable Check-In & Start Event")
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(accentGreen)
+                    )
                 }
             }
 
             if event.status == .ongoing {
                 Button(action: onCompleteEvent) {
-                    Text("Complete Event")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(AppTheme.secondary)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 12))
+                        Text("Complete Event")
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(AppTheme.secondary)
+                    )
                 }
             }
         }
         .padding(16)
-        .background(AppTheme.primary.opacity(0.15))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(AppTheme.primary.opacity(0.08))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(AppTheme.primary.opacity(0.2), lineWidth: 1)
+        )
     }
 }
+
+// MARK: - Interest Limit Banner
 
 struct InterestLimitBanner: View {
     let interestsCount: Int
@@ -404,29 +633,32 @@ struct InterestLimitBanner: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("Mark who you'd like to connect with")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.white)
                 Text("If they mark you too, you'll match after the event!")
-                    .font(.caption)
+                    .font(.system(size: 12))
                     .foregroundColor(AppTheme.textSecondary)
             }
 
             Spacer()
 
             Text("\(interestsCount)/\(interestLimit)")
-                .font(.headline)
-                .foregroundColor(interestsCount >= interestLimit ? AppTheme.error : AppTheme.accent)
+                .font(.system(size: 17, weight: .bold))
+                .foregroundColor(interestsCount >= interestLimit ? AppTheme.error : Color(hex: "2E7D5A"))
         }
         .padding(16)
-        .background(AppTheme.error.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(AppTheme.error.opacity(0.08))
+        )
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(AppTheme.error.opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(AppTheme.error.opacity(0.25), lineWidth: 1)
         )
     }
 }
+
+// MARK: - Attendees Section
 
 struct AttendeesSection: View {
     let attendees: [EventAttendee]
@@ -439,18 +671,32 @@ struct AttendeesSection: View {
     let onToggleInterest: (EventAttendee) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text("Participants (\(attendees.count))")
-                    .font(.headline)
-                    .foregroundColor(AppTheme.textPrimary)
+                Text("Participants")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.white)
+
+                Text("\(attendees.count)")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Color(hex: "2E7D5A"))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(
+                        Capsule()
+                            .fill(Color(hex: "2E7D5A").opacity(0.15))
+                    )
 
                 Spacer()
 
                 if canSendInterests {
-                    Text("Tap ❤️ to connect")
-                        .font(.caption)
-                        .foregroundColor(AppTheme.textTertiary)
+                    HStack(spacing: 4) {
+                        Image(systemName: "heart")
+                            .font(.system(size: 10))
+                        Text("Tap to connect")
+                            .font(.system(size: 11))
+                    }
+                    .foregroundColor(AppTheme.textTertiary)
                 }
             }
 
@@ -470,6 +716,8 @@ struct AttendeesSection: View {
     }
 }
 
+// MARK: - Attendee Card
+
 struct AttendeeCard: View {
     let attendee: EventAttendee
     let canReview: Bool
@@ -480,19 +728,18 @@ struct AttendeeCard: View {
     let onReview: () -> Void
     let onToggleInterest: () -> Void
 
-    // Only show interest button for checked-in attendees
+    private let accentGreen = Color(hex: "2E7D5A")
+
     private var showInterestButton: Bool {
         canSendInterests && attendee.checkedIn
     }
 
-    // Can add interest if remaining or already interested (to remove)
     private var canToggleInterest: Bool {
         attendee.isInterestedIn || interestsRemaining > 0
     }
 
     var body: some View {
         HStack(spacing: 12) {
-            // Tappable profile area
             Button {
                 onTap()
             } label: {
@@ -501,50 +748,54 @@ struct AttendeeCard: View {
                         .resizable()
                         .placeholder {
                             Circle()
-                                .fill(AppTheme.card)
+                                .fill(Color.white.opacity(0.08))
                         }
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 50, height: 50)
+                        .frame(width: 48, height: 48)
                         .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        )
 
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 6) {
                             Text(attendee.profile.firstName)
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(AppTheme.textPrimary)
+                                .font(.system(size: 15, weight: .medium))
+                                .foregroundColor(.white)
 
                             Text("\(attendee.profile.age)")
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(AppTheme.textSecondary)
 
-                            // Builder badge
                             if attendee.trust.badges.contains("trusted_builder") {
                                 Image(systemName: "wrench.and.screwdriver.fill")
-                                    .font(.caption2)
+                                    .font(.system(size: 10))
                                     .foregroundColor(AppTheme.primary)
                             }
                         }
 
                         HStack(spacing: 4) {
                             if attendee.checkedIn {
-                                HStack(spacing: 2) {
+                                HStack(spacing: 3) {
                                     Image(systemName: "checkmark.circle.fill")
+                                        .font(.system(size: 10))
                                     Text("Here")
+                                        .font(.system(size: 11, weight: .medium))
                                 }
-                                .foregroundColor(AppTheme.accent)
-                                .font(.caption2)
+                                .foregroundColor(accentGreen)
                             } else {
-                                HStack(spacing: 2) {
+                                HStack(spacing: 3) {
                                     Image(systemName: "star.fill")
+                                        .font(.system(size: 10))
                                     Text("Interested")
+                                        .font(.system(size: 11, weight: .medium))
                                 }
                                 .foregroundColor(AppTheme.primary)
-                                .font(.caption2)
                             }
                             if attendee.trust.eventsAttended > 0 {
                                 Text("• \(attendee.trust.eventsAttended) events")
-                                    .font(.caption2)
+                                    .font(.system(size: 11))
                                     .foregroundColor(AppTheme.textTertiary)
                             }
                         }
@@ -555,7 +806,6 @@ struct AttendeeCard: View {
 
             Spacer()
 
-            // Action buttons
             if showInterestButton {
                 Button {
                     onToggleInterest()
@@ -566,13 +816,21 @@ struct AttendeeCard: View {
                                 .scaleEffect(0.8)
                         } else {
                             Image(systemName: attendee.isInterestedIn ? "heart.fill" : "heart")
-                                .font(.title2)
+                                .font(.system(size: 20, weight: .medium))
                                 .foregroundColor(attendee.isInterestedIn ? AppTheme.error : AppTheme.textTertiary)
+                                .scaleEffect(attendee.isInterestedIn ? 1.1 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.5), value: attendee.isInterestedIn)
                         }
                     }
-                    .frame(width: 44, height: 44)
-                    .background(attendee.isInterestedIn ? AppTheme.error.opacity(0.15) : AppTheme.surface)
-                    .clipShape(Circle())
+                    .frame(width: 42, height: 42)
+                    .background(
+                        Circle()
+                            .fill(attendee.isInterestedIn ? AppTheme.error.opacity(0.12) : Color.white.opacity(0.06))
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(attendee.isInterestedIn ? AppTheme.error.opacity(0.3) : Color.white.opacity(0.08), lineWidth: 1)
+                    )
                 }
                 .disabled(isProcessing || !canToggleInterest)
             } else if canReview {
@@ -580,62 +838,104 @@ struct AttendeeCard: View {
                     onReview()
                 } label: {
                     Text("Review")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(AppTheme.secondary)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(AppTheme.secondary.opacity(0.2))
-                        .clipShape(Capsule())
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(accentGreen)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 7)
+                        .background(
+                            Capsule()
+                                .fill(accentGreen.opacity(0.12))
+                        )
+                        .overlay(
+                            Capsule()
+                                .stroke(accentGreen.opacity(0.3), lineWidth: 1)
+                        )
                 }
             }
         }
-        .padding(12)
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color.white.opacity(0.04))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(Color.white.opacity(0.06), lineWidth: 1)
+        )
     }
 }
+
+// MARK: - Check-In Sheet
 
 struct CheckInSheet: View {
     @Binding var code: String
     let onSubmit: () -> Void
     @Environment(\.dismiss) private var dismiss
 
+    private let accentGreen = Color(hex: "2E7D5A")
+
     var body: some View {
         VStack(spacing: 20) {
             Text("Enter Check-In Code")
-                .font(.headline)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(.white)
 
             Text("Ask the event organizer for the code")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.system(size: 14))
+                .foregroundColor(AppTheme.textSecondary)
 
             TextField("Code", text: $code)
-                .textFieldStyle(.roundedBorder)
+                .font(.system(size: 16, weight: .medium))
+                .padding(14)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                )
                 .textInputAutocapitalization(.characters)
+                .foregroundColor(.white)
                 .padding(.horizontal)
 
             HStack(spacing: 16) {
                 Button("Cancel") {
                     dismiss()
                 }
-                .foregroundColor(.secondary)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(AppTheme.textSecondary)
 
-                Button("Check In") {
+                Button {
                     onSubmit()
+                } label: {
+                    Text("Check In")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(accentGreen)
+                        )
                 }
-                .fontWeight(.semibold)
                 .disabled(code.isEmpty)
+                .opacity(code.isEmpty ? 0.5 : 1.0)
             }
         }
         .padding()
+        .background(AppTheme.background.ignoresSafeArea())
     }
 }
+
+// MARK: - Review Sheet
 
 struct ReviewSheet: View {
     let attendee: EventAttendee
     let onSubmit: (Bool) -> Void
     @Environment(\.dismiss) private var dismiss
+
+    private let accentGreen = Color(hex: "2E7D5A")
 
     var body: some View {
         VStack(spacing: 24) {
@@ -643,57 +943,74 @@ struct ReviewSheet: View {
                 .resizable()
                 .placeholder {
                     Circle()
-                        .fill(Color.gray.opacity(0.3))
+                        .fill(Color.white.opacity(0.08))
                 }
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 80, height: 80)
                 .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                )
 
             Text("How was meeting \(attendee.profile.firstName)?")
-                .font(.headline)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(.white)
 
             Text("Your review helps build trust in our community")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.system(size: 14))
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: 32) {
+            HStack(spacing: 24) {
                 Button {
                     onSubmit(false)
                     dismiss()
                 } label: {
-                    VStack {
+                    VStack(spacing: 8) {
                         Image(systemName: "hand.thumbsdown.fill")
-                            .font(.system(size: 32))
+                            .font(.system(size: 28))
                         Text("Not Great")
-                            .font(.caption)
+                            .font(.system(size: 12, weight: .medium))
                     }
                     .foregroundColor(AppTheme.error)
-                    .frame(width: 80, height: 80)
-                    .background(AppTheme.error.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(width: 90, height: 90)
+                    .background(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(AppTheme.error.opacity(0.08))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(AppTheme.error.opacity(0.25), lineWidth: 1)
+                    )
                 }
 
                 Button {
                     onSubmit(true)
                     dismiss()
                 } label: {
-                    VStack {
+                    VStack(spacing: 8) {
                         Image(systemName: "hand.thumbsup.fill")
-                            .font(.system(size: 32))
+                            .font(.system(size: 28))
                         Text("Great!")
-                            .font(.caption)
+                            .font(.system(size: 12, weight: .medium))
                     }
-                    .foregroundColor(AppTheme.accent)
-                    .frame(width: 80, height: 80)
-                    .background(AppTheme.accent.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .foregroundColor(accentGreen)
+                    .frame(width: 90, height: 90)
+                    .background(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(accentGreen.opacity(0.08))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(accentGreen.opacity(0.25), lineWidth: 1)
+                    )
                 }
             }
         }
         .padding()
+        .background(AppTheme.background.ignoresSafeArea())
     }
 }
 
 import FirebaseFunctions
-
