@@ -110,7 +110,7 @@ class TabViewController: UITabBarController {
     private var cancellables = Set<AnyCancellable>()
 
     private var glassBottomConstraint: NSLayoutConstraint!
-    private let glassHeight: CGFloat = 110
+    private let glassHeight: CGFloat = 120
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,7 +133,7 @@ class TabViewController: UITabBarController {
         glassHostVC.didMove(toParent: self)
 
         glassHostVC.view.translatesAutoresizingMaskIntoConstraints = false
-        glassBottomConstraint = glassHostVC.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        glassBottomConstraint = glassHostVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
 
         NSLayoutConstraint.activate([
             glassHostVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -177,7 +177,7 @@ class TabViewController: UITabBarController {
 
     func setCustomTabBarHidden(_ hidden: Bool, animated: Bool) {
         forceHideSystemTabBar()
-        glassBottomConstraint.constant = hidden ? glassHeight + view.safeAreaInsets.bottom : 0
+        glassBottomConstraint.constant = hidden ? glassHeight : 0
 
         let animations = {
             self.view.layoutIfNeeded()
