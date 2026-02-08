@@ -3,6 +3,8 @@ import Combine
 import MapKit
 import CoreLocation
 import FirebaseFunctions
+import PhotosUI
+import SwiftUI
 
 // MARK: - Discovery Models (used by UserProfileView, EventsCoordinator)
 
@@ -69,6 +71,16 @@ final class ExploreViewModel: ActionableViewModel {
     // Location
     @Published var hasLocationPermission = false
 
+    // Stories
+    @Published var stories: [Story] = []
+    @Published var selectedStory: Story?
+    @Published var showStoryViewer = false
+    @Published var selectedStoryPhotoItem: PhotosPickerItem?
+    @Published var isPostingStory = false
+    @Published var storyPostError: String?
+
+    private var storyRefreshTimer: Timer?
+
     private weak var coordinator: ExploreCoordinating?
     private let functions = Functions.functions()
     private let geocoder = CLGeocoder()
@@ -91,6 +103,7 @@ final class ExploreViewModel: ActionableViewModel {
     init(coordinator: ExploreCoordinating?) {
         self.coordinator = coordinator
         setupLocationObserver()
+        setupStoryPhotoObserver()
     }
 
     // MARK: - Location
@@ -235,6 +248,99 @@ final class ExploreViewModel: ActionableViewModel {
             center: coordinate,
             span: MKCoordinateSpan(latitudeDelta: 0.15, longitudeDelta: 0.15)
         )
+    }
+
+    // MARK: - Stories
+
+    func loadStories() async {
+        do {
+            let response: GetStoriesResponse = try await FirebaseManager.shared.callFunction(
+                name: "getStories"
+            )
+            stories = response.stories
+                .filter { !$0.isExpired }
+                .sorted { $0.createdAt > $1.createdAt }
+        } catch {
+            print("Failed to load stories: \(error)")
+        }
+    }
+
+    private func setupStoryPhotoObserver() {
+        $selectedStoryPhotoItem
+            .compactMap { $0 }
+            .sink { [weak self] item in
+                Task {
+                    await self?.postStory(from: item)
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func postStory(from item: PhotosPickerItem) async {
+        isPostingStory = true
+        storyPostError = nil
+
+        do {
+            guard let data = try await item.loadTransferable(type: Data.self),
+                  let image = UIImage(data: data) else {
+                throw NSError(domain: "", code: -1,
+                              userInfo: [NSLocalizedDescriptionKey: "Failed to load image"])
+            }
+
+            let resized = resizeImage(image, maxSize: 1080)
+            guard let compressed = resized.jpegData(compressionQuality: 0.8) else {
+                throw NSError(domain: "", code: -1,
+                              userInfo: [NSLocalizedDescriptionKey: "Failed to compress image"])
+            }
+
+            let base64String = compressed.base64EncodedString()
+
+            let _: PostStoryResponse = try await FirebaseManager.shared.callFunction(
+                name: "postStory",
+                data: ["imageData": base64String]
+            )
+
+            selectedStoryPhotoItem = nil
+            await loadStories()
+        } catch {
+            storyPostError = error.localizedDescription
+        }
+
+        isPostingStory = false
+    }
+
+    func viewStory(_ story: Story) {
+        selectedStory = story
+        showStoryViewer = true
+    }
+
+    var hasOwnStory: Bool {
+        guard let userId = AuthManager.shared.currentUserId else { return false }
+        return stories.contains { $0.userId == userId }
+    }
+
+    func startStoryRefreshTimer() {
+        storyRefreshTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.objectWillChange.send()
+            }
+        }
+    }
+
+    func stopStoryRefreshTimer() {
+        storyRefreshTimer?.invalidate()
+        storyRefreshTimer = nil
+    }
+
+    private func resizeImage(_ image: UIImage, maxSize: CGFloat) -> UIImage {
+        let size = image.size
+        let ratio = min(maxSize / size.width, maxSize / size.height)
+        if ratio >= 1 { return image }
+        let newSize = CGSize(width: size.width * ratio, height: size.height * ratio)
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+        }
     }
 
     // MARK: - Parse Event

@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import PhotosUI
 
 struct ExploreView: ActionableView {
     @ObservedObject var viewModel: ExploreViewModel
@@ -21,6 +22,13 @@ struct ExploreView: ActionableView {
         .task {
             viewModel.requestLocationPermission()
             await viewModel.loadEvents()
+            await viewModel.loadStories()
+        }
+        .onAppear {
+            viewModel.startStoryRefreshTimer()
+        }
+        .onDisappear {
+            viewModel.stopStoryRefreshTimer()
         }
         .sheet(isPresented: $viewModel.showEventDetailSheet) {
             if let event = viewModel.detailEvent {
@@ -35,6 +43,16 @@ struct ExploreView: ActionableView {
             LocationSearchView { location in
                 viewModel.moveMapTo(location.coordinate)
             }
+        }
+        .fullScreenCover(isPresented: $viewModel.showStoryViewer) {
+            if let story = viewModel.selectedStory {
+                StoryViewerView(story: story)
+            }
+        }
+        .alert("Error", isPresented: .constant(viewModel.storyPostError != nil)) {
+            Button("OK") { viewModel.storyPostError = nil }
+        } message: {
+            Text(viewModel.storyPostError ?? "")
         }
     }
 
@@ -59,37 +77,73 @@ struct ExploreView: ActionableView {
         .padding(.bottom, 10)
     }
 
-    // MARK: - Stories (placeholder)
+    // MARK: - Stories
 
     private var storiesSection: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 14) {
-                ForEach(0..<6, id: \.self) { _ in
-                    VStack(spacing: 6) {
-                        Circle()
-                            .fill(Color.white.opacity(0.06))
-                            .frame(width: 56, height: 56)
-                            .overlay(
-                                Circle()
-                                    .stroke(
-                                        LinearGradient(
-                                            colors: [accentGreen, accentGreen.opacity(0.3)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 2
-                                    )
-                            )
+                addStoryButton
 
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(Color.white.opacity(0.08))
-                            .frame(width: 36, height: 6)
-                    }
+                ForEach(viewModel.stories) { story in
+                    storyBubble(story)
                 }
             }
             .padding(.horizontal, 20)
         }
         .padding(.vertical, 12)
+    }
+
+    private var addStoryButton: some View {
+        PhotosPicker(selection: $viewModel.selectedStoryPhotoItem, matching: .images) {
+            VStack(spacing: 6) {
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.06))
+                        .frame(width: 56, height: 56)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.15), lineWidth: 1.5)
+                        )
+
+                    if viewModel.isPostingStory {
+                        ProgressView()
+                            .tint(accentGreen)
+                            .scaleEffect(0.8)
+                    } else {
+                        Image(systemName: "plus")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(accentGreen)
+                    }
+                }
+
+                Text(viewModel.hasOwnStory ? "Update" : "Add")
+                    .font(.system(size: 11))
+                    .foregroundColor(AppTheme.textSecondary)
+            }
+        }
+        .disabled(viewModel.isPostingStory)
+    }
+
+    private func storyBubble(_ story: Story) -> some View {
+        Button {
+            viewModel.viewStory(story)
+        } label: {
+            VStack(spacing: 6) {
+                ZStack {
+                    StoryProgressRing(freshness: story.freshness)
+                        .frame(width: 58, height: 58)
+
+                    CachedProfileImage(url: story.user.photoUrl, size: 50)
+                }
+
+                Text(story.user.firstName)
+                    .font(.system(size: 11))
+                    .foregroundColor(AppTheme.textSecondary)
+                    .lineLimit(1)
+                    .frame(width: 56)
+            }
+            .padding(.top, 2)
+        }
     }
 
     // MARK: - Search + Filter
