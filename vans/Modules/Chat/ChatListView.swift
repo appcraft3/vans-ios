@@ -13,13 +13,12 @@ struct ChatListView: View {
                 // Header
                 HStack {
                     Text("Messages")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                        .font(.system(size: 28, weight: .bold))
                         .foregroundColor(AppTheme.textPrimary)
                     Spacer()
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 16)
+                .padding(.top, 20)
                 .padding(.bottom, 12)
 
                 if viewModel.isLoading && viewModel.chats.isEmpty {

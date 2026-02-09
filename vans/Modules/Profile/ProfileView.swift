@@ -30,8 +30,14 @@ struct ProfileView: ActionableView {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    profileHeaderBar
-                    profilePhotoSection
+                    ZStack {
+                        profilePhotoSection
+                        VStack {
+                            profileHeaderBar
+                            Spacer()
+                        }
+                    }
+                   
                     nameInfoSection
 
                     if let user = viewModel.user {
@@ -134,9 +140,6 @@ struct ProfileView: ActionableView {
 
     private var profileHeaderBar: some View {
         HStack {
-            Text("Profile")
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(AppTheme.textPrimary)
 
             Spacer()
 
