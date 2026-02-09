@@ -14,10 +14,26 @@ struct UserProfileResponse: Codable {
     let user: UserProfileData
 }
 
+struct UserReview: Identifiable, Codable {
+    let id: String
+    let reviewerFirstName: String
+    let reviewerPhotoUrl: String
+    let eventTitle: String
+    let reviewText: String
+    let createdAt: String?
+}
+
+struct UserReviewsResponse: Codable {
+    let success: Bool
+    let reviews: [UserReview]
+}
+
 final class UserProfileViewModel: ObservableObject {
     @Published var user: UserProfileData?
     @Published var isLoading: Bool = false
     @Published var connectionsCount: Int = 0
+    @Published var reviews: [UserReview] = []
+    @Published var isLoadingReviews: Bool = false
 
     private let userId: String
     private let initialUser: DiscoveryUser
@@ -43,6 +59,26 @@ final class UserProfileViewModel: ObservableObject {
                 print("Failed to load profile: \(error)")
             }
             isLoading = false
+        }
+
+        loadReviews()
+    }
+
+    func loadReviews() {
+        guard !isLoadingReviews else { return }
+        isLoadingReviews = true
+
+        Task { @MainActor in
+            do {
+                let response: UserReviewsResponse = try await FirebaseManager.shared.callFunction(
+                    name: "getUserReviews",
+                    data: ["userId": userId]
+                )
+                self.reviews = response.reviews
+            } catch {
+                print("Failed to load reviews: \(error)")
+            }
+            isLoadingReviews = false
         }
     }
 

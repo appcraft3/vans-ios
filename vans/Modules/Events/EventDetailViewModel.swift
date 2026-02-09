@@ -218,12 +218,12 @@ final class EventDetailViewModel: ObservableObject {
         selectedAttendeeForReview = attendee
     }
 
-    func submitReview(for userId: String, isPositive: Bool) async {
+    func submitReview(for userId: String, reviewText: String) async {
         do {
             let result = try await functions.httpsCallable("submitEventReview").call([
                 "eventId": eventId,
                 "targetUserId": userId,
-                "isPositive": isPositive
+                "reviewText": reviewText
             ])
 
             guard let data = result.data as? [String: Any],
@@ -316,7 +316,8 @@ final class EventDetailViewModel: ObservableObject {
             badges: trustData["badges"] as? [String] ?? [],
             eventsAttended: trustData["eventsAttended"] as? Int ?? 0,
             positiveReviews: trustData["positiveReviews"] as? Int ?? 0,
-            negativeReviews: trustData["negativeReviews"] as? Int ?? 0
+            negativeReviews: trustData["negativeReviews"] as? Int ?? 0,
+            reviewCount: trustData["reviewCount"] as? Int ?? 0
         )
 
         return EventAttendee(

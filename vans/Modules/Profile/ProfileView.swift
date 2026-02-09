@@ -280,8 +280,7 @@ struct ProfileView: ActionableView {
             // Stats pills
             HStack(spacing: 8) {
                 statPill(value: "\(user.trust.eventsAttended)", label: "Events")
-                statPill(value: "\(user.trust.positiveReviews)", label: "Positive")
-                statPill(value: "\(user.trust.negativeReviews)", label: "Negative")
+                statPill(value: "\(user.trust.reviewCount)", label: "Reviews")
             }
         }
         .padding(16)

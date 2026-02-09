@@ -50,12 +50,12 @@ struct EventDetailView: View {
             .presentationDetents([.height(250)])
         }
         .sheet(item: $viewModel.selectedAttendeeForReview) { attendee in
-            ReviewSheet(attendee: attendee) { isPositive in
+            ReviewSheet(attendee: attendee) { reviewText in
                 Task {
-                    await viewModel.submitReview(for: attendee.id, isPositive: isPositive)
+                    await viewModel.submitReview(for: attendee.id, reviewText: reviewText)
                 }
             }
-            .presentationDetents([.height(300)])
+            .presentationDetents([.height(420)])
         }
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("OK") { viewModel.errorMessage = nil }
@@ -945,13 +945,16 @@ struct CheckInSheet: View {
 
 struct ReviewSheet: View {
     let attendee: EventAttendee
-    let onSubmit: (Bool) -> Void
+    let onSubmit: (String) -> Void
     @Environment(\.dismiss) private var dismiss
+    @State private var reviewText: String = ""
+    @FocusState private var isTextFieldFocused: Bool
 
     private let accentGreen = Color(hex: "2E7D5A")
+    private let maxCharacters = 500
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             KFImage(URL(string: attendee.profile.photoUrl))
                 .resizable()
                 .placeholder {
@@ -975,54 +978,54 @@ struct ReviewSheet: View {
                 .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: 24) {
-                Button {
-                    onSubmit(false)
-                    dismiss()
-                } label: {
-                    VStack(spacing: 8) {
-                        Image(systemName: "hand.thumbsdown.fill")
-                            .font(.system(size: 28))
-                        Text("Not Great")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .foregroundColor(AppTheme.error)
-                    .frame(width: 90, height: 90)
+            VStack(alignment: .trailing, spacing: 6) {
+                TextEditor(text: $reviewText)
+                    .focused($isTextFieldFocused)
+                    .frame(minHeight: 100, maxHeight: 160)
+                    .padding(12)
+                    .scrollContentBackground(.hidden)
                     .background(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .fill(AppTheme.error.opacity(0.08))
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Color.white.opacity(0.06))
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(AppTheme.error.opacity(0.25), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
                     )
-                }
+                    .foregroundColor(AppTheme.textPrimary)
+                    .font(.system(size: 15))
+                    .onChange(of: reviewText) { newValue in
+                        if newValue.count > maxCharacters {
+                            reviewText = String(newValue.prefix(maxCharacters))
+                        }
+                    }
 
-                Button {
-                    onSubmit(true)
-                    dismiss()
-                } label: {
-                    VStack(spacing: 8) {
-                        Image(systemName: "hand.thumbsup.fill")
-                            .font(.system(size: 28))
-                        Text("Great!")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .foregroundColor(accentGreen)
-                    .frame(width: 90, height: 90)
-                    .background(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .fill(accentGreen.opacity(0.08))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(accentGreen.opacity(0.25), lineWidth: 1)
-                    )
-                }
+                Text("\(reviewText.count)/\(maxCharacters)")
+                    .font(.system(size: 12))
+                    .foregroundColor(AppTheme.textSecondary)
             }
+
+            Button {
+                onSubmit(reviewText.trimmingCharacters(in: .whitespacesAndNewlines))
+                dismiss()
+            } label: {
+                Text("Submit Review")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(reviewText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? accentGreen.opacity(0.3) : accentGreen)
+                    )
+            }
+            .disabled(reviewText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding()
         .background(AppTheme.background.ignoresSafeArea())
+        .onAppear {
+            isTextFieldFocused = true
+        }
     }
 }
 

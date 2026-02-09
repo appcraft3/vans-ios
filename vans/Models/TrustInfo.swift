@@ -31,12 +31,36 @@ struct TrustInfo: Codable {
     let eventsAttended: Int
     let positiveReviews: Int
     let negativeReviews: Int
+    let reviewCount: Int
 
     var badgeList: [Badge] {
         badges.compactMap { Badge(rawValue: $0) }
     }
 
     static var empty: TrustInfo {
-        TrustInfo(level: 0, badges: [], eventsAttended: 0, positiveReviews: 0, negativeReviews: 0)
+        TrustInfo(level: 0, badges: [], eventsAttended: 0, positiveReviews: 0, negativeReviews: 0, reviewCount: 0)
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case level, badges, eventsAttended, positiveReviews, negativeReviews, reviewCount
+    }
+
+    init(level: Int, badges: [String], eventsAttended: Int, positiveReviews: Int, negativeReviews: Int, reviewCount: Int = 0) {
+        self.level = level
+        self.badges = badges
+        self.eventsAttended = eventsAttended
+        self.positiveReviews = positiveReviews
+        self.negativeReviews = negativeReviews
+        self.reviewCount = reviewCount
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        level = try container.decodeIfPresent(Int.self, forKey: .level) ?? 0
+        badges = try container.decodeIfPresent([String].self, forKey: .badges) ?? []
+        eventsAttended = try container.decodeIfPresent(Int.self, forKey: .eventsAttended) ?? 0
+        positiveReviews = try container.decodeIfPresent(Int.self, forKey: .positiveReviews) ?? 0
+        negativeReviews = try container.decodeIfPresent(Int.self, forKey: .negativeReviews) ?? 0
+        reviewCount = try container.decodeIfPresent(Int.self, forKey: .reviewCount) ?? 0
     }
 }

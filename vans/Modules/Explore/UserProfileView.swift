@@ -41,6 +41,11 @@ struct UserProfileView: View {
                     // Trust Section
                     trustSection
 
+                    // Reviews Section
+                    if !viewModel.reviews.isEmpty {
+                        reviewsSection
+                    }
+
                     // Activities Section
                     if !viewModel.displayProfile.activities.isEmpty {
                         activitiesSection
@@ -198,8 +203,7 @@ struct UserProfileView: View {
                 // Stats
                 HStack(spacing: 32) {
                     statItem(value: "\(viewModel.displayTrust.eventsAttended)", label: "Events")
-                    statItem(value: "\(viewModel.displayTrust.positiveReviews)", label: "Positive")
-                    statItem(value: "\(viewModel.displayTrust.negativeReviews)", label: "Negative")
+                    statItem(value: "\(viewModel.displayTrust.reviewCount)", label: "Reviews")
                 }
             }
         }
@@ -219,6 +223,58 @@ struct UserProfileView: View {
                 .font(.caption)
                 .foregroundColor(AppTheme.textSecondary)
         }
+    }
+
+    private var reviewsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Reviews")
+                .font(.headline)
+                .foregroundColor(AppTheme.textPrimary)
+
+            ForEach(viewModel.reviews) { review in
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 10) {
+                        KFImage(URL(string: review.reviewerPhotoUrl))
+                            .resizable()
+                            .placeholder {
+                                Circle()
+                                    .fill(Color.white.opacity(0.08))
+                            }
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 36, height: 36)
+                            .clipShape(Circle())
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(review.reviewerFirstName)
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(AppTheme.textPrimary)
+
+                            if !review.eventTitle.isEmpty {
+                                Text(review.eventTitle)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(AppTheme.textSecondary)
+                            }
+                        }
+
+                        Spacer()
+                    }
+
+                    Text(review.reviewText)
+                        .font(.system(size: 14))
+                        .foregroundColor(AppTheme.textSecondary)
+                        .lineSpacing(3)
+                }
+                .padding(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white.opacity(0.04))
+                )
+            }
+        }
+        .padding()
+        .background(AppTheme.card)
+        .cornerRadius(16)
+        .padding(.horizontal)
     }
 
     private var activitiesSection: some View {

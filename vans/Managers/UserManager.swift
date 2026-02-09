@@ -61,7 +61,8 @@ final class UserManager {
                         badges: trustData["badges"] as? [String] ?? [],
                         eventsAttended: trustData["eventsAttended"] as? Int ?? 0,
                         positiveReviews: trustData["positiveReviews"] as? Int ?? 0,
-                        negativeReviews: trustData["negativeReviews"] as? Int ?? 0
+                        negativeReviews: trustData["negativeReviews"] as? Int ?? 0,
+                        reviewCount: trustData["reviewCount"] as? Int ?? 0
                     )
                 }
 
