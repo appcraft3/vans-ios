@@ -14,6 +14,7 @@ final class TabbarCoordinator: NSObject, Coordinator {
 
     private let window: UIWindow
     private var startedCoordinators: Set<Int> = []
+    private var matchCancellable: AnyCancellable?
 
     var rootViewController: UIViewController {
         window.rootViewController ?? { fatalError("Window should always contain a root view controller when asked.") }()
@@ -53,6 +54,74 @@ final class TabbarCoordinator: NSObject, Coordinator {
 
         DispatchQueue.main.async { [weak self] in
             self?.tabBarController?.switchToTab(0)
+        }
+
+        // Start listening for matches
+        MatchManager.shared.startListening()
+        setupMatchPopup()
+    }
+
+    private func setupMatchPopup() {
+        matchCancellable = MatchManager.shared.$currentMatch
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] match in
+                guard let self, let match else { return }
+                self.showMatchPopup(match)
+            }
+    }
+
+    private func showMatchPopup(_ match: MatchInfo) {
+        let popupView = MatchPopupView(
+            match: match,
+            onSendMessage: { [weak self] in
+                MatchManager.shared.dismissMatch()
+                self?.navigateToMatchChat(match)
+            },
+            onDismiss: {
+                MatchManager.shared.dismissMatch()
+            }
+        )
+
+        let hostingController = UIHostingController(rootView: popupView)
+        hostingController.view.backgroundColor = .clear
+        hostingController.modalPresentationStyle = .overFullScreen
+        hostingController.modalTransitionStyle = .crossDissolve
+
+        tabBarController?.present(hostingController, animated: true)
+    }
+
+    private func navigateToMatchChat(_ match: MatchInfo) {
+        // Dismiss popup then navigate to chat tab
+        tabBarController?.dismiss(animated: true) { [weak self] in
+            guard let self else { return }
+            // Switch to Messages tab (index 2 = Home/Messages)
+            self.tabBarController?.switchToTab(2)
+            self.startCoordinatorIfNeeded(at: 2)
+
+            // Push to chat
+            if let homeCoordinator = self.tabCoordinators[2] as? HomeCoordinator {
+                let otherUser = ChatUser(
+                    odId: match.otherUserId,
+                    userId: match.otherUserId,
+                    profile: UserProfile(
+                        firstName: match.otherUserName,
+                        photoUrl: match.otherUserPhotoUrl ?? "",
+                        age: 0,
+                        gender: .male,
+                        vanLifeStatus: .planning,
+                        region: "",
+                        activities: [],
+                        bio: nil
+                    ),
+                    isPremium: false
+                )
+                homeCoordinator.showChat(
+                    chatId: match.connectionId,
+                    otherUser: otherUser,
+                    sourceEventName: match.eventName,
+                    waitingForHer: false
+                )
+            }
         }
     }
 

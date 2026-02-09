@@ -29,6 +29,7 @@ final class AppCoordinator: Coordinator {
     }
 
     private func handleSignOut() {
+        MatchManager.shared.stopListening()
         childCoordinators.removeAll()
 
         let navigationController = UINavigationController()

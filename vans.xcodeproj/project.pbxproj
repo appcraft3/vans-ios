@@ -24,6 +24,8 @@
 		1A0014 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0014 /* AuthManager.swift */; };
 		1A0015 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0015 /* UserManager.swift */; };
 		1A0016 /* RemoteConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0016 /* RemoteConfigManager.swift */; };
+		073MATCH1B00000000000001 /* MatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000001 /* MatchManager.swift */; };
+		073MATCH1B00000000000002 /* MatchPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000002 /* MatchPopupView.swift */; };
 		1A0017 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0017 /* KeychainHelper.swift */; };
 		1A0018 /* ForceUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0018 /* ForceUpdateManager.swift */; };
 		1A0019 /* SplashCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0019 /* SplashCoordinator.swift */; };
@@ -135,6 +137,8 @@
 		2A0014 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		2A0015 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		2A0016 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
+		073MATCH2B00000000000001 /* MatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchManager.swift; sourceTree = "<group>"; };
+		073MATCH2B00000000000002 /* MatchPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPopupView.swift; sourceTree = "<group>"; };
 		2A0017 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		2A0018 /* ForceUpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceUpdateManager.swift; sourceTree = "<group>"; };
 		2A0019 /* SplashCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCoordinator.swift; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 				2A0017 /* KeychainHelper.swift */,
 				2A0018 /* ForceUpdateManager.swift */,
 				B5ED692DC4CD24A57457566D /* LocationManager.swift */,
+				073MATCH2B00000000000001 /* MatchManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -398,6 +403,7 @@
 				2A0025 /* LoadingView.swift */,
 				CD48230371496DA459F1550C /* CachedAsyncImage.swift */,
 				FA99C0DE087CF7F17F26BF09 /* StoryProgressRing.swift */,
+				073MATCH2B00000000000002 /* MatchPopupView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -635,6 +641,8 @@
 				1A0016 /* RemoteConfigManager.swift in Sources */,
 				1A0017 /* KeychainHelper.swift in Sources */,
 				1A0018 /* ForceUpdateManager.swift in Sources */,
+				073MATCH1B00000000000001 /* MatchManager.swift in Sources */,
+				073MATCH1B00000000000002 /* MatchPopupView.swift in Sources */,
 				1A0019 /* SplashCoordinator.swift in Sources */,
 				1A0020 /* SplashView.swift in Sources */,
 				1A0021 /* SplashViewModel.swift in Sources */,
