@@ -30,6 +30,7 @@ struct ProfileView: ActionableView {
 
             ScrollView {
                 VStack(spacing: 20) {
+                    profileHeaderBar
                     profilePhotoSection
                     nameInfoSection
 
@@ -125,6 +126,56 @@ struct ProfileView: ActionableView {
                     .fill(Color.white.opacity(0.03))
                     .frame(height: 200)
                     .ignoresSafeArea(edges: .bottom)
+            }
+        }
+    }
+
+    // MARK: - Header Bar
+
+    private var profileHeaderBar: some View {
+        HStack {
+            Text("Profile")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(AppTheme.textPrimary)
+
+            Spacer()
+
+            if viewModel.isPro {
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 12))
+                    Text("VanGo Pro")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .foregroundColor(accentGreen)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(
+                    Capsule()
+                        .fill(accentGreen.opacity(0.15))
+                )
+                .overlay(
+                    Capsule()
+                        .stroke(accentGreen.opacity(0.4), lineWidth: 1)
+                )
+            } else {
+                Button {
+                    viewModel.openPaywall()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "mountain.2.fill")
+                            .font(.system(size: 12))
+                        Text("Go Pro")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 7)
+                    .background(
+                        Capsule()
+                            .fill(accentGreen)
+                    )
+                }
             }
         }
     }
@@ -278,29 +329,6 @@ struct ProfileView: ActionableView {
                     .stroke(Color.white.opacity(0.08), lineWidth: 1)
             )
             .padding(.top, 4)
-
-            // Go Pro button (only if not pro)
-            if !viewModel.isPro {
-                Button {
-                    viewModel.openPaywall()
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "mountain.2.fill")
-                            .font(.system(size: 14))
-                        Text("Go Pro")
-                            .font(.system(size: 14, weight: .semibold))
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(
-                        Capsule()
-                            .fill(accentGreen)
-                    )
-                    .shadow(color: accentGreen.opacity(0.3), radius: 8)
-                }
-                .padding(.top, 4)
-            }
         }
     }
 
