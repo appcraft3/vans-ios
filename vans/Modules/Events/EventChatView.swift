@@ -1,6 +1,7 @@
 import SwiftUI
 import Kingfisher
 import FirebaseFunctions
+import FirebaseFirestore
 
 struct EventChatView: View {
     let eventId: String
@@ -77,8 +78,8 @@ struct EventChatView: View {
             .background(AppTheme.background)
         }
         .background(AppTheme.background)
-        .task {
-            await viewModel.loadMessages()
+        .onAppear {
+            viewModel.startListening()
         }
     }
 
@@ -192,34 +193,66 @@ class EventChatViewModel: ObservableObject {
     let currentUserId: String
 
     private let functions = Functions.functions()
+    private let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
+    private var pendingTempIds: Set<String> = []
 
     init(eventId: String) {
         self.eventId = eventId
         self.currentUserId = AuthManager.shared.currentUser?.id ?? ""
     }
 
-    func loadMessages() async {
+    deinit {
+        listener?.remove()
+    }
+
+    func startListening() {
         isLoading = true
+        listener?.remove()
 
-        do {
-            let result = try await functions.httpsCallable("getEventMessages").call([
-                "eventId": eventId,
-                "limit": 100
-            ])
+        listener = db.collection("events").document(eventId)
+            .collection("messages")
+            .order(by: "createdAt", descending: false)
+            .limit(toLast: 100)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self else { return }
+                if let error {
+                    print("Error listening to messages: \(error)")
+                    self.isLoading = false
+                    return
+                }
+                guard let documents = snapshot?.documents else {
+                    self.isLoading = false
+                    return
+                }
 
-            guard let data = result.data as? [String: Any],
-                  let success = data["success"] as? Bool,
-                  success,
-                  let messagesData = data["messages"] as? [[String: Any]] else {
-                return
+                let serverMessages = documents.compactMap { self.parseDocument($0) }
+
+                // Merge: keep optimistic messages not yet confirmed
+                let serverIds = Set(serverMessages.map { $0.id })
+                let confirmedTempIds = self.pendingTempIds.filter { tempId in
+                    // If a server message appeared with matching content, the temp is confirmed
+                    false // We can't easily match, so just remove all temp once server data arrives
+                }
+                _ = confirmedTempIds
+
+                // Remove temp messages that now have server counterparts
+                let remainingOptimistic = self.messages.filter {
+                    $0.id.hasPrefix("temp_") && !serverIds.contains($0.id)
+                }
+
+                // Check if server already has messages matching our optimistic ones
+                var filtered = remainingOptimistic
+                for opt in remainingOptimistic {
+                    if serverMessages.contains(where: { $0.senderId == opt.senderId && $0.content == opt.content }) {
+                        filtered.removeAll { $0.id == opt.id }
+                        self.pendingTempIds.remove(opt.id)
+                    }
+                }
+
+                self.messages = serverMessages + filtered
+                self.isLoading = false
             }
-
-            messages = messagesData.compactMap { parseMessage($0) }
-        } catch {
-            print("Error loading messages: \(error)")
-        }
-
-        isLoading = false
     }
 
     func sendMessage() {
@@ -240,6 +273,7 @@ class EventChatViewModel: ObservableObject {
             createdAt: Date()
         )
         messages.append(optimisticMessage)
+        pendingTempIds.insert(tempId)
 
         // Send in background, undo on failure
         Task {
@@ -253,32 +287,37 @@ class EventChatViewModel: ObservableObject {
                       let success = data["success"] as? Bool,
                       success else {
                     messages.removeAll { $0.id == tempId }
+                    pendingTempIds.remove(tempId)
                     messageText = text
                     return
                 }
+                // Listener will pick up the new message and remove the optimistic one
             } catch {
                 print("Error sending message: \(error)")
                 messages.removeAll { $0.id == tempId }
+                pendingTempIds.remove(tempId)
                 messageText = text
             }
         }
     }
 
-    private func parseMessage(_ data: [String: Any]) -> EventMessage? {
-        guard let id = data["id"] as? String,
-              let senderId = data["senderId"] as? String,
+    private func parseDocument(_ doc: QueryDocumentSnapshot) -> EventMessage? {
+        let data = doc.data()
+        guard let senderId = data["senderId"] as? String,
               let senderName = data["senderName"] as? String,
               let content = data["content"] as? String else {
             return nil
         }
 
-        let createdAtString = data["createdAt"] as? String ?? ""
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let createdAt = formatter.date(from: createdAtString) ?? Date()
+        let createdAt: Date
+        if let timestamp = data["createdAt"] as? Timestamp {
+            createdAt = timestamp.dateValue()
+        } else {
+            createdAt = Date()
+        }
 
         return EventMessage(
-            id: id,
+            id: doc.documentID,
             senderId: senderId,
             senderName: senderName,
             senderPhotoUrl: data["senderPhotoUrl"] as? String,

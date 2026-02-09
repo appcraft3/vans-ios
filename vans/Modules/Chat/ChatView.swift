@@ -41,7 +41,7 @@ struct ChatView: View {
         .navigationBarHidden(true)
         .onAppear {
             viewModel.waitingForFemale = initialWaitingForHer
-            viewModel.loadMessages()
+            viewModel.startListening()
         }
     }
 
