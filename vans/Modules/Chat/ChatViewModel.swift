@@ -60,21 +60,34 @@ final class ChatViewModel: ObservableObject {
     }
 
     func sendMessage(_ content: String) {
-        guard !isSending, !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        isSending = true
+        let text = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
         errorMessage = nil
 
+        // Optimistic: show message immediately
+        let tempId = "temp_\(UUID().uuidString)"
+        let formatter = ISO8601DateFormatter()
+        let optimisticMessage = ChatMessage(
+            id: tempId,
+            senderId: currentUserId,
+            content: text,
+            createdAt: formatter.string(from: Date()),
+            read: false
+        )
+        messages.append(optimisticMessage)
+        canSendMessage = true
+        waitingForFemale = false
+
+        // Send in background, undo on failure
         Task { @MainActor in
             do {
-                // Use event connection send message endpoint
-                let response: SendMessageResponse = try await FirebaseManager.shared.callFunction(
+                let _: SendMessageResponse = try await FirebaseManager.shared.callFunction(
                     name: "sendEventConnectionMessage",
-                    data: ["connectionId": chatId, "content": content]
+                    data: ["connectionId": chatId, "content": text]
                 )
-                self.messages.append(response.message)
-                self.canSendMessage = true
-                self.waitingForFemale = false
             } catch let error as NSError {
+                // Undo optimistic message
+                messages.removeAll { $0.id == tempId }
                 if let message = error.userInfo["message"] as? String {
                     self.errorMessage = message
                 } else {
@@ -82,7 +95,6 @@ final class ChatViewModel: ObservableObject {
                 }
                 print("Failed to send message: \(error)")
             }
-            isSending = false
         }
     }
 

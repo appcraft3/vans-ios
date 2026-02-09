@@ -171,6 +171,10 @@ final class ProfileViewModel: ActionableViewModel {
     func openWaitlistReview() {
         coordinator?.showWaitlistReview()
     }
+
+    func openMyReviews() {
+        coordinator?.showMyReviews()
+    }
 }
 
 extension Notification.Name {

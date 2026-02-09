@@ -22,6 +22,33 @@ struct CachedAsyncImage: View {
     }
 }
 
+struct ProfilePlaceholder: View {
+    let size: CGFloat
+
+    private let green = Color(hex: "2D4A3E")
+
+    var body: some View {
+        Circle()
+            .fill(
+                LinearGradient(
+                    colors: [green.opacity(0.7), green.opacity(0.3)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .frame(width: size, height: size)
+            .overlay(
+                Image(systemName: "person.fill")
+                    .font(.system(size: size * 0.35))
+                    .foregroundColor(Color.white.opacity(0.5))
+            )
+            .overlay(
+                Circle()
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
+    }
+}
+
 struct CachedProfileImage: View {
     let url: String?
     let size: CGFloat
@@ -31,22 +58,14 @@ struct CachedProfileImage: View {
             KFImage(imageUrl)
                 .resizable()
                 .placeholder {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
+                    ProfilePlaceholder(size: size)
                 }
                 .fade(duration: 0.25)
                 .scaledToFill()
                 .frame(width: size, height: size)
                 .clipShape(Circle())
         } else {
-            Circle()
-                .fill(Color.gray.opacity(0.3))
-                .frame(width: size, height: size)
-                .overlay(
-                    Image(systemName: "person.fill")
-                        .font(.system(size: size * 0.4))
-                        .foregroundColor(.gray)
-                )
+            ProfilePlaceholder(size: size)
         }
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0736BF76ADA33BE20A4D9A9D /* WaitlistReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */; };
+		073MYREV1A00000000000001 /* MyReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MYREV2A00000000000001 /* MyReviewsView.swift */; };
 		07E72C6ED1018666F452C6DC /* EventAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E428D83E7576FC89633678D /* EventAnnotation.swift */; };
 		10E991095E985D1172E52277 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07687C86DB109F07166CEA1D /* ChatView.swift */; };
 		1A0001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0001 /* AppDelegate.swift */; };
@@ -194,6 +195,7 @@
 		696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewViewModel.swift; sourceTree = "<group>"; };
 		79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotationView.swift; sourceTree = "<group>"; };
 		7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		073MYREV2A00000000000001 /* MyReviewsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MyReviewsView.swift; sourceTree = "<group>"; };
 		9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewView.swift; sourceTree = "<group>"; };
 		9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeModuleBuilder.swift; sourceTree = "<group>"; };
 		A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventPreviewSheet.swift; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 				2A0063 /* ProfileModuleBuilder.swift */,
 				9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */,
 				696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */,
+				073MYREV2A00000000000001 /* MyReviewsView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -676,6 +679,7 @@
 				8AA5F3BD4FACDE77C5A607D3 /* InviteCodeModuleBuilder.swift in Sources */,
 				0736BF76ADA33BE20A4D9A9D /* WaitlistReviewView.swift in Sources */,
 				24CA33E7224EBFC0054CAF59 /* WaitlistReviewViewModel.swift in Sources */,
+				073MYREV1A00000000000001 /* MyReviewsView.swift in Sources */,
 				A89FB059FFBC4126C4D1A15E /* UserProfileView.swift in Sources */,
 				D43C4483E0F9F65FA1E86C72 /* CachedAsyncImage.swift in Sources */,
 				FB1BB1CB8888340E7FD44F3A /* UserProfileViewModel.swift in Sources */,

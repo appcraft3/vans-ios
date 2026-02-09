@@ -108,7 +108,11 @@ struct ChatView: View {
                         .padding()
                     }
 
-                    ForEach(viewModel.messages) { message in
+                    ForEach(Array(viewModel.messages.enumerated()), id: \.element.id) { index, message in
+                        if shouldShowDateSeparator(at: index) {
+                            dateSeparator(for: message.createdAt)
+                        }
+
                         MessageBubble(
                             message: message,
                             isFromCurrentUser: viewModel.isFromCurrentUser(message)
@@ -160,31 +164,32 @@ struct ChatView: View {
             }
 
             HStack(spacing: 12) {
-                TextField("Type a message...", text: $messageText, axis: .vertical)
-                    .textFieldStyle(.plain)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(AppTheme.card)
-                    .cornerRadius(20)
-                    .foregroundColor(AppTheme.textPrimary)
-                    .focused($isInputFocused)
-                    .lineLimit(1...5)
+                ZStack(alignment: .leading) {
+                    if messageText.isEmpty {
+                        Text("Type a message...")
+                            .foregroundColor(Color.white.opacity(0.4))
+                            .padding(.leading, 16)
+                    }
+                    TextField("", text: $messageText, axis: .vertical)
+                        .textFieldStyle(.plain)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .foregroundColor(AppTheme.textPrimary)
+                        .focused($isInputFocused)
+                        .lineLimit(1...5)
+                }
+                .background(AppTheme.card)
+                .cornerRadius(20)
 
                 Button(action: sendMessage) {
-                    if viewModel.isSending {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.textPrimary))
-                            .frame(width: 44, height: 44)
-                    } else {
-                        Image(systemName: "paperplane.fill")
-                            .font(.title3)
-                            .foregroundColor(messageText.isEmpty ? AppTheme.textTertiary : .black)
-                            .frame(width: 44, height: 44)
-                            .background(messageText.isEmpty ? AppTheme.card : AppTheme.accent)
-                            .clipShape(Circle())
-                    }
+                    Image(systemName: "paperplane.fill")
+                        .font(.title3)
+                        .foregroundColor(messageText.isEmpty ? AppTheme.textTertiary : .black)
+                        .frame(width: 44, height: 44)
+                        .background(messageText.isEmpty ? AppTheme.card : AppTheme.accent)
+                        .clipShape(Circle())
                 }
-                .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isSending)
+                .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
             .padding(.horizontal)
             .padding(.vertical, 12)
@@ -197,6 +202,49 @@ struct ChatView: View {
         guard !content.isEmpty else { return }
         messageText = ""
         viewModel.sendMessage(content)
+    }
+
+    private func parseDate(_ dateString: String?) -> Date? {
+        guard let dateString else { return nil }
+        let formatter = ISO8601DateFormatter()
+        return formatter.date(from: dateString)
+    }
+
+    private func shouldShowDateSeparator(at index: Int) -> Bool {
+        let message = viewModel.messages[index]
+        guard let date = parseDate(message.createdAt) else { return false }
+        if index == 0 { return true }
+        let previous = viewModel.messages[index - 1]
+        guard let prevDate = parseDate(previous.createdAt) else { return true }
+        return !Calendar.current.isDate(date, inSameDayAs: prevDate)
+    }
+
+    private func dateSeparator(for dateString: String?) -> some View {
+        let label: String = {
+            guard let dateString, let date = parseDate(dateString) else { return "" }
+            let calendar = Calendar.current
+            if calendar.isDateInToday(date) {
+                return "Today"
+            } else if calendar.isDateInYesterday(date) {
+                return "Yesterday"
+            } else {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "MMM d, yyyy"
+                return formatter.string(from: date)
+            }
+        }()
+
+        return Text(label)
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(AppTheme.textTertiary)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+            .background(
+                Capsule()
+                    .fill(Color.white.opacity(0.06))
+            )
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 4)
     }
 }
 

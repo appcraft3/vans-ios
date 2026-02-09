@@ -48,6 +48,7 @@ struct EventDetailView: View {
                 }
             }
             .presentationDetents([.height(250)])
+            .modifier(SheetBackgroundModifier())
         }
         .sheet(item: $viewModel.selectedAttendeeForReview) { attendee in
             ReviewSheet(attendee: attendee) { reviewText in
@@ -160,6 +161,7 @@ struct EventDetailView: View {
                             AdminSection(
                                 event: event,
                                 checkInCode: checkInCode,
+                                isProcessing: viewModel.isProcessing,
                                 onEnableCheckIn: { Task { await viewModel.enableCheckIn() } },
                                 onCompleteEvent: { Task { await viewModel.completeEvent() } }
                             )
@@ -198,6 +200,9 @@ struct EventDetailView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
                 }
+            }
+            .refreshable {
+                await viewModel.loadEventDetails()
             }
 
             // Bottom action with glassy background
@@ -551,6 +556,7 @@ struct EventDetailView: View {
 struct AdminSection: View {
     let event: VanEvent
     let checkInCode: String
+    let isProcessing: Bool
     let onEnableCheckIn: () -> Void
     let onCompleteEvent: () -> Void
 
@@ -587,9 +593,14 @@ struct AdminSection: View {
             if event.status == .upcoming {
                 Button(action: onEnableCheckIn) {
                     HStack(spacing: 6) {
-                        Image(systemName: "play.fill")
-                            .font(.system(size: 12))
-                        Text("Enable Check-In & Start Event")
+                        if isProcessing {
+                            ProgressView()
+                                .tint(.black)
+                        } else {
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 12))
+                            Text("Enable Check-In & Start Event")
+                        }
                     }
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.black)
@@ -600,14 +611,20 @@ struct AdminSection: View {
                             .fill(accentGreen)
                     )
                 }
+                .disabled(isProcessing)
             }
 
             if event.status == .ongoing {
                 Button(action: onCompleteEvent) {
                     HStack(spacing: 6) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 12))
-                        Text("Complete Event")
+                        if isProcessing {
+                            ProgressView()
+                                .tint(.black)
+                        } else {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 12))
+                            Text("Complete Event")
+                        }
                     }
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.black)
@@ -618,6 +635,7 @@ struct AdminSection: View {
                             .fill(AppTheme.secondary)
                     )
                 }
+                .disabled(isProcessing)
             }
         }
         .padding(16)
@@ -757,15 +775,7 @@ struct AttendeeCard: View {
                 onTap()
             } label: {
                 HStack(spacing: 12) {
-                    KFImage(URL(string: attendee.profile.photoUrl))
-                        .resizable()
-                        .placeholder {
-                            Circle()
-                                .fill(Color.white.opacity(0.08))
-                        }
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 48, height: 48)
-                        .clipShape(Circle())
+                    CachedProfileImage(url: attendee.profile.photoUrl, size: 48)
                         .overlay(
                             Circle()
                                 .stroke(Color.white.opacity(0.08), lineWidth: 1)
@@ -897,20 +907,28 @@ struct CheckInSheet: View {
                 .font(.system(size: 14))
                 .foregroundColor(AppTheme.textSecondary)
 
-            TextField("Code", text: $code)
-                .font(.system(size: 16, weight: .medium))
-                .padding(14)
-                .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.white.opacity(0.06))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
-                .textInputAutocapitalization(.characters)
-                .foregroundColor(.white)
-                .padding(.horizontal)
+            ZStack(alignment: .leading) {
+                if code.isEmpty {
+                    Text("Code")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(Color.white.opacity(0.4))
+                        .padding(.leading, 14)
+                }
+                TextField("", text: $code)
+                    .font(.system(size: 16, weight: .medium))
+                    .padding(14)
+                    .textInputAutocapitalization(.characters)
+                    .foregroundColor(.white)
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
+            )
+            .padding(.horizontal)
 
             HStack(spacing: 16) {
                 Button("Cancel") {
@@ -955,19 +973,7 @@ struct ReviewSheet: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            KFImage(URL(string: attendee.profile.photoUrl))
-                .resizable()
-                .placeholder {
-                    Circle()
-                        .fill(Color.white.opacity(0.08))
-                }
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 80, height: 80)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
+            CachedProfileImage(url: attendee.profile.photoUrl, size: 80)
 
             Text("How was meeting \(attendee.profile.firstName)?")
                 .font(.system(size: 18, weight: .bold))
@@ -1025,6 +1031,16 @@ struct ReviewSheet: View {
         .background(AppTheme.background.ignoresSafeArea())
         .onAppear {
             isTextFieldFocused = true
+        }
+    }
+}
+
+private struct SheetBackgroundModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.4, *) {
+            content.presentationBackground(AppTheme.background)
+        } else {
+            content
         }
     }
 }

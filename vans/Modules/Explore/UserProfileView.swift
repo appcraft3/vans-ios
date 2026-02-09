@@ -234,15 +234,7 @@ struct UserProfileView: View {
             ForEach(viewModel.reviews) { review in
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 10) {
-                        KFImage(URL(string: review.reviewerPhotoUrl))
-                            .resizable()
-                            .placeholder {
-                                Circle()
-                                    .fill(Color.white.opacity(0.08))
-                            }
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 36, height: 36)
-                            .clipShape(Circle())
+                        CachedProfileImage(url: review.reviewerPhotoUrl, size: 36)
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text(review.reviewerFirstName)

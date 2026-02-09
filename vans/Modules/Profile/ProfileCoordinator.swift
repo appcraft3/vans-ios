@@ -4,6 +4,7 @@ import SwiftUI
 protocol ProfileCoordinating: Coordinator {
     func showWaitlistReview()
     func showBecomeBuilder()
+    func showMyReviews()
 }
 
 final class ProfileCoordinator: NSObject, ProfileCoordinating {
@@ -32,6 +33,14 @@ final class ProfileCoordinator: NSObject, ProfileCoordinating {
     func showBecomeBuilder() {
         let viewModel = BecomeBuilderViewModel(coordinator: nil)
         let view = BecomeBuilderView(viewModel: viewModel)
+        let hostingController = UIHostingController(rootView: view)
+        hostingController.hidesBottomBarWhenPushed = true
+        navigationController.pushViewController(hostingController, animated: true)
+    }
+
+    @MainActor
+    func showMyReviews() {
+        let view = MyReviewsView()
         let hostingController = UIHostingController(rootView: view)
         hostingController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(hostingController, animated: true)

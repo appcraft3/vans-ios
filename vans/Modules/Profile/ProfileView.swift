@@ -53,6 +53,9 @@ struct ProfileView: ActionableView {
                     // Builder Section
                     builderSection
 
+                    // Reviews Section
+                    reviewsButton
+
                     if viewModel.isAdmin {
                         adminSection
                     }
@@ -477,6 +480,44 @@ struct ProfileView: ActionableView {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.white.opacity(0.08), lineWidth: 1)
         )
+    }
+
+    // MARK: - Reviews
+
+    private var reviewsButton: some View {
+        Button {
+            viewModel.openMyReviews()
+        } label: {
+            HStack {
+                Image(systemName: "text.bubble.fill")
+                    .font(.title2)
+                    .foregroundColor(accentGreen)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Reviews")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(AppTheme.textPrimary)
+
+                    Text("See what others say about you")
+                        .font(.system(size: 12))
+                        .foregroundColor(AppTheme.textSecondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .foregroundColor(AppTheme.textTertiary)
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
+        }
     }
 
     // MARK: - Admin

@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import FirebaseFunctions
 
 struct UserProfileData: Codable {
     let userId: String
@@ -21,6 +22,15 @@ struct UserReview: Identifiable, Codable {
     let eventTitle: String
     let reviewText: String
     let createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case reviewerFirstName = "reviewerFirstName"
+        case reviewerPhotoUrl = "reviewerPhotoUrl"
+        case eventTitle = "eventTitle"
+        case reviewText = "reviewText"
+        case createdAt = "createdAt"
+    }
 }
 
 struct UserReviewsResponse: Codable {
@@ -70,11 +80,24 @@ final class UserProfileViewModel: ObservableObject {
 
         Task { @MainActor in
             do {
-                let response: UserReviewsResponse = try await FirebaseManager.shared.callFunction(
-                    name: "getUserReviews",
-                    data: ["userId": userId]
-                )
-                self.reviews = response.reviews
+                let result = try await Functions.functions().httpsCallable("getUserReviews").call(["userId": userId])
+                guard let data = result.data as? [String: Any],
+                      let success = data["success"] as? Bool, success,
+                      let reviewsData = data["reviews"] as? [[String: Any]] else {
+                    isLoadingReviews = false
+                    return
+                }
+
+                self.reviews = reviewsData.map { d in
+                    UserReview(
+                        id: d["id"] as? String ?? UUID().uuidString,
+                        reviewerFirstName: d["reviewerFirstName"] as? String ?? "Anonymous",
+                        reviewerPhotoUrl: d["reviewerPhotoUrl"] as? String ?? "",
+                        eventTitle: d["eventTitle"] as? String ?? "",
+                        reviewText: d["reviewText"] as? String ?? "",
+                        createdAt: d["createdAt"] as? String
+                    )
+                }
             } catch {
                 print("Failed to load reviews: \(error)")
             }

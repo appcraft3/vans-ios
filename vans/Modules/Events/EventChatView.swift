@@ -20,7 +20,11 @@ struct EventChatView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(spacing: 12) {
-                        ForEach(viewModel.messages) { message in
+                        ForEach(Array(viewModel.messages.enumerated()), id: \.element.id) { index, message in
+                            if shouldShowDateSeparator(at: index) {
+                                dateSeparator(for: message.createdAt)
+                            }
+
                             EventMessageBubble(
                                 message: message,
                                 isOwnMessage: message.senderId == viewModel.currentUserId,
@@ -45,23 +49,28 @@ struct EventChatView: View {
 
             // Input
             HStack(spacing: 12) {
-                TextField("Message...", text: $viewModel.messageText)
-                    .padding(12)
-                    .background(AppTheme.card)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .foregroundColor(AppTheme.textPrimary)
-                    .focused($isInputFocused)
+                ZStack(alignment: .leading) {
+                    if viewModel.messageText.isEmpty {
+                        Text("Message...")
+                            .foregroundColor(Color.white.opacity(0.4))
+                            .padding(.leading, 12)
+                    }
+                    TextField("", text: $viewModel.messageText)
+                        .padding(12)
+                        .foregroundColor(AppTheme.textPrimary)
+                        .focused($isInputFocused)
+                }
+                .background(AppTheme.card)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
 
                 Button {
-                    Task {
-                        await viewModel.sendMessage()
-                    }
+                    viewModel.sendMessage()
                 } label: {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.system(size: 32))
                         .foregroundColor(viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty ? AppTheme.textTertiary : AppTheme.accent)
                 }
-                .disabled(viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty || viewModel.isSending)
+                .disabled(viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -70,6 +79,40 @@ struct EventChatView: View {
         .background(AppTheme.background)
         .task {
             await viewModel.loadMessages()
+        }
+    }
+
+    private func shouldShowDateSeparator(at index: Int) -> Bool {
+        let message = viewModel.messages[index]
+        if index == 0 { return true }
+        let previous = viewModel.messages[index - 1]
+        return !Calendar.current.isDate(message.createdAt, inSameDayAs: previous.createdAt)
+    }
+
+    private func dateSeparator(for date: Date) -> some View {
+        Text(dayLabel(for: date))
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(AppTheme.textTertiary)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+            .background(
+                Capsule()
+                    .fill(Color.white.opacity(0.06))
+            )
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 4)
+    }
+
+    private func dayLabel(for date: Date) -> String {
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            return "Today"
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM d, yyyy"
+            return formatter.string(from: date)
         }
     }
 }
@@ -88,15 +131,7 @@ struct EventMessageBubble: View {
                 Button {
                     onTapAvatar?()
                 } label: {
-                    KFImage(URL(string: message.senderPhotoUrl ?? ""))
-                        .resizable()
-                        .placeholder {
-                            Circle()
-                                .fill(AppTheme.card)
-                        }
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 32, height: 32)
-                        .clipShape(Circle())
+                    CachedProfileImage(url: message.senderPhotoUrl, size: 32)
                 }
             }
 
@@ -187,36 +222,46 @@ class EventChatViewModel: ObservableObject {
         isLoading = false
     }
 
-    func sendMessage() async {
+    func sendMessage() {
         let text = messageText.trimmingCharacters(in: .whitespaces)
         guard !text.isEmpty else { return }
 
-        isSending = true
-        let tempText = text
         messageText = ""
 
-        do {
-            let result = try await functions.httpsCallable("sendEventMessage").call([
-                "eventId": eventId,
-                "content": tempText
-            ])
+        // Optimistic: show message immediately
+        let tempId = "temp_\(UUID().uuidString)"
+        let currentUser = AuthManager.shared.currentUser
+        let optimisticMessage = EventMessage(
+            id: tempId,
+            senderId: currentUserId,
+            senderName: currentUser?.profile?.firstName ?? "",
+            senderPhotoUrl: currentUser?.profile?.photoUrl,
+            content: text,
+            createdAt: Date()
+        )
+        messages.append(optimisticMessage)
 
-            guard let data = result.data as? [String: Any],
-                  let success = data["success"] as? Bool,
-                  success,
-                  let messageData = data["message"] as? [String: Any],
-                  let newMessage = parseMessage(messageData) else {
-                messageText = tempText
-                return
+        // Send in background, undo on failure
+        Task {
+            do {
+                let result = try await functions.httpsCallable("sendEventMessage").call([
+                    "eventId": eventId,
+                    "content": text
+                ])
+
+                guard let data = result.data as? [String: Any],
+                      let success = data["success"] as? Bool,
+                      success else {
+                    messages.removeAll { $0.id == tempId }
+                    messageText = text
+                    return
+                }
+            } catch {
+                print("Error sending message: \(error)")
+                messages.removeAll { $0.id == tempId }
+                messageText = text
             }
-
-            messages.append(newMessage)
-        } catch {
-            print("Error sending message: \(error)")
-            messageText = tempText
         }
-
-        isSending = false
     }
 
     private func parseMessage(_ data: [String: Any]) -> EventMessage? {
