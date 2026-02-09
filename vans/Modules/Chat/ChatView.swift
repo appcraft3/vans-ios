@@ -207,6 +207,10 @@ struct ChatView: View {
     private func parseDate(_ dateString: String?) -> Date? {
         guard let dateString else { return nil }
         let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: dateString) { return date }
+        // Fallback for dates without fractional seconds (optimistic messages)
+        formatter.formatOptions = [.withInternetDateTime]
         return formatter.date(from: dateString)
     }
 
@@ -286,7 +290,13 @@ struct MessageBubble: View {
 
     private func formatTime(_ dateString: String) -> String {
         let formatter = ISO8601DateFormatter()
-        guard let date = formatter.date(from: dateString) else { return "" }
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        var date = formatter.date(from: dateString)
+        if date == nil {
+            formatter.formatOptions = [.withInternetDateTime]
+            date = formatter.date(from: dateString)
+        }
+        guard let date else { return "" }
 
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "h:mm a"

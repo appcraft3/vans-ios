@@ -65,6 +65,13 @@ struct MessagesResponse: Codable {
     let success: Bool
     let messages: [ChatMessage]
     let hasMore: Bool
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        success = try container.decode(Bool.self, forKey: .success)
+        messages = try container.decode([ChatMessage].self, forKey: .messages)
+        hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
+    }
 }
 
 struct GetChatResponse: Codable {
