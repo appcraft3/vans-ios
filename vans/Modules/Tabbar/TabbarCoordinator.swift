@@ -31,9 +31,9 @@ final class TabbarCoordinator: NSObject, Coordinator {
         guard !(window.rootViewController is UITabBarController) else { return }
 
         tabCoordinators = [
-            HomeCoordinator(),
             ExploreCoordinator(),
             EventsCoordinator(),
+            HomeCoordinator(),
             ProfileCoordinator()
         ]
 
