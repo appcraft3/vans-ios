@@ -164,8 +164,8 @@ struct EventsListView: ActionableView {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, 12)
-        .padding(.bottom, 4)
+        .padding(.top, 20)
+        .padding(.bottom, 10)
     }
 
     // MARK: - Date Filter

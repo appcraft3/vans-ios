@@ -76,30 +76,44 @@ struct ProfileView: ActionableView {
     private var backgroundElements: some View {
         ZStack {
             // Star dots
-            GeometryReader { geo in
-                let stars: [(x: CGFloat, y: CGFloat, size: CGFloat, opacity: Double)] = [
-                    (0.15, 0.08, 1.5, 0.10),
-                    (0.72, 0.05, 1.2, 0.08),
-                    (0.88, 0.12, 1.8, 0.12),
-                    (0.35, 0.15, 1.0, 0.06),
-                    (0.55, 0.03, 1.4, 0.09),
-                    (0.08, 0.22, 1.2, 0.07),
-                    (0.92, 0.25, 1.6, 0.10),
-                    (0.45, 0.10, 1.0, 0.08),
-                    (0.25, 0.28, 1.3, 0.06),
-                    (0.78, 0.18, 1.1, 0.09),
-                ]
-
-                ForEach(0..<stars.count, id: \.self) { i in
-                    Circle()
-                        .fill(Color.white.opacity(stars[i].opacity))
-                        .frame(width: stars[i].size, height: stars[i].size)
-                        .position(
-                            x: geo.size.width * stars[i].x,
-                            y: geo.size.height * stars[i].y
-                        )
-                }
-            }
+//            GeometryReader { geo in
+//                let stars: [(x: CGFloat, y: CGFloat, size: CGFloat, opacity: Double)] = [
+//                    (0.15, 0.08, 1.5, 0.10),
+//                    (0.72, 0.05, 1.2, 0.08),
+//                    (0.88, 0.12, 1.8, 0.12),
+//                    (0.35, 0.15, 1.0, 0.06),
+//                    (0.55, 0.03, 1.4, 0.09),
+//                    (0.08, 0.22, 1.2, 0.07),
+//                    (0.92, 0.25, 1.6, 0.10),
+//                    (0.45, 0.10, 1.0, 0.08),
+//                    (0.25, 0.28, 1.3, 0.06),
+//                    (0.78, 0.18, 1.1, 0.09),
+//                ]
+//
+//                ForEach(0..<stars.count, id: \.self) { i in
+//                    Circle()
+//                        .fill(Color.white.opacity(stars[i].opacity))
+//                        .frame(width: stars[i].size, height: stars[i].size)
+//                        .position(
+//                            x: geo.size.width * stars[i].x,
+//                            y: geo.size.height * stars[i].y
+//                        )
+//                }
+//            }
+            
+            StarfieldBackground(starCount: 60, twinkleCount: 225)
+                .ignoresSafeArea()
+            
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.04),
+                    Color.clear
+                ],
+                startPoint: .top,
+                endPoint: .center
+            )
+            .ignoresSafeArea()
+            .blendMode(.screen)
 
             // Mountain silhouette
             VStack {

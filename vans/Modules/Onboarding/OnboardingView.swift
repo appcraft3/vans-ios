@@ -17,15 +17,13 @@ struct OnboardingView: ActionableView {
                         // Fixed header section
                         headerView
 
-                        HStack(spacing: 4) {
-                            ForEach(0..<OnboardingStep.allCases.count, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: 2)
-                                    .fill(index <= viewModel.currentStep.rawValue ? accentGreen : Color.white.opacity(0.2))
-                                    .frame(height: 3)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 12)
+                        RoadLaneStepProgress(
+                            total: OnboardingStep.allCases.count,
+                            current: viewModel.currentStep.rawValue,
+                            accent: accentGreen
+                        )
+                        .padding(.horizontal, 24)
+                        .padding(.top, 24)
 
                         titleSection
                             .padding(.top, 24)

@@ -92,6 +92,8 @@
 		8AA5F3BD4FACDE77C5A607D3 /* InviteCodeModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */; };
 		A89FB059FFBC4126C4D1A15E /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */; };
 		B1A95CDF017CD31C67C2991B /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D06139C3B1AC0A84BC7715F /* ChatModels.swift */; };
+		B44AC21C2F3A37A600B6F5B4 /* StarfieldBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44AC21B2F3A379400B6F5B4 /* StarfieldBackground.swift */; };
+		B44AC21E2F3A3DEC00B6F5B4 /* RoasStepProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44AC21D2F3A3DE500B6F5B4 /* RoasStepProgress.swift */; };
 		B8D228EF267DFC068CE00A60 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */; };
 		C5013215B6C64EC71FC06150 /* StoryProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA99C0DE087CF7F17F26BF09 /* StoryProgressRing.swift */; };
 		D07A3F7F272604F2E98E4324 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3711F9E5803D07BC66758943 /* ChatListViewModel.swift */; };
@@ -195,6 +197,8 @@
 		9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewView.swift; sourceTree = "<group>"; };
 		9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeModuleBuilder.swift; sourceTree = "<group>"; };
 		A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventPreviewSheet.swift; sourceTree = "<group>"; };
+		B44AC21B2F3A379400B6F5B4 /* StarfieldBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarfieldBackground.swift; sourceTree = "<group>"; };
+		B44AC21D2F3A3DE500B6F5B4 /* RoasStepProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoasStepProgress.swift; sourceTree = "<group>"; };
 		B5ED692DC4CD24A57457566D /* LocationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		CD48230371496DA459F1550C /* CachedAsyncImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
@@ -451,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0060 /* ProfileCoordinator.swift */,
+				B44AC21B2F3A379400B6F5B4 /* StarfieldBackground.swift */,
 				2A0061 /* ProfileView.swift */,
 				2A0062 /* ProfileViewModel.swift */,
 				2A0063 /* ProfileModuleBuilder.swift */,
@@ -464,6 +469,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0080 /* OnboardingCoordinator.swift */,
+				B44AC21D2F3A3DE500B6F5B4 /* RoasStepProgress.swift */,
 				2A0081 /* OnboardingView.swift */,
 				2A0082 /* OnboardingViewModel.swift */,
 				2A0083 /* OnboardingModuleBuilder.swift */,
@@ -577,7 +583,7 @@
 			packageReferences = (
 				8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */,
+				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 4A0099 /* Products */;
 			projectDirPath = "";
@@ -610,12 +616,14 @@
 				1A0002 /* SceneDelegate.swift in Sources */,
 				1A0003 /* AppCoordinator.swift in Sources */,
 				411A01622F323EFA00A9EDA6 /* AppTheme.swift in Sources */,
+				B44AC21C2F3A37A600B6F5B4 /* StarfieldBackground.swift in Sources */,
 				1A0004 /* Coordinator.swift in Sources */,
 				1A0005 /* ActionableHostingViewController.swift in Sources */,
 				1A0006 /* View+Extensions.swift in Sources */,
 				1A0007 /* String+Extensions.swift in Sources */,
 				1A0008 /* Array+Extensions.swift in Sources */,
 				1A0009 /* APIError.swift in Sources */,
+				B44AC21E2F3A3DEC00B6F5B4 /* RoasStepProgress.swift in Sources */,
 				1A0013 /* ThirdPartyManager.swift in Sources */,
 				1A0014 /* AuthManager.swift in Sources */,
 				1A0040 /* SignInManager.swift in Sources */,
@@ -903,7 +911,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */ = {
+		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -967,7 +975,7 @@
 		};
 		99496712EC816571A558DC47 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */;
+			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
