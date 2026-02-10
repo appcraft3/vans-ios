@@ -168,6 +168,26 @@ final class EventDetailViewModel: ObservableObject {
         isProcessing = false
     }
 
+    func issueCheckInCode() async -> String? {
+        do {
+            let result = try await functions.httpsCallable("refreshCheckInCode").call(["eventId": eventId])
+
+            guard let data = result.data as? [String: Any],
+                  let success = data["success"] as? Bool,
+                  success,
+                  let issuedCode = data["issuedCode"] as? String else {
+                return nil
+            }
+
+            // Update displayed code to the new one
+            checkInCode = data["newCode"] as? String
+            return issuedCode
+        } catch {
+            errorMessage = error.localizedDescription
+            return nil
+        }
+    }
+
     func enableCheckIn() async {
         isProcessing = true
 

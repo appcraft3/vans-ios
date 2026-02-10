@@ -163,7 +163,14 @@ struct EventDetailView: View {
                                 checkInCode: checkInCode,
                                 isProcessing: viewModel.isProcessing,
                                 onEnableCheckIn: { Task { await viewModel.enableCheckIn() } },
-                                onCompleteEvent: { Task { await viewModel.completeEvent() } }
+                                onCompleteEvent: { Task { await viewModel.completeEvent() } },
+                                onCopyCode: {
+                                    Task {
+                                        if let code = await viewModel.issueCheckInCode() {
+                                            UIPasteboard.general.string = code
+                                        }
+                                    }
+                                }
                             )
                         }
 
@@ -555,7 +562,9 @@ struct AdminSection: View {
     let isProcessing: Bool
     let onEnableCheckIn: () -> Void
     let onCompleteEvent: () -> Void
+    let onCopyCode: () -> Void
 
+    @State private var copied = false
     private let accentGreen = Color(hex: "2E7D5A")
 
     var body: some View {
@@ -569,21 +578,54 @@ struct AdminSection: View {
                     .foregroundColor(AppTheme.primary)
             }
 
-            HStack {
-                Text("Check-in Code")
-                    .font(.system(size: 14))
-                    .foregroundColor(AppTheme.textSecondary)
-                Spacer()
-                Text(checkInCode)
-                    .font(.system(.body, design: .monospaced))
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
+            if event.status == .ongoing {
+                VStack(spacing: 8) {
+                    Text("Check-in Code (single use)")
+                        .font(.system(size: 13))
+                        .foregroundColor(AppTheme.textSecondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    HStack {
+                        Text(checkInCode)
+                            .font(.system(.title3, design: .monospaced))
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+
+                        Spacer()
+
+                        Button {
+                            onCopyCode()
+                            copied = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                copied = false
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                                    .font(.system(size: 13))
+                                Text(copied ? "Copied!" : "Copy & Issue")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                            .foregroundColor(copied ? accentGreen : .black)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(copied ? accentGreen.opacity(0.15) : accentGreen)
+                            )
+                        }
+                        .disabled(isProcessing)
+                    }
+                    .padding(12)
                     .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color.white.opacity(0.08))
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color.white.opacity(0.06))
                     )
+
+                    Text("Each code works once. Copy it, share with one person, then copy a new one.")
+                        .font(.caption2)
+                        .foregroundColor(AppTheme.textTertiary)
+                }
             }
 
             if event.status == .upcoming {
