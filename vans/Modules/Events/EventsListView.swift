@@ -313,9 +313,9 @@ struct EventsListView: ActionableView {
         let nextOpa = restingOpacity(stackPos: max(0, stackPos - 1))
 
         let isFront = stackPos == 0
-        let yOff = isFront ? dragOffset : curY + (nextY - curY) * dragProgress
-        let scl = isFront ? 1.0 : curScale + (nextScale - curScale) * dragProgress
-        let opa = isFront ? curOpa : curOpa + (nextOpa - curOpa) * dragProgress
+        let yOff: CGFloat = isFront ? dragOffset : curY + (nextY - curY) * dragProgress
+        let scl: CGFloat = isFront ? 1.0 : curScale + (nextScale - curScale) * dragProgress
+        let opa: Double = isFront ? curOpa : curOpa + (nextOpa - curOpa) * dragProgress
 
         return EventSwipeCard(
             event: event,

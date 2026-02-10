@@ -5,6 +5,7 @@ protocol ProfileCoordinating: Coordinator {
     func showWaitlistReview()
     func showBecomeBuilder()
     func showMyReviews()
+    func showPaywall()
 }
 
 final class ProfileCoordinator: NSObject, ProfileCoordinating {
@@ -44,5 +45,13 @@ final class ProfileCoordinator: NSObject, ProfileCoordinating {
         let hostingController = UIHostingController(rootView: view)
         hostingController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(hostingController, animated: true)
+    }
+
+    @MainActor
+    func showPaywall() {
+        let view = PaywallView()
+        let hostingController = UIHostingController(rootView: view)
+        hostingController.modalPresentationStyle = .fullScreen
+        navigationController.present(hostingController, animated: true)
     }
 }

@@ -29,6 +29,10 @@ final class ProfileViewModel: ActionableViewModel {
     @Published var builderSessions: Int = 0
     @Published var builderRating: Int = 100
 
+    // Pro / Paywall
+    @Published var isPro: Bool = false
+    @Published var showPaywall: Bool = false
+
     private weak var coordinator: ProfileCoordinating?
     private var cancellables = Set<AnyCancellable>()
 
@@ -40,6 +44,7 @@ final class ProfileViewModel: ActionableViewModel {
         self.coordinator = coordinator
         setupUserObserver()
         setupPhotoObserver()
+        setupProObserver()
     }
 
     private func setupUserObserver() {
@@ -140,6 +145,21 @@ final class ProfileViewModel: ActionableViewModel {
 
     func openBecomeBuilder() {
         coordinator?.showBecomeBuilder()
+    }
+
+    func openPaywall() {
+        showPaywall = true
+    }
+
+    private func setupProObserver() {
+        Task { @MainActor in
+            PurchaseManager.shared.$isPro
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isPro in
+                    self?.isPro = isPro
+                }
+                .store(in: &self.cancellables)
+        }
     }
 
     private func loadConnectionsCount() {

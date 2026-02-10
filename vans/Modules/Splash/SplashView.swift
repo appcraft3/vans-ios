@@ -7,14 +7,19 @@ struct SplashView: ActionableView {
     var body: some View {
         ZStack {
             backgroundView
-
-            VStack(spacing: 24) {
-                Spacer()
-                logoView
-                appNameView
-                Spacer()
-                loadingView
-                Spacer().frame(height: 60)
+            ZStack {
+                VStack(spacing: 24) {
+                    Spacer()
+                    logoView
+                    appNameView
+                    Spacer()
+                    Spacer().frame(height: 60)
+                }
+                VStack {
+                    Spacer()
+                    loadingView
+                    Spacer().frame(height: 60)
+                }
             }
         }
         .alert("Error", isPresented: $viewModel.showError) {
@@ -85,7 +90,7 @@ struct SplashView: ActionableView {
             case .success:
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 32))
-                    .foregroundColor(.green)
+                    .foregroundColor(.accentPrimary)
             case .failed:
                 Image(systemName: "exclamationmark.circle.fill")
                     .font(.system(size: 32))

@@ -30,7 +30,14 @@ struct ProfileView: ActionableView {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    profilePhotoSection
+                    ZStack {
+                        profilePhotoSection
+                        VStack {
+                            profileHeaderBar
+                            Spacer()
+                        }
+                    }
+                   
                     nameInfoSection
 
                     if let user = viewModel.user {
@@ -71,6 +78,9 @@ struct ProfileView: ActionableView {
         .navigationBarHidden(true)
         .onAppear {
             viewModel.loadUser()
+        }
+        .fullScreenCover(isPresented: $viewModel.showPaywall) {
+            PaywallView()
         }
     }
 
@@ -125,6 +135,53 @@ struct ProfileView: ActionableView {
                     .fill(Color.white.opacity(0.03))
                     .frame(height: 200)
                     .ignoresSafeArea(edges: .bottom)
+            }
+        }
+    }
+
+    // MARK: - Header Bar
+
+    private var profileHeaderBar: some View {
+        HStack {
+
+            Spacer()
+
+            if viewModel.isPro {
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 12))
+                    Text("VanGo Pro")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .foregroundColor(accentGreen)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(
+                    Capsule()
+                        .fill(accentGreen.opacity(0.15))
+                )
+                .overlay(
+                    Capsule()
+                        .stroke(accentGreen.opacity(0.4), lineWidth: 1)
+                )
+            } else {
+                Button {
+                    viewModel.openPaywall()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "mountain.2.fill")
+                            .font(.system(size: 12))
+                        Text("Go Pro")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 7)
+                    .background(
+                        Capsule()
+                            .fill(accentGreen)
+                    )
+                }
             }
         }
     }
@@ -194,9 +251,31 @@ struct ProfileView: ActionableView {
 
     private var nameInfoSection: some View {
         VStack(spacing: 10) {
-            Text(viewModel.user?.profile?.firstName ?? "User")
-                .font(.system(size: 26, weight: .bold))
-                .foregroundColor(AppTheme.textPrimary)
+            HStack(spacing: 8) {
+                Text(viewModel.user?.profile?.firstName ?? "User")
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(AppTheme.textPrimary)
+
+                if viewModel.isPro {
+                    HStack(spacing: 4) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 12))
+                        Text("Pro")
+                            .font(.system(size: 11, weight: .bold))
+                    }
+                    .foregroundColor(accentGreen)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(accentGreen.opacity(0.15))
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(accentGreen.opacity(0.4), lineWidth: 1)
+                    )
+                }
+            }
 
             if let age = viewModel.user?.profile?.age {
                 Text("\(age) years old")
@@ -551,47 +630,25 @@ struct ProfileView: ActionableView {
     // MARK: - Settings
 
     private var settingsSection: some View {
-        VStack(spacing: 12) {
-            if viewModel.user?.isPremium == true {
-                HStack {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(accentGreen)
-                    Text("Premium Member")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(AppTheme.textPrimary)
-                    Spacer()
-                }
-                .padding(16)
-                .background(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(accentGreen.opacity(0.08))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(accentGreen.opacity(0.2), lineWidth: 1)
-                )
+        Button {
+            viewModel.signOut()
+        } label: {
+            HStack {
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                Text("Sign Out")
             }
-
-            Button {
-                viewModel.signOut()
-            } label: {
-                HStack {
-                    Image(systemName: "rectangle.portrait.and.arrow.right")
-                    Text("Sign Out")
-                }
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(AppTheme.error)
-                .frame(maxWidth: .infinity)
-                .padding(14)
-                .background(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(AppTheme.error.opacity(0.1))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(AppTheme.error.opacity(0.2), lineWidth: 1)
-                )
-            }
+            .font(.system(size: 15, weight: .semibold))
+            .foregroundColor(AppTheme.error)
+            .frame(maxWidth: .infinity)
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(AppTheme.error.opacity(0.1))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(AppTheme.error.opacity(0.2), lineWidth: 1)
+            )
         }
     }
 }
