@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0736BF76ADA33BE20A4D9A9D /* WaitlistReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */; };
+		073MATCH1B00000000000001 /* MatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000001 /* MatchManager.swift */; };
+		073MATCH1B00000000000002 /* MatchPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000002 /* MatchPopupView.swift */; };
 		073MYREV1A00000000000001 /* MyReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MYREV2A00000000000001 /* MyReviewsView.swift */; };
 		07E72C6ED1018666F452C6DC /* EventAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E428D83E7576FC89633678D /* EventAnnotation.swift */; };
 		10E991095E985D1172E52277 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07687C86DB109F07166CEA1D /* ChatView.swift */; };
@@ -24,8 +26,6 @@
 		1A0014 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0014 /* AuthManager.swift */; };
 		1A0015 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0015 /* UserManager.swift */; };
 		1A0016 /* RemoteConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0016 /* RemoteConfigManager.swift */; };
-		073MATCH1B00000000000001 /* MatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000001 /* MatchManager.swift */; };
-		073MATCH1B00000000000002 /* MatchPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000002 /* MatchPopupView.swift */; };
 		1A0017 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0017 /* KeychainHelper.swift */; };
 		1A0018 /* ForceUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0018 /* ForceUpdateManager.swift */; };
 		1A0019 /* SplashCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0019 /* SplashCoordinator.swift */; };
@@ -123,6 +123,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		073MATCH2B00000000000001 /* MatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchManager.swift; sourceTree = "<group>"; };
+		073MATCH2B00000000000002 /* MatchPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPopupView.swift; sourceTree = "<group>"; };
+		073MYREV2A00000000000001 /* MyReviewsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MyReviewsView.swift; sourceTree = "<group>"; };
 		07687C86DB109F07166CEA1D /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeCoordinator.swift; sourceTree = "<group>"; };
@@ -142,8 +145,6 @@
 		2A0014 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		2A0015 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		2A0016 /* RemoteConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigManager.swift; sourceTree = "<group>"; };
-		073MATCH2B00000000000001 /* MatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchManager.swift; sourceTree = "<group>"; };
-		073MATCH2B00000000000002 /* MatchPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPopupView.swift; sourceTree = "<group>"; };
 		2A0017 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		2A0018 /* ForceUpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceUpdateManager.swift; sourceTree = "<group>"; };
 		2A0019 /* SplashCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCoordinator.swift; sourceTree = "<group>"; };
@@ -206,7 +207,6 @@
 		79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotationView.swift; sourceTree = "<group>"; };
 		7BF06400F3C570E7754653DD /* PaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
-		073MYREV2A00000000000001 /* MyReviewsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MyReviewsView.swift; sourceTree = "<group>"; };
 		98E976E9D601AA2D39B5D778 /* PurchaseManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewView.swift; sourceTree = "<group>"; };
 		9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeModuleBuilder.swift; sourceTree = "<group>"; };
@@ -524,7 +524,6 @@
 				7BF06400F3C570E7754653DD /* PaywallView.swift */,
 				3583806EC60A08169AA13C31 /* PaywallViewModel.swift */,
 			);
-			name = Paywall;
 			path = Paywall;
 			sourceTree = "<group>";
 		};
@@ -616,8 +615,8 @@
 			packageReferences = (
 				8A0001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8A0002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */,
-				B44AC3A12F3A73D200B6F5B4 /* XCRemoteSwiftPackageReference "purchases-ios-spm.git" */,
+				7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				B44AC3A12F3A73D200B6F5B4 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			productRefGroup = 4A0099 /* Products */;
 			projectDirPath = "";
@@ -952,7 +951,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */ = {
+		7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -976,7 +975,7 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		B44AC3A12F3A73D200B6F5B4 /* XCRemoteSwiftPackageReference "purchases-ios-spm.git" */ = {
+		B44AC3A12F3A73D200B6F5B4 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
 			requirement = {
@@ -1024,12 +1023,12 @@
 		};
 		99496712EC816571A558DC47 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher.git" */;
+			package = 7483E67BC27751BC33937C0A /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
 		B44AC3A22F3A73D200B6F5B4 /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B44AC3A12F3A73D200B6F5B4 /* XCRemoteSwiftPackageReference "purchases-ios-spm.git" */;
+			package = B44AC3A12F3A73D200B6F5B4 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCat;
 		};
 /* End XCSwiftPackageProductDependency section */
