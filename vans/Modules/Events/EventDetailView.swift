@@ -167,13 +167,6 @@ struct EventDetailView: View {
                             )
                         }
 
-                        // Share check-in code (for checked-in non-admin users)
-                        if !viewModel.isAdmin, viewModel.isAttending,
-                           event.status == .ongoing,
-                           let checkInCode = viewModel.checkInCode {
-                            ShareCodeBanner(code: checkInCode)
-                        }
-
                         // Interest limit indicator
                         if viewModel.canSendInterests {
                             InterestLimitBanner(
@@ -653,51 +646,6 @@ struct AdminSection: View {
     }
 }
 
-// MARK: - Share Code Banner
-
-struct ShareCodeBanner: View {
-    let code: String
-
-    var body: some View {
-        VStack(spacing: 10) {
-            HStack(spacing: 8) {
-                Image(systemName: "person.2.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(AppTheme.secondary)
-                Text("Share Check-In Code")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(AppTheme.textPrimary)
-                Spacer()
-            }
-
-            Text("Share this code with others at the event so they can check in too")
-                .font(.caption)
-                .foregroundColor(AppTheme.textSecondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            Text(code)
-                .font(.system(.title2, design: .monospaced))
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Color.white.opacity(0.08))
-                )
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(AppTheme.secondary.opacity(0.08))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(AppTheme.secondary.opacity(0.2), lineWidth: 1)
-        )
-    }
-}
-
 // MARK: - Interest Limit Banner
 
 struct InterestLimitBanner: View {
@@ -951,7 +899,7 @@ struct CheckInSheet: View {
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(.white)
 
-            Text("Get the code from someone at the event")
+            Text("Ask the event organizer for the code")
                 .font(.system(size: 14))
                 .foregroundColor(AppTheme.textSecondary)
 
