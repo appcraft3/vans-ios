@@ -57,6 +57,22 @@ struct VanEvent: Identifiable, Codable {
         }
     }
 
+    func toWidgetEvent() -> WidgetEvent {
+        WidgetEvent(
+            id: id,
+            title: title,
+            activityType: activityType,
+            region: region,
+            approximateArea: approximateArea,
+            date: date,
+            endDate: endDate,
+            attendeesCount: attendeesCount,
+            maxAttendees: maxAttendees,
+            status: status.rawValue,
+            firstPhotoURL: photos.first
+        )
+    }
+
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE, MMM d 'at' h:mm a"

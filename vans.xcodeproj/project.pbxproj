@@ -12,7 +12,10 @@
 		073MATCH1B00000000000002 /* MatchPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MATCH2B00000000000002 /* MatchPopupView.swift */; };
 		073MYREV1A00000000000001 /* MyReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073MYREV2A00000000000001 /* MyReviewsView.swift */; };
 		07E72C6ED1018666F452C6DC /* EventAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E428D83E7576FC89633678D /* EventAnnotation.swift */; };
+		094A7ACA7CF001C6223815B5 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002A7750BE255EA8BC59C6FD /* SwiftUI.framework */; };
 		10E991095E985D1172E52277 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07687C86DB109F07166CEA1D /* ChatView.swift */; };
+		13E8A6100FC64A8A02398D39 /* SharedEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208AA4CC6FE6C0302AA72CBC /* SharedEventData.swift */; };
+		14E977C0DAF4780EDD393146 /* SmallEventWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE903C2157915E2C0AEE1C5C /* SmallEventWidgetView.swift */; };
 		1A0001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0001 /* AppDelegate.swift */; };
 		1A0002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0002 /* SceneDelegate.swift */; };
 		1A0003 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0003 /* AppCoordinator.swift */; };
@@ -75,7 +78,9 @@
 		1A0091 /* WaitlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0091 /* WaitlistView.swift */; };
 		1A0092 /* WaitlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0092 /* WaitlistViewModel.swift */; };
 		1A0093 /* WaitlistModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0093 /* WaitlistModuleBuilder.swift */; };
+		1DDA61B3E7E2C3CEB6F6D14B /* VanGoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9923023B0E61415515E5F1A6 /* VanGoWidget.swift */; };
 		24CA33E7224EBFC0054CAF59 /* WaitlistReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */; };
+		2D8CAFAC63B6C4D330CB4CBB /* SharedContainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0594CD34B9AC51A10AB1E2 /* SharedContainerManager.swift */; };
 		36A393F3BE00518B9F086BF5 /* StoryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D8E89CF62344D886668E9 /* StoryModels.swift */; };
 		3B09A9A88267D09831AED448 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */; };
 		3BEF7EB63F40D1D95BF1A736 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ED692DC4CD24A57457566D /* LocationManager.swift */; };
@@ -89,9 +94,14 @@
 		412461312F37951D00488119 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412461302F37951D00488119 /* LocationSearchView.swift */; };
 		4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4191BB6A2F2B86440043335E /* GoogleService-Info.plist */; };
 		47BE57C6960BD32D43E9CDCA /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF06400F3C570E7754653DD /* PaywallView.swift */; };
+		4F897247DD126CFFBD1102B7 /* WidgetTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E681DF599B4BBF0DC3C3535 /* WidgetTheme.swift */; };
+		542BCA0841CC93CC74BC3F63 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 923056AB3CD1C457AFB78B7F /* WidgetKit.framework */; };
 		55B1793178B79819D11CD109 /* EventPreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FA955BA809FDA25C74CC4 /* EventPreviewCard.swift */; };
+		55B527535EA1449106810CA7 /* VanGoWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5622B14DBAA2392785F6DE83 /* VanGoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5EFD67DF500783A6323F14E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 273E65E6CB620A67FA73DF95 /* Foundation.framework */; };
 		6693AC733BE3D2AF573EFC8E /* InviteCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */; };
 		698F170005711EF5A3792BB1 /* PaywallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3583806EC60A08169AA13C31 /* PaywallViewModel.swift */; };
+		6B9F527F41FD9D309E9B8FA3 /* SharedEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208AA4CC6FE6C0302AA72CBC /* SharedEventData.swift */; };
 		73DBA679ADC240311078C11D /* EventPreviewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */; };
 		829CFD7DCFDD8B8B3D48D13A /* InviteCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */; };
 		8AA5F3BD4FACDE77C5A607D3 /* InviteCodeModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */; };
@@ -104,6 +114,7 @@
 		B8D228EF267DFC068CE00A60 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */; };
 		C5013215B6C64EC71FC06150 /* StoryProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA99C0DE087CF7F17F26BF09 /* StoryProgressRing.swift */; };
 		D07A3F7F272604F2E98E4324 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3711F9E5803D07BC66758943 /* ChatListViewModel.swift */; };
+		D118AE844EA56E8DF65CF355 /* VanGoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE831F0595BCBE1A6EF719 /* VanGoWidgetBundle.swift */; };
 		D43C4483E0F9F65FA1E86C72 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD48230371496DA459F1550C /* CachedAsyncImage.swift */; };
 		E1A00001 /* EventModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00001 /* EventModels.swift */; };
 		E1A00002 /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00002 /* EventsListView.swift */; };
@@ -115,22 +126,55 @@
 		E1A00008 /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00008 /* CreateEventView.swift */; };
 		E1A00009 /* CreateEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00009 /* CreateEventViewModel.swift */; };
 		E1A00010 /* EventChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A00010 /* EventChatView.swift */; };
+		E53EDD3CFE15481F434B4B0F /* MediumEventWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AEC882428EF15C984CCB1B /* MediumEventWidgetView.swift */; };
 		E862AEC380B6245DCF2EB851 /* PaywallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2061B873D17260DDFF1C09 /* PaywallViewModel.swift */; };
+		ECBC0B41DA4CCCBEA4D5296A /* WidgetEventEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632947B93F88C8EBA007DF71 /* WidgetEventEntry.swift */; };
+		EDE117B7F01A0A93D49F8414 /* EventTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C679A9F49E3F8713F1067BD /* EventTimelineProvider.swift */; };
+		F243E68902289859AF91D586 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 923056AB3CD1C457AFB78B7F /* WidgetKit.framework */; };
 		F4F60A5F2C7DEA6096EDEA41 /* EventAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */; };
+		F59E0AE6A78D877BEB46C4E6 /* SharedContainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0594CD34B9AC51A10AB1E2 /* SharedContainerManager.swift */; };
 		F90E21D0C2648CDC4A294E0E /* StoryViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5274FFC1C167CA1BAB51D3 /* StoryViewerView.swift */; };
 		F9C940CBA577E6417A0945E8 /* InviteCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D893127945C1A9579A974067 /* InviteCodeViewModel.swift */; };
 		FB1BB1CB8888340E7FD44F3A /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		6F27D634543E8D54CFEEAEF3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A0100 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD680030E06E6ACA423F424C;
+			remoteInfo = VanGoWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DB1E237A454A7E8CED175A7F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				55B527535EA1449106810CA7 /* VanGoWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		002A7750BE255EA8BC59C6FD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		073MATCH2B00000000000001 /* MatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchManager.swift; sourceTree = "<group>"; };
 		073MATCH2B00000000000002 /* MatchPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPopupView.swift; sourceTree = "<group>"; };
 		073MYREV2A00000000000001 /* MyReviewsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MyReviewsView.swift; sourceTree = "<group>"; };
 		07687C86DB109F07166CEA1D /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		0AE7A178EB2C674941B65CAC /* VanGoWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = VanGoWidget.entitlements; sourceTree = "<group>"; };
 		0BE3B232B0B78B0ED385E8CA /* ChatListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		0C9F4D7515E1744520C4AE6E /* InviteCodeCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeCoordinator.swift; sourceTree = "<group>"; };
 		0E428D83E7576FC89633678D /* EventAnnotation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotation.swift; sourceTree = "<group>"; };
 		119FA955BA809FDA25C74CC4 /* EventPreviewCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventPreviewCard.swift; sourceTree = "<group>"; };
+		208AA4CC6FE6C0302AA72CBC /* SharedEventData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedEventData.swift; sourceTree = "<group>"; };
+		273E65E6CB620A67FA73DF95 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		2A0000 /* vans.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vans.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A0001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2A0002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -188,11 +232,14 @@
 		2A0091 /* WaitlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistView.swift; sourceTree = "<group>"; };
 		2A0092 /* WaitlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistViewModel.swift; sourceTree = "<group>"; };
 		2A0093 /* WaitlistModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitlistModuleBuilder.swift; sourceTree = "<group>"; };
+		2CEE831F0595BCBE1A6EF719 /* VanGoWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VanGoWidgetBundle.swift; sourceTree = "<group>"; };
+		2D0594CD34B9AC51A10AB1E2 /* SharedContainerManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedContainerManager.swift; sourceTree = "<group>"; };
 		2D5274FFC1C167CA1BAB51D3 /* StoryViewerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryViewerView.swift; sourceTree = "<group>"; };
 		304E8EAD955DE461AB4F6BD5 /* UserProfileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		3583806EC60A08169AA13C31 /* PaywallViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallViewModel.swift; sourceTree = "<group>"; };
 		3711F9E5803D07BC66758943 /* ChatListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatListViewModel.swift; sourceTree = "<group>"; };
 		3D06139C3B1AC0A84BC7715F /* ChatModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
+		3E681DF599B4BBF0DC3C3535 /* WidgetTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetTheme.swift; sourceTree = "<group>"; };
 		411A01612F323EFA00A9EDA6 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; tabWidth = 5; };
 		412445412F33CBEA00488119 /* BuilderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuilderModels.swift; sourceTree = "<group>"; };
 		412461172F37854300488119 /* BecomeBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BecomeBuilderView.swift; sourceTree = "<group>"; };
@@ -201,13 +248,20 @@
 		412461302F37951D00488119 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		4191BB672F2B7D970043335E /* vans.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vans.entitlements; sourceTree = "<group>"; };
 		4191BB6A2F2B86440043335E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		461F69EFAA5CF23E7ACD48B3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A3D8E89CF62344D886668E9 /* StoryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryModels.swift; sourceTree = "<group>"; };
+		5622B14DBAA2392785F6DE83 /* VanGoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VanGoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AF287A2C6ABF3FC05B1588E /* DarkMapView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DarkMapView.swift; sourceTree = "<group>"; };
+		5C679A9F49E3F8713F1067BD /* EventTimelineProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventTimelineProvider.swift; sourceTree = "<group>"; };
+		632947B93F88C8EBA007DF71 /* WidgetEventEntry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetEventEntry.swift; sourceTree = "<group>"; };
 		696FB08537E4DF3266C95A89 /* WaitlistReviewViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewViewModel.swift; sourceTree = "<group>"; };
+		75AEC882428EF15C984CCB1B /* MediumEventWidgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediumEventWidgetView.swift; sourceTree = "<group>"; };
 		79ED4F37DF4EE3E5A0B64484 /* EventAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventAnnotationView.swift; sourceTree = "<group>"; };
 		7BF06400F3C570E7754653DD /* PaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		7ED03D905E3B4E08BD0A6DFD /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		923056AB3CD1C457AFB78B7F /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/WidgetKit.framework; sourceTree = DEVELOPER_DIR; };
 		98E976E9D601AA2D39B5D778 /* PurchaseManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		9923023B0E61415515E5F1A6 /* VanGoWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VanGoWidget.swift; sourceTree = "<group>"; };
 		9B2DDEC2AAEBD370630E4F29 /* WaitlistReviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaitlistReviewView.swift; sourceTree = "<group>"; };
 		9EA353BD197D9EA8099D7479 /* InviteCodeModuleBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeModuleBuilder.swift; sourceTree = "<group>"; };
 		A1D3E482CBAD02717763F584 /* EventPreviewSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventPreviewSheet.swift; sourceTree = "<group>"; };
@@ -217,6 +271,7 @@
 		B5ED692DC4CD24A57457566D /* LocationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		B79308773994CEA07B3DBC8F /* UserProfileViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		CD48230371496DA459F1550C /* CachedAsyncImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
+		CE903C2157915E2C0AEE1C5C /* SmallEventWidgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmallEventWidgetView.swift; sourceTree = "<group>"; };
 		D893127945C1A9579A974067 /* InviteCodeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeViewModel.swift; sourceTree = "<group>"; };
 		DFDE90C3A9634D38C22F4064 /* InviteCodeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InviteCodeView.swift; sourceTree = "<group>"; };
 		E2A00001 /* EventModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EventModels.swift; sourceTree = "<group>"; };
@@ -233,6 +288,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		08D8D44D316CF75F2F5AAD4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EFD67DF500783A6323F14E6 /* Foundation.framework in Frameworks */,
+				F243E68902289859AF91D586 /* WidgetKit.framework in Frameworks */,
+				094A7ACA7CF001C6223815B5 /* SwiftUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3A0001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -246,6 +311,7 @@
 				1A0035 /* FirebaseAnalytics in Frameworks */,
 				1A0036 /* GoogleSignIn in Frameworks */,
 				1A0037 /* GoogleSignInSwift in Frameworks */,
+				542BCA0841CC93CC74BC3F63 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +344,9 @@
 			children = (
 				4A0001 /* vans */,
 				4A0099 /* Products */,
+				95D9EDD64CE54995A1E7E3FE /* Frameworks */,
+				FA6B8CEE1E4AC1A4BF2A4742 /* VanGoWidget */,
+				81D2F6B6089D072C7C9ACBDC /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -513,8 +582,36 @@
 			isa = PBXGroup;
 			children = (
 				2A0000 /* vans.app */,
+				5622B14DBAA2392785F6DE83 /* VanGoWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7D8071ACA39BC77240B10BFE /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				273E65E6CB620A67FA73DF95 /* Foundation.framework */,
+				923056AB3CD1C457AFB78B7F /* WidgetKit.framework */,
+				002A7750BE255EA8BC59C6FD /* SwiftUI.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		81D2F6B6089D072C7C9ACBDC /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				208AA4CC6FE6C0302AA72CBC /* SharedEventData.swift */,
+				2D0594CD34B9AC51A10AB1E2 /* SharedContainerManager.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		95D9EDD64CE54995A1E7E3FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7D8071ACA39BC77240B10BFE /* iOS */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		A6AA0753E994C93432E238A3 /* Paywall */ = {
@@ -557,6 +654,22 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		FA6B8CEE1E4AC1A4BF2A4742 /* VanGoWidget */ = {
+			isa = PBXGroup;
+			children = (
+				2CEE831F0595BCBE1A6EF719 /* VanGoWidgetBundle.swift */,
+				9923023B0E61415515E5F1A6 /* VanGoWidget.swift */,
+				5C679A9F49E3F8713F1067BD /* EventTimelineProvider.swift */,
+				632947B93F88C8EBA007DF71 /* WidgetEventEntry.swift */,
+				CE903C2157915E2C0AEE1C5C /* SmallEventWidgetView.swift */,
+				75AEC882428EF15C984CCB1B /* MediumEventWidgetView.swift */,
+				3E681DF599B4BBF0DC3C3535 /* WidgetTheme.swift */,
+				461F69EFAA5CF23E7ACD48B3 /* Info.plist */,
+				0AE7A178EB2C674941B65CAC /* VanGoWidget.entitlements */,
+			);
+			path = VanGoWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -567,10 +680,12 @@
 				5A0002 /* Sources */,
 				3A0001 /* Frameworks */,
 				5A0003 /* Resources */,
+				DB1E237A454A7E8CED175A7F /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				ADA8C1AC2F0C11244C2FF45F /* PBXTargetDependency */,
 			);
 			name = vans;
 			packageProductDependencies = (
@@ -587,6 +702,23 @@
 			productName = vans;
 			productReference = 2A0000 /* vans.app */;
 			productType = "com.apple.product-type.application";
+		};
+		DD680030E06E6ACA423F424C /* VanGoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 695C67DBE93B755A2CC32EB6 /* Build configuration list for PBXNativeTarget "VanGoWidgetExtension" */;
+			buildPhases = (
+				D030FA1C8411D279CC5750C8 /* Sources */,
+				08D8D44D316CF75F2F5AAD4C /* Frameworks */,
+				D4271944CA8AA334C9A10B01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VanGoWidgetExtension;
+			productName = VanGoWidgetExtension;
+			productReference = 5622B14DBAA2392785F6DE83 /* VanGoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -623,6 +755,7 @@
 			projectRoot = "";
 			targets = (
 				5A0001 /* vans */,
+				DD680030E06E6ACA423F424C /* VanGoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -635,6 +768,13 @@
 				1A0028 /* Assets.xcassets in Resources */,
 				1A0029 /* LaunchScreen.storyboard in Resources */,
 				4191BB6B2F2B86B00043335E /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4271944CA8AA334C9A10B01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,12 +886,66 @@
 				E862AEC380B6245DCF2EB851 /* PaywallViewModel.swift in Sources */,
 				47BE57C6960BD32D43E9CDCA /* PaywallView.swift in Sources */,
 				698F170005711EF5A3792BB1 /* PaywallViewModel.swift in Sources */,
+				6B9F527F41FD9D309E9B8FA3 /* SharedEventData.swift in Sources */,
+				2D8CAFAC63B6C4D330CB4CBB /* SharedContainerManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D030FA1C8411D279CC5750C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D118AE844EA56E8DF65CF355 /* VanGoWidgetBundle.swift in Sources */,
+				1DDA61B3E7E2C3CEB6F6D14B /* VanGoWidget.swift in Sources */,
+				EDE117B7F01A0A93D49F8414 /* EventTimelineProvider.swift in Sources */,
+				ECBC0B41DA4CCCBEA4D5296A /* WidgetEventEntry.swift in Sources */,
+				14E977C0DAF4780EDD393146 /* SmallEventWidgetView.swift in Sources */,
+				E53EDD3CFE15481F434B4B0F /* MediumEventWidgetView.swift in Sources */,
+				4F897247DD126CFFBD1102B7 /* WidgetTheme.swift in Sources */,
+				13E8A6100FC64A8A02398D39 /* SharedEventData.swift in Sources */,
+				F59E0AE6A78D877BEB46C4E6 /* SharedContainerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		ADA8C1AC2F0C11244C2FF45F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VanGoWidgetExtension;
+			target = DD680030E06E6ACA423F424C /* VanGoWidgetExtension */;
+			targetProxy = 6F27D634543E8D54CFEEAEF3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		4D7E24955E85B69AF45A4058 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = VanGoWidget/VanGoWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2LST5R6GRF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VanGoWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.abtc.vans.VanGoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		6A0010 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -886,6 +1080,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -914,6 +1109,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -927,9 +1123,46 @@
 			};
 			name = Release;
 		};
+		F6564B568A08AC887A1F1B0A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = VanGoWidget/VanGoWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2LST5R6GRF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VanGoWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.abtc.vans.VanGoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		695C67DBE93B755A2CC32EB6 /* Build configuration list for PBXNativeTarget "VanGoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6564B568A08AC887A1F1B0A /* Release */,
+				4D7E24955E85B69AF45A4058 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6A0001 /* Build configuration list for PBXProject "vans" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -5,6 +5,7 @@ import CoreLocation
 import FirebaseFunctions
 import PhotosUI
 import SwiftUI
+import WidgetKit
 
 // MARK: - Discovery Models (used by UserProfileView, EventsCoordinator)
 
@@ -158,6 +159,11 @@ final class ExploreViewModel: ActionableViewModel {
             }
 
             events = eventsData.compactMap { parseEvent($0) }
+
+            // Update widget data
+            SharedContainerManager.saveEvents(events.map { $0.toWidgetEvent() })
+            WidgetCenter.shared.reloadAllTimelines()
+
             await buildAnnotations()
         } catch {
             print("Failed to load events: \(error)")

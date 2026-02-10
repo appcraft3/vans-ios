@@ -1,6 +1,7 @@
 import Foundation
 import FirebaseFunctions
 import MapKit
+import WidgetKit
 
 @MainActor
 final class EventsListViewModel: ActionableViewModel {
@@ -52,6 +53,10 @@ final class EventsListViewModel: ActionableViewModel {
             }
 
             events = eventsData.compactMap { parseEvent($0) }
+
+            // Update widget data
+            SharedContainerManager.saveEvents(events.map { $0.toWidgetEvent() })
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             errorMessage = error.localizedDescription
         }
