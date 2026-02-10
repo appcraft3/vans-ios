@@ -167,6 +167,13 @@ struct EventDetailView: View {
                             )
                         }
 
+                        // Share check-in code (for checked-in non-admin users)
+                        if !viewModel.isAdmin, viewModel.isAttending,
+                           event.status == .ongoing,
+                           let checkInCode = viewModel.checkInCode {
+                            ShareCodeBanner(code: checkInCode)
+                        }
+
                         // Interest limit indicator
                         if viewModel.canSendInterests {
                             InterestLimitBanner(
@@ -458,7 +465,7 @@ struct EventDetailView: View {
                     .stroke(accentGreen.opacity(0.3), lineWidth: 1)
             )
         } else if event.isInterested {
-            if event.status == .ongoing && event.checkInEnabled {
+            if event.status == .ongoing {
                 Button {
                     showCheckInSheet = true
                 } label: {
@@ -496,10 +503,6 @@ struct EventDetailView: View {
 
                     if event.status == .upcoming {
                         Text("Check-in available when event starts")
-                            .font(.caption)
-                            .foregroundColor(AppTheme.textTertiary)
-                    } else if event.status == .ongoing && !event.checkInEnabled {
-                        Text("Waiting for organizer to enable check-in")
                             .font(.caption)
                             .foregroundColor(AppTheme.textTertiary)
                     }
@@ -646,6 +649,51 @@ struct AdminSection: View {
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(AppTheme.primary.opacity(0.2), lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Share Code Banner
+
+struct ShareCodeBanner: View {
+    let code: String
+
+    var body: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "person.2.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(AppTheme.secondary)
+                Text("Share Check-In Code")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(AppTheme.textPrimary)
+                Spacer()
+            }
+
+            Text("Share this code with others at the event so they can check in too")
+                .font(.caption)
+                .foregroundColor(AppTheme.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Text(code)
+                .font(.system(.title2, design: .monospaced))
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.white.opacity(0.08))
+                )
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(AppTheme.secondary.opacity(0.08))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(AppTheme.secondary.opacity(0.2), lineWidth: 1)
         )
     }
 }
@@ -903,7 +951,7 @@ struct CheckInSheet: View {
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(.white)
 
-            Text("Ask the event organizer for the code")
+            Text("Get the code from someone at the event")
                 .font(.system(size: 14))
                 .foregroundColor(AppTheme.textSecondary)
 

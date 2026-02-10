@@ -10,7 +10,6 @@ struct MatchInfo {
     let eventName: String
 }
 
-@MainActor
 final class MatchManager: ObservableObject {
     static let shared = MatchManager()
 
@@ -42,13 +41,11 @@ final class MatchManager: ObservableObject {
                 guard let snapshot else { return }
 
                 if self.isInitialLoad {
-                    // First load: just record existing connection IDs
                     self.knownConnectionIds = Set(snapshot.documents.map { $0.documentID })
                     self.isInitialLoad = false
                     return
                 }
 
-                // Look for newly added documents
                 for change in snapshot.documentChanges {
                     if change.type == .added && !self.knownConnectionIds.contains(change.document.documentID) {
                         self.knownConnectionIds.insert(change.document.documentID)
@@ -75,7 +72,6 @@ final class MatchManager: ObservableObject {
 
         let otherUserId = userIds.first { $0 != currentUserId } ?? ""
 
-        // Get other user's info from the denormalized users map
         var otherUserName = "Someone"
         var otherUserPhotoUrl: String?
 
@@ -93,6 +89,8 @@ final class MatchManager: ObservableObject {
             eventName: eventName
         )
 
-        currentMatch = match
+        DispatchQueue.main.async {
+            self.currentMatch = match
+        }
     }
 }
