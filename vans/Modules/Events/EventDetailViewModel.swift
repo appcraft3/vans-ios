@@ -302,7 +302,8 @@ final class EventDetailViewModel: ObservableObject {
             isAttending: false,
             hasBuilder: data["hasBuilder"] as? Bool ?? false,
             latitude: data["latitude"] as? Double,
-            longitude: data["longitude"] as? Double
+            longitude: data["longitude"] as? Double,
+            photos: data["photos"] as? [String] ?? []
         )
     }
 

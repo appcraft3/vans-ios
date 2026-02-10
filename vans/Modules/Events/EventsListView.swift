@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 // MARK: - Date Filter
 
@@ -243,8 +244,9 @@ struct EventsListView: ActionableView {
     private var cardStack: some View {
         GeometryReader { geo in
             let cardW = geo.size.width
-            let cardH = geo.size.height - 36 // room for back card peek above
-            let dragProgress = min(1.0, max(0, -dragOffset / (cardH * 0.25)))
+            let cardH = geo.size.height - 36
+            // Progress 0→1 as user drags up (clamped). Reaches 1.0 at 40% card height.
+            let dragProgress = min(1.0, max(0, -dragOffset / (cardH * 0.4)))
 
             ZStack {
                 ForEach(visibleCards.reversed(), id: \.offset) { item in
@@ -273,7 +275,29 @@ struct EventsListView: ActionableView {
         .padding(.bottom, 86)
     }
 
-    @ViewBuilder
+    // Compute resting Y offset for a given stack position
+    private func restingY(stackPos: Int, cardH: CGFloat) -> CGFloat {
+        guard stackPos > 0 else { return 0 }
+        let scaleDrop: CGFloat = 0.04
+        let peekPerCard: CGFloat = 12.0
+        let scale = 1.0 - CGFloat(stackPos) * scaleDrop
+        let peek = peekPerCard * CGFloat(stackPos)
+        return -(cardH * (1.0 - scale) / 2.0 + peek)
+    }
+
+    private func restingScale(stackPos: Int) -> CGFloat {
+        guard stackPos > 0 else { return 1.0 }
+        return 1.0 - CGFloat(stackPos) * 0.04
+    }
+
+    private func restingOpacity(stackPos: Int) -> Double {
+        switch stackPos {
+        case 0: return 1.0
+        case 1: return 0.6
+        default: return 0.3
+        }
+    }
+
     private func stackedCard(
         event: VanEvent,
         stackPos: Int,
@@ -281,30 +305,19 @@ struct EventsListView: ActionableView {
         cardW: CGFloat,
         cardH: CGFloat
     ) -> some View {
-        // Back cards peek from the TOP of the front card
-        let scaleDrop: CGFloat = 0.04
-        let peekPerCard: CGFloat = 12.0
+        let curY = restingY(stackPos: stackPos, cardH: cardH)
+        let nextY = restingY(stackPos: max(0, stackPos - 1), cardH: cardH)
+        let curScale = restingScale(stackPos: stackPos)
+        let nextScale = restingScale(stackPos: max(0, stackPos - 1))
+        let curOpa = restingOpacity(stackPos: stackPos)
+        let nextOpa = restingOpacity(stackPos: max(0, stackPos - 1))
 
-        let scale = 1.0 - CGFloat(stackPos) * scaleDrop
-        let peek = peekPerCard * CGFloat(stackPos)
+        let isFront = stackPos == 0
+        let yOff = isFront ? dragOffset : curY + (nextY - curY) * dragProgress
+        let scl = isFront ? 1.0 : curScale + (nextScale - curScale) * dragProgress
+        let opa = isFront ? curOpa : curOpa + (nextOpa - curOpa) * dragProgress
 
-        // Offset so the back card's top edge sits `peek` pt above the front card's top
-        // With center-anchored scaleEffect: visual top = center_y - (cardH * scale / 2)
-        // We want: back_visual_top = front_top - peek = -cardH/2 - peek
-        // So: restingY - cardH * scale / 2 = -cardH/2 - peek
-        // restingY = -cardH/2 - peek + cardH * scale / 2 = -(cardH * (1 - scale) / 2 + peek)
-        let restingY = -(cardH * (1.0 - scale) / 2.0 + peek)
-
-        let baseOpacity: Double = stackPos == 0 ? 1.0 : stackPos == 1 ? 0.6 : 0.3
-
-        // During drag, interpolate behind cards toward front position
-        let lerp: CGFloat = stackPos == 1 ? dragProgress * 0.45 : dragProgress * 0.15
-
-        let yOff = stackPos == 0 ? dragOffset : restingY * (1.0 - lerp)
-        let scl = stackPos == 0 ? 1.0 : scale + (1.0 - scale) * lerp
-        let opa = stackPos == 0 ? 1.0 : baseOpacity + (1.0 - baseOpacity) * lerp
-
-        EventSwipeCard(
+        return EventSwipeCard(
             event: event,
             cardWidth: cardW,
             cardHeight: cardH,
@@ -331,7 +344,7 @@ struct EventsListView: ActionableView {
                 if value.translation.height < 0 {
                     dragOffset = value.translation.height
                 } else {
-                    dragOffset = value.translation.height * 0.2 // resist downward
+                    dragOffset = value.translation.height * 0.2
                 }
             }
             .onEnded { value in
@@ -340,19 +353,17 @@ struct EventsListView: ActionableView {
                     || value.predictedEndTranslation.height < -cardHeight * 0.5
 
                 if shouldDismiss {
-                    // Fly card off the top
-                    withAnimation(.easeOut(duration: 0.28)) {
+                    // Fly front card off the top; behind cards follow via dragProgress → 1.0
+                    withAnimation(.easeOut(duration: 0.3)) {
                         dragOffset = -cardHeight * 1.5
                     }
-                    // Bring next card forward
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+                    // After fly-off, behind cards are already at their next positions
+                    // (dragProgress clamped to 1.0), so index change causes no jump
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
+                        currentIndex += 1
                         dragOffset = 0
-                        withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
-                            currentIndex += 1
-                        }
                     }
                 } else {
-                    // Snap back
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.72)) {
                         dragOffset = 0
                     }
@@ -375,23 +386,20 @@ struct EventSwipeCard: View {
     var body: some View {
         ZStack {
             // Background image
-            // TODO: Replace with real event images from backend
-            AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/600/900")) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    placeholderBg
-                case .empty:
-                    placeholderBg
-                        .overlay(ProgressView().tint(.white.opacity(0.25)))
-                @unknown default:
-                    placeholderBg
-                }
+            if let firstPhoto = event.photos.first, let url = URL(string: firstPhoto) {
+                KFImage(url)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: cardWidth, height: cardHeight)
+            } else {
+                placeholderBg
+                    .overlay(
+                        Image(systemName: event.activityIcon)
+                            .font(.system(size: 40))
+                            .foregroundColor(.white.opacity(0.15))
+                    )
+                    .frame(width: cardWidth, height: cardHeight)
             }
-            .frame(width: cardWidth, height: cardHeight)
 
             // Green gradient overlays
             VStack(spacing: 0) {

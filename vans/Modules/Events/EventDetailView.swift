@@ -247,24 +247,21 @@ struct EventDetailView: View {
 
             ZStack(alignment: .bottomLeading) {
                 // Background image
-                AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/800/600")) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: imgW, height: imgH)
-                            .clipped()
-                    case .failure:
-                        Rectangle().fill(Color(hex: "1A2820"))
-                    case .empty:
-                        Rectangle().fill(Color(hex: "1A2820"))
-                            .overlay(ProgressView().tint(.white.opacity(0.25)))
-                    @unknown default:
-                        Rectangle().fill(Color(hex: "1A2820"))
-                    }
+                if let firstPhoto = event.photos.first, let url = URL(string: firstPhoto) {
+                    KFImage(url)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: imgW, height: imgH)
+                        .clipped()
+                } else {
+                    Rectangle().fill(Color(hex: "1A2820"))
+                        .overlay(
+                            Image(systemName: event.activityIcon)
+                                .font(.system(size: 40))
+                                .foregroundColor(.white.opacity(0.15))
+                        )
+                        .frame(width: imgW, height: imgH)
                 }
-                .frame(width: imgW, height: imgH)
 
                 // Green gradient overlays
                 VStack(spacing: 0) {
@@ -394,39 +391,27 @@ struct EventDetailView: View {
 
     @ViewBuilder
     private func photoGallery(event: VanEvent) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Gallery")
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundColor(.white)
+        if event.photos.count > 1 {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Gallery")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.white)
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(0..<5, id: \.self) { index in
-                        AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)_\(index)/400/300")) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(Array(event.photos.enumerated()), id: \.offset) { _, photoUrl in
+                            if let url = URL(string: photoUrl) {
+                                KFImage(url)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                            case .failure:
-                                Rectangle().fill(Color(hex: "1A2820"))
+                                    .frame(width: 160, height: 120)
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                                     .overlay(
-                                        Image(systemName: "photo")
-                                            .foregroundColor(.white.opacity(0.15))
+                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                            .stroke(Color.white.opacity(0.08), lineWidth: 1)
                                     )
-                            case .empty:
-                                Rectangle().fill(Color(hex: "1A2820"))
-                                    .overlay(ProgressView().tint(.white.opacity(0.2)))
-                            @unknown default:
-                                Rectangle().fill(Color(hex: "1A2820"))
                             }
                         }
-                        .frame(width: 160, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                        )
                     }
                 }
             }
@@ -1023,26 +1008,35 @@ struct ReviewSheet: View {
                 .multilineTextAlignment(.center)
 
             VStack(alignment: .trailing, spacing: 6) {
-                TextEditor(text: $reviewText)
-                    .focused($isTextFieldFocused)
-                    .frame(minHeight: 100, maxHeight: 160)
-                    .padding(12)
-                    .scrollContentBackground(.hidden)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color.white.opacity(0.06))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                    )
-                    .foregroundColor(AppTheme.textPrimary)
-                    .font(.system(size: 15))
-                    .onChange(of: reviewText) { newValue in
-                        if newValue.count > maxCharacters {
-                            reviewText = String(newValue.prefix(maxCharacters))
-                        }
+                ZStack(alignment: .topLeading) {
+                    if reviewText.isEmpty {
+                        Text("Share your experience...")
+                            .foregroundColor(Color.white.opacity(0.35))
+                            .font(.system(size: 15))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 20)
                     }
+                    TextEditor(text: $reviewText)
+                        .focused($isTextFieldFocused)
+                        .frame(minHeight: 100, maxHeight: 160)
+                        .padding(12)
+                        .scrollContentBackground(.hidden)
+                        .foregroundColor(AppTheme.textPrimary)
+                        .font(.system(size: 15))
+                        .onChange(of: reviewText) { newValue in
+                            if newValue.count > maxCharacters {
+                                reviewText = String(newValue.prefix(maxCharacters))
+                            }
+                        }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                )
 
                 Text("\(reviewText.count)/\(maxCharacters)")
                     .font(.system(size: 12))

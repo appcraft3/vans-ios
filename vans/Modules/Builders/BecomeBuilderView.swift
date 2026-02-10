@@ -170,13 +170,22 @@ struct BecomeBuilderView: View {
                     .foregroundColor(viewModel.bio.count >= 20 ? AppTheme.accent : AppTheme.textTertiary)
             }
 
-            TextEditor(text: $viewModel.bio)
-                .foregroundColor(AppTheme.textPrimary)
-                .scrollContentBackground(.hidden)
-                .frame(minHeight: 100)
-                .padding(12)
-                .background(AppTheme.inputBackground)
-                .cornerRadius(12)
+            ZStack(alignment: .topLeading) {
+                if viewModel.bio.isEmpty {
+                    Text("Tell us about your van build experience...")
+                        .foregroundColor(Color.white.opacity(0.35))
+                        .font(.system(size: 15))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 20)
+                }
+                TextEditor(text: $viewModel.bio)
+                    .foregroundColor(AppTheme.textPrimary)
+                    .scrollContentBackground(.hidden)
+                    .frame(minHeight: 100)
+                    .padding(12)
+            }
+            .background(AppTheme.inputBackground)
+            .cornerRadius(12)
 
             Text("Describe your van build experience and what you can help with")
                 .font(.caption)

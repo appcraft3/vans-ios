@@ -17,9 +17,15 @@ struct LocationSearchView: View {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(AppTheme.textTertiary)
 
-                        TextField("Search for a location...", text: $viewModel.searchText)
-                            .foregroundColor(AppTheme.textPrimary)
-                            .autocorrectionDisabled()
+                        ZStack(alignment: .leading) {
+                            if viewModel.searchText.isEmpty {
+                                Text("Search for a location...")
+                                    .foregroundColor(Color.white.opacity(0.35))
+                            }
+                            TextField("", text: $viewModel.searchText)
+                                .foregroundColor(AppTheme.textPrimary)
+                                .autocorrectionDisabled()
+                        }
                     }
                     .padding(12)
                     .background(AppTheme.card)

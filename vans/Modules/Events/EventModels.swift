@@ -22,6 +22,7 @@ struct VanEvent: Identifiable, Codable {
     var hasBuilder: Bool
     var latitude: Double?
     var longitude: Double?
+    var photos: [String]
 
     var coordinate: CLLocationCoordinate2D? {
         guard let lat = latitude, let lng = longitude else { return nil }

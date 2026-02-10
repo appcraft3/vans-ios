@@ -206,9 +206,16 @@ struct WaitlistView: ActionableView {
 
     private var inviteCodeInputView: some View {
         VStack(spacing: 12) {
-            TextField("Enter invite code", text: $viewModel.inviteCode)
-                .textFieldStyle(OnboardingTextFieldStyle())
-                .textInputAutocapitalization(.characters)
+            ZStack(alignment: .leading) {
+                if viewModel.inviteCode.isEmpty {
+                    Text("Enter invite code")
+                        .foregroundColor(Color.white.opacity(0.35))
+                        .padding(.leading, 16)
+                }
+                TextField("", text: $viewModel.inviteCode)
+                    .textFieldStyle(OnboardingTextFieldStyle())
+                    .textInputAutocapitalization(.characters)
+            }
 
             Button(action: { viewModel.useInviteCode() }) {
                 Text("Use Code")

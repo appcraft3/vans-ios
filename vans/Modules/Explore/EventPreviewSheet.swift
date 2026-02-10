@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct EventPreviewSheet: View {
     let event: VanEvent
@@ -14,19 +15,18 @@ struct EventPreviewSheet: View {
                 VStack(spacing: 0) {
                     // Hero image with green gradient
                     ZStack(alignment: .bottomLeading) {
-                        AsyncImage(url: URL(string: "https://picsum.photos/seed/\(event.id)/600/400")) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
+                        Group {
+                            if let firstPhoto = event.photos.first, let url = URL(string: firstPhoto) {
+                                KFImage(url)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                            case .failure:
+                            } else {
                                 Rectangle().fill(Color(hex: "1A2820"))
-                            case .empty:
-                                Rectangle().fill(Color(hex: "1A2820"))
-                                    .overlay(ProgressView().tint(.white.opacity(0.25)))
-                            @unknown default:
-                                Rectangle().fill(Color(hex: "1A2820"))
+                                    .overlay(
+                                        Image(systemName: event.activityIcon)
+                                            .font(.system(size: 40))
+                                            .foregroundColor(.white.opacity(0.15))
+                                    )
                             }
                         }
                         .frame(height: 220)
