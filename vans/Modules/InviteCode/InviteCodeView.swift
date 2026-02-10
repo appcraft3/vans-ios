@@ -3,6 +3,9 @@ import SwiftUI
 struct InviteCodeView: ActionableView {
     @ObservedObject var viewModel: InviteCodeViewModel
     @State private var showInviteCodeInput = false
+    @State private var showPaywall = false
+
+    private let accentGreen = Color(hex: "2E7D5A")
 
     var body: some View {
         ZStack {
@@ -39,6 +42,42 @@ struct InviteCodeView: ActionableView {
                 }
 
                 Spacer()
+
+                // Go Pro card
+                Button {
+                    showPaywall = true
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "bolt.shield.fill")
+                            .font(.system(size: 22))
+                            .foregroundColor(accentGreen)
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Skip the wait with Pro")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(AppTheme.textPrimary)
+                            Text("Get priority review and join faster")
+                                .font(.system(size: 12))
+                                .foregroundColor(AppTheme.textSecondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(accentGreen)
+                    }
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(accentGreen.opacity(0.08))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(accentGreen.opacity(0.25), lineWidth: 1)
+                    )
+                }
+                .padding(.horizontal, 32)
 
                 // Actions
                 VStack(spacing: 16) {
@@ -152,6 +191,9 @@ struct InviteCodeView: ActionableView {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.waitlistMessage)
+        }
+        .fullScreenCover(isPresented: $showPaywall) {
+            PaywallView()
         }
     }
 }
