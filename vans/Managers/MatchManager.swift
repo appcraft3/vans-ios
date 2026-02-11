@@ -89,7 +89,10 @@ final class MatchManager: ObservableObject {
             eventName: eventName
         )
 
-        DispatchQueue.main.async {
+        // Delay popup to avoid conflicts with alerts triggered by
+        // the same API call that created the match (e.g. completeEvent
+        // shows a success alert that can dismiss the popup).
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.currentMatch = match
         }
     }

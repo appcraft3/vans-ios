@@ -71,14 +71,29 @@ final class TabbarCoordinator: NSObject, Coordinator {
     }
 
     private func showMatchPopup(_ match: MatchInfo) {
+        // Dismiss any existing alert / sheet first, then present the popup
+        let presenter = topMostViewController(from: tabBarController)
+
+        // If an alert or sheet is showing, dismiss it first
+        if presenter != tabBarController, presenter?.presentingViewController != nil {
+            presenter?.dismiss(animated: false) { [weak self] in
+                self?.presentMatchPopup(match)
+            }
+        } else {
+            presentMatchPopup(match)
+        }
+    }
+
+    private func presentMatchPopup(_ match: MatchInfo) {
         let popupView = MatchPopupView(
             match: match,
             onSendMessage: { [weak self] in
                 MatchManager.shared.dismissMatch()
                 self?.navigateToMatchChat(match)
             },
-            onDismiss: {
+            onDismiss: { [weak self] in
                 MatchManager.shared.dismissMatch()
+                self?.tabBarController?.dismiss(animated: true)
             }
         )
 
@@ -87,11 +102,20 @@ final class TabbarCoordinator: NSObject, Coordinator {
         hostingController.modalPresentationStyle = .overFullScreen
         hostingController.modalTransitionStyle = .crossDissolve
 
-        tabBarController?.present(hostingController, animated: true)
+        // Present on the topmost VC to avoid being dismissed by sibling presentations
+        let top = topMostViewController(from: tabBarController) ?? tabBarController
+        top?.present(hostingController, animated: true)
+    }
+
+    private func topMostViewController(from vc: UIViewController?) -> UIViewController? {
+        if let presented = vc?.presentedViewController {
+            return topMostViewController(from: presented)
+        }
+        return vc
     }
 
     private func navigateToMatchChat(_ match: MatchInfo) {
-        // Dismiss popup then navigate to chat tab
+        // Dismiss all presented view controllers (popup + any alerts underneath)
         tabBarController?.dismiss(animated: true) { [weak self] in
             guard let self else { return }
             // Switch to Messages tab (index 2 = Home/Messages)
