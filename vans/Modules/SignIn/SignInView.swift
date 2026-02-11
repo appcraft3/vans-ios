@@ -30,7 +30,7 @@ struct SignInView: ActionableView {
                             .foregroundColor(AppTheme.accent)
                     }
 
-                    Text("Welcome to VANS")
+                    Text("Welcome to VanGo")
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(AppTheme.textPrimary)
 

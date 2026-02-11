@@ -74,7 +74,7 @@ struct SplashView: ActionableView {
 //    }
     
     private var appNameView: some View {
-        Text("VANS")
+        Text("VanGo")
             .font(.system(size: 42, weight: .bold, design: .rounded))
             .foregroundColor(.white)
             .shadow(color: .white.opacity(0.15), radius: 10, y: 2)

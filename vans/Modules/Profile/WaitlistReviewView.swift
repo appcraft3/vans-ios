@@ -20,7 +20,7 @@ struct WaitlistReviewView: View {
 
                     Spacer()
 
-                    Text("Waitlist Review")
+                    Text("Waitlist")
                         .font(.headline)
                         .foregroundColor(AppTheme.textPrimary)
 

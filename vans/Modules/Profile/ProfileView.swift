@@ -608,7 +608,7 @@ struct ProfileView: ActionableView {
             HStack {
                 Image(systemName: "shield.fill")
                     .foregroundColor(accentGreen)
-                Text("Waitlist Review")
+                Text("Waitlist")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppTheme.textPrimary)
                 Spacer()
