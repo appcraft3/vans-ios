@@ -56,7 +56,8 @@ VanGo uses **RevenueCat** to power subscriptions under the product:
 
 ### Product
 
--   **VanGo Pro** (auto-renewable subscription)
+-   **VanGo Pro – Monthly** (auto-renewable subscription)
+-   **VanGo Pro – Yearly** (auto-renewable subscription, discounted annual plan)
 
 ### Entitlement
 
