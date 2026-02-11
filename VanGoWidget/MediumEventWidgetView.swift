@@ -10,42 +10,52 @@ struct MediumEventWidgetView: View {
 
     var body: some View {
         if displayEvents.isEmpty {
-            emptyState
-        } else {
-            ZStack {
-                WidgetTheme.surface
+            HStack(spacing: 12) {
+                Image(systemName: "calendar.badge.plus")
+                    .font(.system(size: 32))
+                    .foregroundColor(WidgetTheme.textTertiary)
 
-                VStack(alignment: .leading, spacing: 0) {
-                    // Header
-                    HStack {
-                        Text("Upcoming Events")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(WidgetTheme.textPrimary)
-
-                        Spacer()
-
-                        Image(systemName: "calendar.circle.fill")
-                            .font(.system(size: 16))
-                            .foregroundColor(WidgetTheme.accent)
-                    }
-                    .padding(.horizontal, 14)
-                    .padding(.top, 12)
-                    .padding(.bottom, 6)
-
-                    // Event rows
-                    ForEach(Array(displayEvents.enumerated()), id: \.element.id) { index, event in
-                        if index > 0 {
-                            Rectangle()
-                                .fill(WidgetTheme.textTertiary.opacity(0.2))
-                                .frame(height: 0.5)
-                                .padding(.horizontal, 14)
-                        }
-
-                        eventRow(event)
-                    }
-
-                    Spacer(minLength: 0)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("No upcoming events")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(WidgetTheme.textSecondary)
+                    Text("Open VanGo to discover events")
+                        .font(.system(size: 11))
+                        .foregroundColor(WidgetTheme.textTertiary)
                 }
+            }
+            .padding()
+        } else {
+            VStack(alignment: .leading, spacing: 0) {
+                // Header
+                HStack {
+                    Text("Upcoming Events")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(WidgetTheme.textPrimary)
+
+                    Spacer()
+
+                    Image(systemName: "calendar.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(WidgetTheme.accent)
+                }
+                .padding(.horizontal, 14)
+                .padding(.top, 12)
+                .padding(.bottom, 6)
+
+                // Event rows
+                ForEach(Array(displayEvents.enumerated()), id: \.element.id) { index, event in
+                    if index > 0 {
+                        Rectangle()
+                            .fill(WidgetTheme.textTertiary.opacity(0.2))
+                            .frame(height: 0.5)
+                            .padding(.horizontal, 14)
+                    }
+
+                    eventRow(event)
+                }
+
+                Spacer(minLength: 0)
             }
         }
     }
@@ -96,28 +106,6 @@ struct MediumEventWidgetView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 6)
-        }
-    }
-
-    private var emptyState: some View {
-        ZStack {
-            WidgetTheme.surface
-
-            HStack(spacing: 12) {
-                Image(systemName: "calendar.badge.plus")
-                    .font(.system(size: 32))
-                    .foregroundColor(WidgetTheme.textTertiary)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("No upcoming events")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(WidgetTheme.textSecondary)
-                    Text("Open VanGo to discover events")
-                        .font(.system(size: 11))
-                        .foregroundColor(WidgetTheme.textTertiary)
-                }
-            }
-            .padding()
         }
     }
 }

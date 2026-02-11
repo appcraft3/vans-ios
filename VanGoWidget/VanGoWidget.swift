@@ -19,13 +19,28 @@ struct VanGoWidgetEntryView: View {
     let entry: EventWidgetEntry
 
     var body: some View {
-        switch family {
-        case .systemSmall:
-            SmallEventWidgetView(entry: entry)
-        case .systemMedium:
-            MediumEventWidgetView(entry: entry)
-        default:
-            SmallEventWidgetView(entry: entry)
+        Group {
+            switch family {
+            case .systemSmall:
+                SmallEventWidgetView(entry: entry)
+            case .systemMedium:
+                MediumEventWidgetView(entry: entry)
+            default:
+                SmallEventWidgetView(entry: entry)
+            }
+        }
+        .widgetBackground(WidgetTheme.surface)
+    }
+}
+
+// MARK: - Container Background Compatibility
+
+extension View {
+    func widgetBackground(_ color: Color) -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            return self.containerBackground(color, for: .widget)
+        } else {
+            return self.background(color)
         }
     }
 }
