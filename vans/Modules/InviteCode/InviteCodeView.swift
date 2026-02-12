@@ -164,6 +164,37 @@ struct InviteCodeView: ActionableView {
 
                 Spacer()
 
+                // Demo notice
+                VStack(spacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "testtube.2")
+                            .font(.caption2)
+                            .foregroundColor(AppTheme.primary)
+                        Text("TEST MODE")
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .foregroundColor(AppTheme.primary)
+                    }
+
+                    Text("Use **MASTER2026** to get admin access")
+                        .font(.system(size: 12))
+                        .foregroundColor(AppTheme.textSecondary)
+
+                    Text("This is for demo & testing purposes only.")
+                        .font(.system(size: 11))
+                        .foregroundColor(AppTheme.textTertiary)
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(AppTheme.primary.opacity(0.06))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(AppTheme.primary.opacity(0.15), lineWidth: 1)
+                )
+                .padding(.horizontal, 32)
+
                 // Sign out option
                 Button(action: {
                     viewModel.signOut()
