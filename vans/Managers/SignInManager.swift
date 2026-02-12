@@ -18,6 +18,7 @@ final class SignInManager: NSObject {
 
     // MARK: - Google Sign In
 
+    @MainActor
     func signInWithGoogle(presenting viewController: UIViewController) async throws -> UserData {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             throw SignInError.missingClientID
@@ -41,7 +42,7 @@ final class SignInManager: NSObject {
     }
 
     // MARK: - Apple Sign In
-
+    @MainActor
     func signInWithApple(presenting viewController: UIViewController) async throws -> UserData {
         let nonce = randomNonceString()
         currentNonce = nonce
